@@ -5,7 +5,7 @@
 // @author       Vanisoul
 // @match        https://www.bilibili.com/*
 // @license      MIT
-// @namespace    http://tampermonkey.net/
+// @namespace    https://greasyfork.org/users/429936
 // @grant        GM_registerMenuCommand
 // @grant        GM_setValue
 // @grant        GM_getValue

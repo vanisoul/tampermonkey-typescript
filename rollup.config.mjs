@@ -19,7 +19,7 @@ function findTypescriptFiles(dir, fileList = []) {
 
         if (fileStat.isDirectory()) {
             findTypescriptFiles(filePath, fileList);
-        } else if (file.endsWith('.ts') && !containsExport(filePath)) {
+        } else if ((file.endsWith('.ts') || file.endsWith('.tsx')) && !containsExport(filePath)) {
             fileList.push(filePath);
         }
     });
@@ -79,7 +79,7 @@ const inputFiles = findTypescriptFiles('src');
 export default inputFiles.map(file => ({
     input: file,
     output: {
-        file: `dist/${file.replace('.ts', '.js')}`,  // 保留原始的資料夾結構
+        file: `dist/${file.replace('.ts', '.js').replace('.tsx', '.js')}`,  // 保留原始的資料夾結構
         format: 'iife',
         name: 'tempermonkey'
     },

@@ -90,6 +90,7 @@ interface MediaPlayerClass {
     getMetricsFor(type: 'video' | 'audio' | 'text' | 'stream'): MetricsList | null;
     getQualityFor(type: 'video' | 'audio' | 'image'): number;
     setQualityFor(type: 'video' | 'audio' | 'image', value: number): void;
+    setDefaultQualityFor(type: 'video' | 'audio' | 'image', value: number): void; // 額外補
     updatePortalSize(): void;
     getLimitBitrateByPortal(): any;
     setLimitBitrateByPortal(value: boolean): void;
@@ -195,6 +196,8 @@ export interface DashPlayer extends MediaPlayerClass {
     initialize: (...args: any[]) => void;
     getCurrentTime: () => number;
     prototype: DashPlayer;
+
+    player: Omit<MediaPlayerClass, 'prototype'>;
 }
 
 declare global {
