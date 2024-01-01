@@ -29,7 +29,7 @@ function findTypescriptFiles(dir, fileList = []) {
 
 function customPreservePlugin() {
     // 匹配 UserScript 開頭、結尾和所有 "// @" 開頭的註解
-    const userScriptRegex = /^\/\/ (==UserScript==|==\/UserScript==|\@)/;
+    const userScriptRegex = /^\/\/\s*(==UserScript==|==\/UserScript==|\@)/;
     const preservedLines = [];
 
     return {
@@ -50,7 +50,7 @@ function customPreservePlugin() {
                 map: null
             };
         },
-        generateBundle(_, bundle, _) {
+        generateBundle(_, bundle, __) {
             for (const fileName in bundle) {
                 if (bundle[fileName].type === 'chunk') {
                     bundle[fileName].code = `${preservedLines.join('\n')}\n\n${bundle[fileName].code}`
