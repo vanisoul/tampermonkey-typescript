@@ -1,4 +1,6 @@
 import typescript from '@rollup/plugin-typescript';
+import commonjs from '@rollup/plugin-commonjs';
+import resolve from "@rollup/plugin-node-resolve";
 import { terser } from 'rollup-plugin-terser';
 import fs from 'fs';
 import path from 'path';
@@ -74,6 +76,8 @@ export default inputFiles.map(file => ({
     plugins: [
         customPreservePlugin(),
         typescript(),
+        resolve(),
+        commonjs(),
         terser()
     ]
 }));
