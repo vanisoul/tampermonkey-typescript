@@ -19,7 +19,7 @@ function findTypescriptFiles(dir, fileList = []) {
 
         if (fileStat.isDirectory()) {
             findTypescriptFiles(filePath, fileList);
-        } else if ((file.endsWith('.ts') || file.endsWith('.tsx')) && !containsExport(filePath)) {
+        } else if ((file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith(".d.ts") && !containsExport(filePath)) {
             fileList.push(filePath);
         }
     });

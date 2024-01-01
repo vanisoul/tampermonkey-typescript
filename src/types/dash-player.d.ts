@@ -199,9 +199,3 @@ export interface DashPlayer extends MediaPlayerClass {
 
     player: Omit<MediaPlayerClass, 'prototype'>;
 }
-
-declare global {
-    interface Window {
-        DashPlayer: DashPlayer;
-    }
-}
