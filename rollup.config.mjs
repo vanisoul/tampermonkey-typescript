@@ -1,6 +1,4 @@
 import typescript from '@rollup/plugin-typescript';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from "@rollup/plugin-node-resolve";
 import { terser } from 'rollup-plugin-terser';
 import fs from 'fs';
 import path from 'path';
@@ -29,16 +27,18 @@ function findTypescriptFiles(dir, fileList = []) {
     return fileList;
 }
 
+
 function customPreservePlugin() {
     // 匹配 UserScript 開頭、結尾和所有 "// @" 開頭的註解
-    const userScriptRegex = /^\/\/\s*(==UserScript==|==\/UserScript==|\@)/;
+    // 移除 ==UserScript==|==\/UserScript==|
+    const userScriptRegex = /^\/\/\s*(\@)/;
     const preservedLines = [];
-
     return {
         name: 'custom-preserve',
-        transform(code, _) {
+
+        transform(code, id) {
             // 將代碼分割成單獨的行
-            const lines = code.split('\n');
+            const lines = fs.readFileSync(id, 'utf-8').split('\n');
 
             // 處理每一行
             lines.forEach(line => {
@@ -55,7 +55,17 @@ function customPreservePlugin() {
         generateBundle(_, bundle, __) {
             for (const fileName in bundle) {
                 if (bundle[fileName].type === 'chunk') {
-                    bundle[fileName].code = `${preservedLines.join('\n')}\n\n${bundle[fileName].code}`
+                    const regex = /@(\S+)\s+(.+)/;
+                    const keyLength = 15;
+                    const preservedLinesFormat = preservedLines.map(str => {
+                        const match = str.match(regex);
+                        const key = match[1].trim().padEnd(keyLength, " ");
+                        const value = match[2].trim();
+                        return `// @${key}${value}`
+                    });
+
+                    const preservedLinesString = `// ==UserScript==\n${preservedLinesFormat.join('\n')}\n// ==/UserScript==`;
+                    bundle[fileName].code = `${preservedLinesString}\n\n${bundle[fileName].code}`
                 }
             }
         }
@@ -76,8 +86,6 @@ export default inputFiles.map(file => ({
     plugins: [
         customPreservePlugin(),
         typescript(),
-        resolve(),
-        commonjs(),
         terser()
     ]
 }));

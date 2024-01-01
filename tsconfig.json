@@ -7,7 +7,8 @@
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
       "outDir": "./dist",
-      "declaration": false
+      "declaration": false,
+      "removeComments": true
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]

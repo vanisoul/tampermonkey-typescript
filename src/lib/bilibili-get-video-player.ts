@@ -1,4 +1,6 @@
+// ==UserScript==
 // @grant        unsafeWindow
+// ==/UserScript==
 
 import type { DashPlayer } from "../types/dash-player";
 

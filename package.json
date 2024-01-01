@@ -16,9 +16,6 @@
     "typescript": "^5.3.3"
   },
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^25.0.7",
-    "@rollup/plugin-node-resolve": "^15.2.3",
-    "@types/tampermonkey": "^5.0.2",
-    "dashjs": "^2.9.3"
+    "@types/tampermonkey": "^5.0.2"
   }
 }
