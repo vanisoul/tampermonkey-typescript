@@ -103,9 +103,6 @@ function replaceExtToJs(filePath) {
     return path.join(parsedPath.dir, parsedPath.name + '.js');
 }
 
-// // 獲取所有沒有 export 的 TypeScript 文件
-// const inputFiles = findTypescriptFiles('src');
-
 async function buildFile(filePath) {
     console.log(`開始建構: ${filePath}`);
 

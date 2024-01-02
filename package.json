@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "build": "rollup -c"
+    "build": "node ./rollup.config.js"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^25.0.7",
