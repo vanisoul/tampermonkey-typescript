@@ -1,3 +1,5 @@
+import resolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import fs from 'fs';
@@ -72,6 +74,23 @@ function customPreservePlugin() {
     };
 }
 
+export function replaceEnvPlugin() {
+    return {
+        name: 'replace-env', // 插件名稱
+        transform(code, id) {
+            const replacedCode = code.replace(/process\.env\.NODE_ENV/g, '"production"');
+            return {
+                code: replacedCode,
+                map: null // 如果您不需要 source map，可以將此設置為 null
+            };
+        }
+    };
+}
+
+function replaceExtToJs(filePath) {
+    const parsedPath = path.parse(filePath);
+    return path.join(parsedPath.dir, parsedPath.name + '.js');
+}
 
 // 獲取所有沒有 export 的 TypeScript 文件
 const inputFiles = findTypescriptFiles('src');
@@ -79,13 +98,21 @@ const inputFiles = findTypescriptFiles('src');
 export default inputFiles.map(file => ({
     input: file,
     output: {
-        file: `dist/${file.replace('.ts', '.js').replace('.tsx', '.js')}`,  // 保留原始的資料夾結構
+        file: `dist/${replaceExtToJs(file)}`,  // 保留原始的資料夾結構
         format: 'iife',
         name: 'tempermonkey'
     },
     plugins: [
         customPreservePlugin(),
+        resolve(),
+        babel({
+            presets: ["@babel/preset-typescript"],
+            plugins: ["@vue/babel-plugin-jsx"],
+            babelHelpers: 'bundled',
+            extensions: ['.jsx', '.tsx'],
+        }),
         typescript(),
+        replaceEnvPlugin(),
         terser()
     ]
 }));
