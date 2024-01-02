@@ -9,7 +9,7 @@
 // @namespace    https://greasyfork.org/users/429936
 // ==/UserScript==
 
-import { createApp, onMounted, ref } from "vue";
+import { createApp, ref } from "vue";
 
 import { mountAfter } from "./lib/vue-mount-after";
 import { ButtonDialog } from "./component/button-dialog";
@@ -22,7 +22,7 @@ const buttonDialog = createApp({
     setup() {
         const gamerAPI = new GamerAPI();
 
-        const questionTitle = ref("");
+        const questionTitle = ref("載入中............");
         const question = ref("");
         const options = ref<string[]>([]);
         const questionToken = ref("");
@@ -52,11 +52,14 @@ const buttonDialog = createApp({
         );
         const buttonLabel = "動畫瘋答題";
 
-        onMounted(async () => {
+        async function updateQuestion() {
             const result = await gamerAPI.getQuestionByGM();
             if ('error' in result) {
                 // GamerErrorResult
+                questionTitle.value = "";
                 question.value = result.msg;
+                options.value = [];
+                questionToken.value = "";
             } else {
                 // QuestionResult
                 questionTitle.value = result.game;
@@ -64,9 +67,16 @@ const buttonDialog = createApp({
                 options.value = [result.a1, result.a2, result.a3, result.a4];
                 questionToken.value = result.token;
             }
-        })
+        }
 
-        return () => <li><ButtonDialog renderDialog={renderDialog} buttonLabel={buttonLabel}></ButtonDialog></li>
+        function cleanQuestion() {
+            questionTitle.value = "載入中............";
+            question.value = "";
+            options.value = [];
+            questionToken.value = "";
+        }
+
+        return () => <li><ButtonDialog class="flex space-x-1 min-h-screen justify-center items-center" onCloseDialog={cleanQuestion} onOpenDialog={updateQuestion} renderDialog={renderDialog} buttonLabel={buttonLabel}></ButtonDialog></li>
     },
 });
 
@@ -75,5 +85,5 @@ const insertBtnInverval = setInterval(() => {
     if (success) {
         clearInterval(insertBtnInverval);
     }
-}, 1000);
+}, 3000);
 
