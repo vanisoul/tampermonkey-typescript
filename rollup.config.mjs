@@ -21,7 +21,7 @@ function findTypescriptFiles(dir, fileList = []) {
 
         if (fileStat.isDirectory()) {
             findTypescriptFiles(filePath, fileList);
-        } else if ((file.endsWith('.js') || file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith(".d.ts") && !file.endsWith(".d.js") && !containsExport(filePath)) {
+        } else if ((file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith(".d.ts") && !containsExport(filePath)) {
             fileList.push(filePath);
         }
     });
@@ -74,6 +74,10 @@ function customPreservePlugin() {
     };
 }
 
+function replaceExtToJs(filePath) {
+    const parsedPath = path.parse(filePath);
+    return path.join(parsedPath.dir, parsedPath.name + '.js');
+}
 
 // 獲取所有沒有 export 的 TypeScript 文件
 const inputFiles = findTypescriptFiles('src');
@@ -81,11 +85,18 @@ const inputFiles = findTypescriptFiles('src');
 export default inputFiles.map(file => ({
     input: file,
     output: {
-        file: `dist/${file.replace('.ts', '.js').replace('.tsx', '.js')}`,  // 保留原始的資料夾結構
+        file: `dist/${replaceExtToJs(file)}`,  // 保留原始的資料夾結構
         format: 'iife',
         name: 'tempermonkey'
     },
     plugins: [
+
+        babel({
+            presets: ["@babel/preset-typescript"],
+            plugins: ["@vue/babel-plugin-jsx"],
+            babelHelpers: 'bundled',
+            extensions: ['.jsx', '.tsx'],
+        }),
         customPreservePlugin(),
         resolve(),
         typescript(),
