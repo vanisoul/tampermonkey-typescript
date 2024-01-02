@@ -74,6 +74,19 @@ function customPreservePlugin() {
     };
 }
 
+export function replaceEnvPlugin() {
+    return {
+        name: 'replace-env', // 插件名稱
+        transform(code, id) {
+            const replacedCode = code.replace(/process\.env\.NODE_ENV/g, '"production"');
+            return {
+                code: replacedCode,
+                map: null // 如果您不需要 source map，可以將此設置為 null
+            };
+        }
+    };
+}
+
 function replaceExtToJs(filePath) {
     const parsedPath = path.parse(filePath);
     return path.join(parsedPath.dir, parsedPath.name + '.js');
@@ -90,15 +103,16 @@ export default inputFiles.map(file => ({
         name: 'tempermonkey'
     },
     plugins: [
+        customPreservePlugin(),
+        resolve(),
         babel({
             presets: ["@babel/preset-typescript"],
             plugins: ["@vue/babel-plugin-jsx"],
             babelHelpers: 'bundled',
             extensions: ['.jsx', '.tsx'],
         }),
-        customPreservePlugin(),
-        resolve(),
         typescript(),
+        replaceEnvPlugin(),
         terser()
     ]
 }));
