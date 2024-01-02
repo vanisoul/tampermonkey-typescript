@@ -8,4 +8,24 @@
 // @namespace      https://greasyfork.org/users/429936
 // ==/UserScript==
 
-!function(){"use strict";let e;const t=setInterval((()=>{var r=document.querySelector(".iqp-player-g.iqp-player.iqp-player-pc"),n=r?r.querySelector("video"):null;n&&(e=n,clearInterval(t))}),1e3);document.addEventListener("keydown",(function(t){"j"===t.key.toLocaleLowerCase()&&e&&(e.currentTime+=90)}))}();
+(function () {
+    'use strict';
+
+    const iqiyiSkipKey = "j";
+    const iqiyiOPTime = 90;
+    let iqiyiVideo = undefined;
+    const iqiyiInterval = setInterval(() => {
+        var playerContainer = document.querySelector('.iqp-player-g.iqp-player.iqp-player-pc');
+        var selectorVideo = playerContainer ? playerContainer.querySelector('video') : null;
+        if (selectorVideo) {
+            iqiyiVideo = selectorVideo;
+            clearInterval(iqiyiInterval);
+        }
+    }, 1000);
+    document.addEventListener('keydown', function (event) {
+        if (event.key.toLocaleLowerCase() === iqiyiSkipKey && iqiyiVideo) {
+            iqiyiVideo.currentTime += iqiyiOPTime;
+        }
+    });
+
+})();

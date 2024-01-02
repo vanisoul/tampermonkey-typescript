@@ -12,4 +12,60 @@
 // @grant          unsafeWindow
 // ==/UserScript==
 
-!function(){"use strict";const e=new class{};const t=setInterval((()=>{const r=unsafeWindow.DashPlayer;r&&function(t){const r=t.prototype.fire;r&&(t.prototype.fire=function(...o){e.dashPlayer=this,t.prototype.fire=r,r.apply(this,o)})}(r),e.dashPlayer&&clearInterval(t)}),1e3);let r=GM_getValue("triggerKey","j");let o=GM_getValue("OPTime",90);GM_registerMenuCommand("設置觸發按鈕",(function(){var e=prompt("請輸入新的觸發按鈕:",r);e&&(GM_setValue("triggerKey",e.toLocaleLowerCase()),r=e.toLocaleLowerCase(),alert("觸發按鈕已更改為: "+r))})),GM_registerMenuCommand("設置跳過時間",(function(){var e=prompt("請輸入新的跳過時間:",o.toString());e&&(GM_setValue("OPTime",e),o=parseInt(e),alert("跳過時間已更改為: "+o))})),document.addEventListener("keydown",(function(t){const n=e.dashPlayer;if(n&&t.key.toLocaleLowerCase()===r&&n){const e=n.getCurrentTime();n.seek(e+o)}}))}();
+(function () {
+    'use strict';
+
+    class DashPlayerManager {
+    }
+    const dashPlayerManager = new DashPlayerManager();
+    function stealPlayerByFire(DashPlayer) {
+        const origFire = DashPlayer.prototype.fire;
+        if (origFire) {
+            DashPlayer.prototype.fire = function (...args) {
+                dashPlayerManager.dashPlayer = this;
+                DashPlayer.prototype.fire = origFire;
+                origFire.apply(this, args);
+            };
+        }
+    }
+    const hackInterval = setInterval(() => {
+        const DashPlayer = unsafeWindow.DashPlayer;
+        if (DashPlayer) {
+            stealPlayerByFire(DashPlayer);
+        }
+        if (dashPlayerManager.dashPlayer) {
+            clearInterval(hackInterval);
+        }
+    }, 1000);
+
+    const defaultKey = "j";
+    let triggerKey = GM_getValue('triggerKey', defaultKey);
+    function setTriggerKey() {
+        var userKey = prompt('請輸入新的觸發按鈕:', triggerKey);
+        if (userKey) {
+            GM_setValue('triggerKey', userKey.toLocaleLowerCase());
+            triggerKey = userKey.toLocaleLowerCase();
+            alert('觸發按鈕已更改為: ' + triggerKey);
+        }
+    }
+    const defaultOPTime = 90;
+    let OPTime = GM_getValue('OPTime', defaultOPTime);
+    function setOPTime() {
+        var userOPTime = prompt('請輸入新的跳過時間:', OPTime.toString());
+        if (userOPTime) {
+            GM_setValue('OPTime', userOPTime);
+            OPTime = parseInt(userOPTime);
+            alert('跳過時間已更改為: ' + OPTime);
+        }
+    }
+    GM_registerMenuCommand('設置觸發按鈕', setTriggerKey);
+    GM_registerMenuCommand('設置跳過時間', setOPTime);
+    document.addEventListener('keydown', function (event) {
+        const dashPlayer = dashPlayerManager.dashPlayer;
+        if (dashPlayer && event.key.toLocaleLowerCase() === triggerKey && dashPlayer) {
+            const currentTime = dashPlayer.getCurrentTime();
+            dashPlayer.seek(currentTime + OPTime);
+        }
+    });
+
+})();

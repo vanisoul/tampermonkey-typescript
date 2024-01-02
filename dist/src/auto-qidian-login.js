@@ -8,4 +8,17 @@
 // @grant          none
 // ==/UserScript==
 
-!function(){"use strict";!function(){const n=setInterval((()=>{const t=document.querySelector(".sign-out");(null==t?void 0:t.classList.contains("hidden"))||(document.querySelector("#login-btn").click(),clearInterval(n))}),1e3)}()}();
+(function () {
+    'use strict';
+
+    (function () {
+        const qiduanInterval = setInterval(() => {
+            const signE = document.querySelector(".sign-out");
+            if (!(signE === null || signE === void 0 ? void 0 : signE.classList.contains("hidden"))) {
+                document.querySelector("#login-btn").click();
+                clearInterval(qiduanInterval);
+            }
+        }, 1000);
+    })();
+
+})();

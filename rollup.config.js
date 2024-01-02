@@ -124,7 +124,7 @@ async function buildFile(filePath) {
             }),
             typescript(),
             replaceEnvPlugin(),
-            terser()
+            // terser() // 禁止壓縮
         ],
         onwarn(warning, warn) {
             warn(warning);

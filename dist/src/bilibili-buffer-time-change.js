@@ -12,4 +12,76 @@
 // @grant          unsafeWindow
 // ==/UserScript==
 
-!function(){"use strict";const e=new class{};const t=setInterval((()=>{const r=unsafeWindow.DashPlayer;r&&function(t){const r=t.prototype.fire;r&&(t.prototype.fire=function(...o){e.dashPlayer=this,t.prototype.fire=r,r.apply(this,o)})}(r),e.dashPlayer&&clearInterval(t)}),1e3);let r=GM_getValue("triggerKey","v");let o=GM_getValue("bufferTime",250);function a(t){const r=setInterval((()=>{const o=e.dashPlayer;o&&(o.player.setBufferPruningInterval(3),o.player.setStableBufferTime(t),o.player.setBufferTimeAtTopQuality(t),o.player.setBufferTimeAtTopQualityLongForm(t),o.player.setBufferAheadToKeep(t+10),o.player.setBufferToKeep(3e4),console.log(`hook set buffer time ${t}`),clearInterval(r))}),1e3)}GM_registerMenuCommand("設置Buffer時間",(function(){var e=prompt("請輸入新的Buffer時間:",o.toString());e&&(GM_setValue("bufferTime",e),o=parseInt(e),a(o),alert("Buffer時間已更改為: "+o))})),GM_registerMenuCommand("設置查看目前 Buffer 按鈕",(function(){var e=prompt("請輸入新的觸發按鈕:",r);e&&(GM_setValue("triggerKey",e.toLocaleLowerCase()),r=e.toLocaleLowerCase(),alert("觸發按鈕已更改為: "+r))})),document.addEventListener("keydown",(function(t){if(t.key.toLocaleLowerCase()===r){const t=e.dashPlayer;console.log(`Now BufferLength : ${null==t?void 0:t.getBufferLength("video")}`)}})),a(o)}();
+(function () {
+    'use strict';
+
+    class DashPlayerManager {
+    }
+    const dashPlayerManager = new DashPlayerManager();
+    function stealPlayerByFire(DashPlayer) {
+        const origFire = DashPlayer.prototype.fire;
+        if (origFire) {
+            DashPlayer.prototype.fire = function (...args) {
+                dashPlayerManager.dashPlayer = this;
+                DashPlayer.prototype.fire = origFire;
+                origFire.apply(this, args);
+            };
+        }
+    }
+    const hackInterval = setInterval(() => {
+        const DashPlayer = unsafeWindow.DashPlayer;
+        if (DashPlayer) {
+            stealPlayerByFire(DashPlayer);
+        }
+        if (dashPlayerManager.dashPlayer) {
+            clearInterval(hackInterval);
+        }
+    }, 1000);
+
+    const defaultKey = "v";
+    let triggerKey = GM_getValue('triggerKey', defaultKey);
+    function setTriggerKey() {
+        var userKey = prompt('請輸入新的觸發按鈕:', triggerKey);
+        if (userKey) {
+            GM_setValue('triggerKey', userKey.toLocaleLowerCase());
+            triggerKey = userKey.toLocaleLowerCase();
+            alert('觸發按鈕已更改為: ' + triggerKey);
+        }
+    }
+    const defaultBufferTime = 250;
+    let bufferTime = GM_getValue('bufferTime', defaultBufferTime);
+    function setBufferTime() {
+        var userBufferTime = prompt('請輸入新的Buffer時間:', bufferTime.toString());
+        if (userBufferTime) {
+            GM_setValue('bufferTime', userBufferTime);
+            bufferTime = parseInt(userBufferTime);
+            changeBuffer(bufferTime);
+            alert('Buffer時間已更改為: ' + bufferTime);
+        }
+    }
+    GM_registerMenuCommand('設置Buffer時間', setBufferTime);
+    GM_registerMenuCommand('設置查看目前 Buffer 按鈕', setTriggerKey);
+    document.addEventListener('keydown', function (event) {
+        if (event.key.toLocaleLowerCase() === triggerKey) {
+            const dashPlayer = dashPlayerManager.dashPlayer;
+            console.log(`Now BufferLength : ${dashPlayer === null || dashPlayer === void 0 ? void 0 : dashPlayer.getBufferLength("video")}`);
+        }
+    });
+    changeBuffer(bufferTime);
+    function changeBuffer(bufferTime) {
+        const setBufferInterval = setInterval(() => {
+            const dashPlayer = dashPlayerManager.dashPlayer;
+            if (dashPlayer) {
+                dashPlayer.player.setBufferPruningInterval(3);
+                dashPlayer.player.setStableBufferTime(bufferTime);
+                dashPlayer.player.setBufferTimeAtTopQuality(bufferTime);
+                dashPlayer.player.setBufferTimeAtTopQualityLongForm(bufferTime);
+                dashPlayer.player.setBufferAheadToKeep(bufferTime + 10);
+                dashPlayer.player.setBufferToKeep(30000);
+                console.log(`hook set buffer time ${bufferTime}`);
+                clearInterval(setBufferInterval);
+            }
+        }, 1000);
+    }
+
+})();

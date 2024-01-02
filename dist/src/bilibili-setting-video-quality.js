@@ -12,4 +12,78 @@
 // @grant          unsafeWindow
 // ==/UserScript==
 
-!function(){"use strict";const t=new class{};const e=setInterval((()=>{const r=unsafeWindow.DashPlayer;r&&function(e){const r=e.prototype.fire;r&&(e.prototype.fire=function(...i){t.dashPlayer=this,e.prototype.fire=r,r.apply(this,i)})}(r),t.dashPlayer&&clearInterval(e)}),1e3),r=GM_getValue("targetQualitys",[1080,720,480,360]),i=GM_getValue("highBitratePriority",!0);function o(){const e=setInterval((()=>{const o=t.dashPlayer;if(o){const t=o.player.getBitrateInfoListFor("video").map(((t,e)=>{const i=r.indexOf(t.height);return Object.assign(Object.assign({},t),{index:e,priority:i})})).filter((t=>-1!==t.priority)).sort(((t,e)=>i?e.bitrate-t.bitrate:t.bitrate-e.bitrate)).sort(((t,e)=>t.priority-e.priority));if(0===t.length)return;const a=t[0].index;o.player.setQualityFor("video",a),o.player.setDefaultQualityFor("video",a),console.log(`hook set Quality ${JSON.stringify(t[0])}`),clearInterval(e)}}))}GM_registerMenuCommand("設置目標品質",(function(){const t=prompt("請輸入目標品質優先序, 逗點分隔（1080, 720, 480, 360）:",r.join(","));t&&(GM_setValue("targetQualitys",t.split(",").map((t=>parseInt(t,10)))),o(),alert("目標品質已設置為："+t))})),GM_registerMenuCommand("設置高比特率優先",(function(){const t=confirm("是否要設置高比特率優先？");GM_setValue("highBitratePriority",t),o(),alert("高比特率優先已"+(t?"開啟":"關閉"))})),o()}();
+(function () {
+    'use strict';
+
+    class DashPlayerManager {
+    }
+    const dashPlayerManager = new DashPlayerManager();
+    function stealPlayerByFire(DashPlayer) {
+        const origFire = DashPlayer.prototype.fire;
+        if (origFire) {
+            DashPlayer.prototype.fire = function (...args) {
+                dashPlayerManager.dashPlayer = this;
+                DashPlayer.prototype.fire = origFire;
+                origFire.apply(this, args);
+            };
+        }
+    }
+    const hackInterval = setInterval(() => {
+        const DashPlayer = unsafeWindow.DashPlayer;
+        if (DashPlayer) {
+            stealPlayerByFire(DashPlayer);
+        }
+        if (dashPlayerManager.dashPlayer) {
+            clearInterval(hackInterval);
+        }
+    }, 1000);
+
+    const defaultTargetQualitys = [1080, 720, 480, 360];
+    const targetQualitys = GM_getValue("targetQualitys", defaultTargetQualitys);
+    const defaultHighBitratePriority = true;
+    const highBitratePriority = GM_getValue("highBitratePriority", defaultHighBitratePriority);
+    GM_registerMenuCommand("設置目標品質", setTargetQuality);
+    GM_registerMenuCommand("設置高比特率優先", setHighBitratePriority);
+    function setTargetQuality() {
+        const quality = prompt("請輸入目標品質優先序, 逗點分隔（1080, 720, 480, 360）:", targetQualitys.join(","));
+        if (quality) {
+            GM_setValue("targetQualitys", quality.split(",").map(q => parseInt(q, 10)));
+            updateQuality();
+            alert("目標品質已設置為：" + quality);
+        }
+    }
+    function setHighBitratePriority() {
+        const priority = confirm("是否要設置高比特率優先？");
+        GM_setValue("highBitratePriority", priority);
+        updateQuality();
+        alert("高比特率優先已" + (priority ? "開啟" : "關閉"));
+    }
+    function updateQuality() {
+        const setQualityInterval = setInterval(() => {
+            const dashPlayer = dashPlayerManager.dashPlayer;
+            if (dashPlayer) {
+                const qualityList = dashPlayer.player.getBitrateInfoListFor("video");
+                const priorityQualityList = qualityList
+                    .map((item, index) => {
+                    const priority = targetQualitys.indexOf(item.height);
+                    return Object.assign(Object.assign({}, item), { index, priority });
+                })
+                    .filter(item => item.priority !== -1)
+                    .sort((currItem, nextItem) => highBitratePriority ?
+                    nextItem.bitrate - currItem.bitrate :
+                    currItem.bitrate - nextItem.bitrate)
+                    .sort((currItem, nextItem) => currItem.priority - nextItem.priority);
+                if (priorityQualityList.length === 0) {
+                    return;
+                }
+                const targetIdx = priorityQualityList[0].index;
+                dashPlayer.player.setQualityFor("video", targetIdx);
+                dashPlayer.player.setDefaultQualityFor("video", targetIdx);
+                console.log(`hook set Quality ${JSON.stringify(priorityQualityList[0])}`);
+                clearInterval(setQualityInterval);
+            }
+        });
+    }
+    updateQuality();
+
+})();
