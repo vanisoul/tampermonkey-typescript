@@ -1,11 +1,12 @@
+import fs from 'fs';
+import path from 'path';
+import { rollup } from "rollup";
 import postcss from 'rollup-plugin-postcss';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
-import fs from 'fs';
-import path from 'path';
 
 // 檢查文件是否包含 export 語句
 function containsExport(filePath) {
@@ -102,32 +103,87 @@ function replaceExtToJs(filePath) {
     return path.join(parsedPath.dir, parsedPath.name + '.js');
 }
 
-// 獲取所有沒有 export 的 TypeScript 文件
-const inputFiles = findTypescriptFiles('src');
+// // 獲取所有沒有 export 的 TypeScript 文件
+// const inputFiles = findTypescriptFiles('src');
 
-export default inputFiles.map(file => ({
-    input: file,
-    output: {
-        file: `dist/${replaceExtToJs(file)}`,  // 保留原始的資料夾結構
+async function buildFile(filePath) {
+    console.log(`開始建構: ${filePath}`);
+
+    const bundle = await rollup({
+        input: filePath,
+        plugins: [
+            postcss({
+                extract: false,
+                inject: true
+            }),
+            customPreservePlugin(),
+            resolve(),
+            commonjs(),
+            babel({
+                presets: ["@babel/preset-typescript"],
+                plugins: ["@vue/babel-plugin-jsx"],
+                babelHelpers: 'bundled',
+                extensions: ['.jsx', '.tsx'],
+            }),
+            typescript(),
+            replaceEnvPlugin(),
+            terser()
+        ],
+        onwarn(warning, warn) {
+            warn(warning);
+        }
+    });
+
+    console.log(`建構完成: ${filePath}`);
+
+    const outputPath = `dist/${replaceExtToJs(filePath)}`;
+    await bundle.write({
+        file: outputPath,
         format: 'iife',
         name: 'tempermonkey'
-    },
-    plugins: [
-        postcss({       // 處理 import .css 檔案, 透過 js 注入到 html 中
-            extract: false,
-            inject: true
-        }),
-        customPreservePlugin(), // 自定義插件，用於保留 UserScript 註解
-        resolve(),      // 抓入第三方套件引用 node_modules 內容
-        commonjs(),     // 處理第三方套件引用時 commonjs 導入語法問題
-        babel({         // 處理 .tsx 檔案
-            presets: ["@babel/preset-typescript"],
-            plugins: ["@vue/babel-plugin-jsx"],
-            babelHelpers: 'bundled',
-            extensions: ['.jsx', '.tsx'],
-        }),
-        typescript(),   // 處理 .ts 檔案
-        replaceEnvPlugin(),     // 替換 process.env.NODE_ENV 為 production
-        terser()            // 壓縮 js
-    ]
-}));
+    });
+
+    console.log(`寫入完成: ${outputPath}`);
+
+    await bundle.close();
+
+    console.log(`========================================`);
+}
+
+async function main() {
+    const files = findTypescriptFiles('src');
+    for (const file of files) {
+        await buildFile(file);
+    }
+}
+
+main().catch(err => {
+    console.error(`建構失敗: ${err}`);
+});
+
+// export default inputFiles.map(file => ({
+//     input: file,
+//     output: {
+//         file: `dist/${replaceExtToJs(file)}`,  // 保留原始的資料夾結構
+//         format: 'iife',
+//         name: 'tempermonkey'
+//     },
+//     plugins: [
+//         postcss({       // 處理 import .css 檔案, 透過 js 注入到 html 中
+//             extract: false,
+//             inject: true
+//         }),
+//         customPreservePlugin(), // 自定義插件，用於保留 UserScript 註解
+//         resolve(),      // 抓入第三方套件引用 node_modules 內容
+//         commonjs(),     // 處理第三方套件引用時 commonjs 導入語法問題
+//         babel({         // 處理 .tsx 檔案
+//             presets: ["@babel/preset-typescript"],
+//             plugins: ["@vue/babel-plugin-jsx"],
+//             babelHelpers: 'bundled',
+//             extensions: ['.jsx', '.tsx'],
+//         }),
+//         typescript(),   // 處理 .ts 檔案
+//         replaceEnvPlugin(),     // 替換 process.env.NODE_ENV 為 production
+//         terser()            // 壓縮 js
+//     ]
+// }));

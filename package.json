@@ -6,7 +6,6 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "convertTsx": "babel ./src/ --out-dir  ./temp/ --extensions .ts,.tsx",
     "build": "rollup -c"
   },
   "dependencies": {
