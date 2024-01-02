@@ -1,4 +1,6 @@
+import postcss from 'rollup-plugin-postcss';
 import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
@@ -39,6 +41,14 @@ function customPreservePlugin() {
         name: 'custom-preserve',
 
         transform(code, id) {
+            // 排除 nodemodules 資料夾下檔案 & 虛擬模塊 & 非字串
+            if (id.startsWith('\x00') || typeof id !== "string" || id.includes('node_modules')) {
+                return {
+                    code,
+                    map: null
+                };
+            }
+
             // 將代碼分割成單獨的行
             const lines = fs.readFileSync(id, 'utf-8').split('\n');
 
@@ -103,16 +113,21 @@ export default inputFiles.map(file => ({
         name: 'tempermonkey'
     },
     plugins: [
-        customPreservePlugin(),
-        resolve(),
-        babel({
+        postcss({       // 處理 import .css 檔案, 透過 js 注入到 html 中
+            extract: false,
+            inject: true
+        }),
+        customPreservePlugin(), // 自定義插件，用於保留 UserScript 註解
+        resolve(),      // 抓入第三方套件引用 node_modules 內容
+        commonjs(),     // 處理第三方套件引用時 commonjs 導入語法問題
+        babel({         // 處理 .tsx 檔案
             presets: ["@babel/preset-typescript"],
             plugins: ["@vue/babel-plugin-jsx"],
             babelHelpers: 'bundled',
             extensions: ['.jsx', '.tsx'],
         }),
-        typescript(),
-        replaceEnvPlugin(),
-        terser()
+        typescript(),   // 處理 .ts 檔案
+        replaceEnvPlugin(),     // 替換 process.env.NODE_ENV 為 production
+        terser()            // 壓縮 js
     ]
 }));

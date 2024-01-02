@@ -1,7 +1,7 @@
 import $ from 'jquery';
 
 declare global {
-    interface Window {
+    interface Window extends Record<string, unknown> {
         DashPlayer: DashPlayer;
         $: typeof $;
         jQuery: typeof $;
