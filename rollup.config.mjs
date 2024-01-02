@@ -90,7 +90,6 @@ export default inputFiles.map(file => ({
         name: 'tempermonkey'
     },
     plugins: [
-
         babel({
             presets: ["@babel/preset-typescript"],
             plugins: ["@vue/babel-plugin-jsx"],
