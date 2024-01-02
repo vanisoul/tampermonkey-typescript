@@ -1,3 +1,5 @@
+import resolve from '@rollup/plugin-node-resolve';
+import babel from '@rollup/plugin-babel';
 import typescript from '@rollup/plugin-typescript';
 import { terser } from 'rollup-plugin-terser';
 import fs from 'fs';
@@ -19,7 +21,7 @@ function findTypescriptFiles(dir, fileList = []) {
 
         if (fileStat.isDirectory()) {
             findTypescriptFiles(filePath, fileList);
-        } else if ((file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith(".d.ts") && !containsExport(filePath)) {
+        } else if ((file.endsWith('.js') || file.endsWith('.ts') || file.endsWith('.tsx')) && !file.endsWith(".d.ts") && !file.endsWith(".d.js") && !containsExport(filePath)) {
             fileList.push(filePath);
         }
     });
@@ -85,6 +87,7 @@ export default inputFiles.map(file => ({
     },
     plugins: [
         customPreservePlugin(),
+        resolve(),
         typescript(),
         terser()
     ]
