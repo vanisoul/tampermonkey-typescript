@@ -10,12 +10,12 @@
 // ==/UserScript==
 
 import { ref, createApp, defineComponent, onMounted, onUnmounted } from "vue";
-import { PromptComponent } from "./component/prompt";
+import { PromptComponent } from "@/component/prompt";
 
-import { mountAfter } from "./lib/vue-mount-after";
+import { mountAfter } from "@/lib/vue-mount-after";
 
-import { useGmValue } from "./composable/use-value";
-import { useGmMenu } from "./composable/use-menu";
+import { useGmValue } from "@/composable/use-value";
+import { useGmMenu } from "@/composable/use-menu";
 
 const App = defineComponent({
     setup() {

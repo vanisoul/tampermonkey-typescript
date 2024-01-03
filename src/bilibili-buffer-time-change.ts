@@ -11,7 +11,7 @@
 // @grant        GM_getValue
 // ==/UserScript==
 
-import { dashPlayerManager } from "./lib/bilibili-get-video-player.js";
+import { dashPlayerManager } from "@/lib/bilibili-get-video-player.js";
 
 const defaultKey = "v";
 let triggerKey = GM_getValue('triggerKey', defaultKey);

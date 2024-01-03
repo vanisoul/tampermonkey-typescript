@@ -11,7 +11,7 @@
 // @grant        GM_getValue
 // ==/UserScript==
 
-import { dashPlayerManager } from "./lib/bilibili-get-video-player.js";
+import { dashPlayerManager } from "@/lib/bilibili-get-video-player.js";
 
 const defaultTargetQualitys = [1080, 720, 480, 360]; // 越前面越優先
 const targetQualitys = GM_getValue("targetQualitys", defaultTargetQualitys);

@@ -2,7 +2,7 @@
 // @grant        unsafeWindow
 // ==/UserScript==
 
-import type { DashPlayer } from "../types/dash-player";
+import type { DashPlayer } from "@/types/dash-player";
 
 class DashPlayerManager {
     public dashPlayer: DashPlayer | undefined;

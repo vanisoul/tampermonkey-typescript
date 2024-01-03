@@ -12,7 +12,10 @@
       "moduleResolution": "node",
       "jsx": "preserve",
       "lib": ["ES2020", "DOM", "DOM.Iterable"],
-
+      "baseUrl": "./",
+      "paths": {
+        "@/*": ["src/*"]
+      }
     },
     "include": ["src/**/*"],
     "exclude": ["node_modules", "dist"]

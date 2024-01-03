@@ -12,12 +12,12 @@
 
 import { createApp, ref } from "vue";
 
-import { mountAfter } from "./lib/vue-mount-after";
-import { ButtonDialog } from "./component/button-dialog";
+import { mountAfter } from "@/lib/vue-mount-after";
+import { ButtonDialog } from "@/component/button-dialog";
 
-import { GamerAPI } from "./service/gamer-api";
+import { GamerAPI } from "@/service/gamer-api";
 
-import { SelectOptionComponent } from "./component/select-option-component";
+import { SelectOptionComponent } from "@/component/select-option-component";
 
 const buttonDialog = createApp({
     setup() {

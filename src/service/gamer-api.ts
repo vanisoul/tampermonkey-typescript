@@ -2,7 +2,7 @@
 // @connect      ani.gamer.com.tw
 // ==/UserScript==
 
-import { UseFetch } from "../composable/use-fetch";
+import { UseFetch } from "@/composable/use-fetch";
 
 interface GamerErrorResult {
     msg: string;
