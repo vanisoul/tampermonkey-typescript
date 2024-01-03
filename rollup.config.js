@@ -124,7 +124,13 @@ async function buildFile(filePath) {
             }),
             typescript(),
             replaceEnvPlugin(),
-            // terser() // 禁止壓縮
+            terser({
+                compress: false, // 禁用壓縮
+                mangle: false,    // 禁用變量名和函數名的修改（模糊）
+                format: {
+                    beautify: true, // 讓生成的代碼更加易於閱讀
+                },
+            })
         ],
         onwarn(warning, warn) {
             warn(warning);
@@ -148,6 +154,16 @@ async function buildFile(filePath) {
 }
 
 async function main() {
+    // 取得第一個參數 如果有檔案就只處理該檔案
+    const inputFiles = process.argv.slice(2);
+    if (inputFiles.length > 0) {
+        for (const file of inputFiles) {
+            await buildFile(file);
+        }
+        return;
+    }
+
+    // 沒有參數就處理 src 資料夾下所有檔案
     const files = findTypescriptFiles('src');
     for (const file of files) {
         await buildFile(file);
