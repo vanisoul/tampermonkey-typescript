@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name         ani-gamer-question
-// @version      1.0.0
+// @version      1.0.1
 // @description  巴哈頁面新增動畫瘋答題按鈕，點擊後會跳出動畫瘋答題視窗
 // @author       Vanisoul
 // @match        https://www.gamer.com.tw/*
 // @match        https://forum.gamer.com.tw/*
 // @license      MIT
 // @namespace    https://greasyfork.org/users/429936
+// @updateHistory    1.0.1 (2024-01-04) 封裝 API, 邏輯未改變
 // ==/UserScript==
 
 import { createApp, ref } from "vue";
@@ -28,7 +29,7 @@ const buttonDialog = createApp({
         const questionToken = ref("");
 
         async function selectOption(idx: number, _: string) {
-            const result = await gamerAPI.sendAnswerByGM(questionToken.value, idx + 1);
+            const result = await gamerAPI.sendAnswer(questionToken.value, idx + 1);
             if ('error' in result) {
                 // GamerErrorResult
                 questionTitle.value = "";
@@ -53,7 +54,7 @@ const buttonDialog = createApp({
         const buttonLabel = "動畫瘋答題";
 
         async function updateQuestion() {
-            const result = await gamerAPI.getQuestionByGM();
+            const result = await gamerAPI.getQuestion();
             if ('error' in result) {
                 // GamerErrorResult
                 questionTitle.value = "";
