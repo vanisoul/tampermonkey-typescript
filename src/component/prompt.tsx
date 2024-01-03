@@ -2,6 +2,8 @@ import { defineComponent, ref, PropType, onMounted, onUnmounted } from 'vue';
 import { ElDialog, ElInput, ElButton } from 'element-plus';
 import 'element-plus/dist/index.css';
 
+import '../css/output.css';
+
 export type PromptEvent = {
     confirm: (input: string) => void;
     close: () => void;
@@ -65,10 +67,10 @@ export const PromptComponent = defineComponent({
         });
 
         return () => (
-            <ElDialog modelValue={props.showDialog} onClose={handleClose} title={props.title}>
+            <ElDialog class={"tailwind"} modelValue={props.showDialog} onClose={handleClose} title={props.title}>
                 <ElInput v-model={props.inputValue} />
                 <p style={{ color: 'red' }}>{errorMessage.value}</p>
-                <div style={{ "margin-top": "0.5rem" }}>
+                <div class="my-2">
                     <ElButton onClick={handleClose}>取消</ElButton>
                     <ElButton type="primary" onClick={handleConfirm}>確認</ElButton>
                 </div>

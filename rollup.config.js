@@ -2,6 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import { rollup } from "rollup";
 import postcss from 'rollup-plugin-postcss';
+import prefixSelector from 'postcss-prefix-selector';
+import tailwindcss from 'tailwindcss';
 import commonjs from '@rollup/plugin-commonjs';
 import resolve from '@rollup/plugin-node-resolve';
 import babel from '@rollup/plugin-babel';
@@ -103,6 +105,22 @@ function replaceExtToJs(filePath) {
     return path.join(parsedPath.dir, parsedPath.name + '.js');
 }
 
+function createPostCssPrefixSelectorPlugin(prefixValue) {
+    return prefixSelector({
+        prefix: prefixValue,
+        transform(prefix, selector, prefixedSelector, filePath) {
+            // 匹配 node_modules 下的檔案
+            const nodeModulesRegex = /node_modules\/[^\/]+\//;
+            // 檢查是否為 * 或 :: 開頭的選擇器
+            const isSpecialSelector = selector.startsWith('*') || selector.startsWith('::');
+
+            // 如果是 node_modules 下的檔案或是 * 或 :: 開頭的選擇器，就不要加前綴
+            return nodeModulesRegex.test(filePath) || isSpecialSelector ? selector : prefixedSelector;
+        },
+    });
+}
+
+
 async function buildFile(filePath) {
     console.log(`開始建構: ${filePath}`);
 
@@ -110,6 +128,9 @@ async function buildFile(filePath) {
         input: filePath,
         plugins: [
             postcss({
+                plugins: [
+                    createPostCssPrefixSelectorPlugin(".tailwind"),
+                ],
                 extract: false,
                 inject: true
             }),
