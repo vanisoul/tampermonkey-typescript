@@ -114,11 +114,27 @@ function createPostCssPrefixSelectorPlugin(prefixValue) {
             // 檢查是否為 * 或 :: 開頭的選擇器
             const isSpecialSelector = selector.startsWith('*') || selector.startsWith('::');
 
-            // 如果是 node_modules 下的檔案或是 * 或 :: 開頭的選擇器，就不要加前綴
+            // 如果是 node_modules 下的檔案或是 * 或 :: 開頭的選擇器，就不要加前綴, 避免影響第三方套件
             return nodeModulesRegex.test(filePath) || isSpecialSelector ? selector : prefixedSelector;
         },
     });
 }
+
+const addImportantToNodeModulesPlugin = (opts = {}) => {
+    return {
+        postcssPlugin: 'add-important-to-node-modules',
+        Once(root, { result }) {
+            // 檢查當前處理的 CSS 文件是否來自 node_modules
+            if (result.opts.from && result.opts.from.includes('node_modules')) {
+                root.walkDecls(decl => {
+                    // 給每個聲明添加 !important
+                    decl.important = true;
+                });
+            }
+        }
+    }
+}
+addImportantToNodeModulesPlugin.postcss = true;
 
 
 async function buildFile(filePath) {

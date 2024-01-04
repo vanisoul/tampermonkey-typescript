@@ -1,8 +1,8 @@
 import { defineComponent, ref, PropType, onMounted, onUnmounted } from 'vue';
 import { ElDialog, ElInput, ElButton } from 'element-plus';
-import 'element-plus/dist/index.css';
 
-import '../css/output.css';
+import '../css/tailwind.css';
+import 'element-plus/dist/index.css';
 
 export type PromptEvent = {
     confirm: (input: string) => void;
@@ -66,15 +66,19 @@ export const PromptComponent = defineComponent({
             document.removeEventListener('keydown', handleEnter);
         });
 
+        const dialogClass = "!rounded-md";
+
         return () => (
-            <ElDialog class={"tailwind"} modelValue={props.showDialog} onClose={handleClose} title={props.title}>
-                <ElInput v-model={props.inputValue} />
-                <p style={{ color: 'red' }}>{errorMessage.value}</p>
-                <div class="my-2">
-                    <ElButton onClick={handleClose}>取消</ElButton>
-                    <ElButton type="primary" onClick={handleConfirm}>確認</ElButton>
-                </div>
-            </ElDialog>
+            <div class={"tailwind"}>
+                <ElDialog class={dialogClass} modelValue={props.showDialog} onClose={handleClose} title={props.title}>
+                    <ElInput v-model={props.inputValue} />
+                    <p class="text-red-600 h-2">{errorMessage.value}</p>
+                    <div>
+                        <ElButton onClick={handleClose}>取消</ElButton>
+                        <ElButton type="primary" onClick={handleConfirm}>確認</ElButton>
+                    </div>
+                </ElDialog>
+            </div>
         );
     }
 });

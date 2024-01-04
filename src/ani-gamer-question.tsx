@@ -77,7 +77,7 @@ const buttonDialog = createApp({
             questionToken.value = "";
         }
 
-        return () => <li><ButtonDialog class="flex space-x-1 min-h-screen justify-center items-center" onCloseDialog={cleanQuestion} onOpenDialog={updateQuestion} renderDialog={renderDialog} buttonLabel={buttonLabel}></ButtonDialog></li>
+        return () => <li><ButtonDialog onCloseDialog={cleanQuestion} onOpenDialog={updateQuestion} renderDialog={renderDialog} buttonLabel={buttonLabel}></ButtonDialog></li>
     },
 });
 

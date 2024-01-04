@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name             iqiyi video tools
-// @version          1.0.0
+// @version          1.0.1
 // @description      iqiyi 快轉
 // @author           Vanisoul
 // @match            https://www.iq.com/*
 // @license          MIT
 // @namespace        https://greasyfork.org/users/429936
 // @updateHistory    1.0.0 (2024-01-03) 增加快捷鍵功能 & 新增時間設定選項
+// @updateHistory    1.0.1 (2024-01-04) 太閒, 使用 vue 元件製作設定視窗, 引用 tailwind css
 // ==/UserScript==
 
 import { ref, createApp, defineComponent, onMounted, onUnmounted } from "vue";

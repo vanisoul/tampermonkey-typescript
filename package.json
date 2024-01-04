@@ -6,7 +6,7 @@
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "tailwind": "npx tailwindcss -i ./src/css/tailwind.css -o ./src/css/output.css",
+    "tailwind": "npx tailwindcss -i ./src/css/tailwind.config.css -o ./src/css/tailwind.css",
     "build": "yarn tailwind && node ./rollup.config.js"
   },
   "dependencies": {
