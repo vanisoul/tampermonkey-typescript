@@ -79,7 +79,9 @@ function customPreservePlugin() {
                         return `// @${key}${value}`
                     });
 
-                    const preservedLinesString = `// ==UserScript==\n${preservedLinesFormat.join('\n')}\n// ==/UserScript==`;
+                    const uniquePreservedLinesFormat = [...new Set(preservedLinesFormat)];
+
+                    const preservedLinesString = `// ==UserScript==\n${uniquePreservedLinesFormat.join('\n')}\n// ==/UserScript==`;
                     bundle[fileName].code = `${preservedLinesString}\n\n${bundle[fileName].code}`
                 }
             }
