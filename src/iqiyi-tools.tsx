@@ -27,15 +27,15 @@ const App = defineComponent({
         const { data: iqiyiOPTime, updateData: updateTime } = useGmValue("iqiyiOPTime", 90);
 
         const keyTitle = "設定快轉鍵";
-        const { setEvent: setKeyEvent } = useGmMenu(keyTitle);
+        const { onTriggerMenu: onSetKeyTriggerMenu } = useGmMenu(keyTitle);
         const timeTitle = "設定快轉時間";
-        const { setEvent: setTimeEvent } = useGmMenu(timeTitle);
+        const { onTriggerMenu: onSetTimeTriggerMenu } = useGmMenu(timeTitle);
 
         const keyPrompt = ref(false);
         const timePrompt = ref(false);
 
-        setKeyEvent(() => { keyPrompt.value = true; });
-        setTimeEvent(() => { timePrompt.value = true; });
+        onSetKeyTriggerMenu(() => { keyPrompt.value = true; });
+        onSetTimeTriggerMenu(() => { timePrompt.value = true; });
 
         function onKeyClose() {
             keyPrompt.value = false;
