@@ -558,6 +558,11 @@
   dependencies:
     undici-types "~5.26.4"
 
+"@types/requirejs@^2.1.37":
+  version "2.1.37"
+  resolved "https://registry.yarnpkg.com/@types/requirejs/-/requirejs-2.1.37.tgz#7f17dce01afdc7b3a8b542b32661b0faecf1e1f9"
+  integrity sha512-jmFgr3mwN2NSmtRP6IpZ2nfRS7ufSXuDYQ6YyPFArN8x5dARQcD/DXzT0J6NYbvquVT4pg9K9HWdi6e6DZR9iQ==
+
 "@types/resolve@1.20.2":
   version "1.20.2"
   resolved "https://registry.yarnpkg.com/@types/resolve/-/resolve-1.20.2.tgz#97d26e00cd4a0423b4af620abecf3e6f442b7975"
@@ -572,6 +577,11 @@
   version "5.0.2"
   resolved "https://registry.yarnpkg.com/@types/tampermonkey/-/tampermonkey-5.0.2.tgz#667c94cf58bfed3e2471aeb887fb2f8da08dee79"
   integrity sha512-keKnYemqWts68wO2+TBdEg84iQd5vymK5SEQGxitI9uOfOnjm/ZskBoK9ZH3mnSYp79HidZMA/Y7ODQtiA/VIg==
+
+"@types/video.js@^7.3.56":
+  version "7.3.56"
+  resolved "https://registry.yarnpkg.com/@types/video.js/-/video.js-7.3.56.tgz#b66001b64055d58fd49ad69543b0e92b9b850adf"
+  integrity sha512-T3cp/kDuNj8scIzK87u0uomUDKnYQE1uHAA0zFPNGc0qCF3aLxZmMtpWvGxofEPNOpUfvtbsQMvwbjU42q8omw==
 
 "@types/web-bluetooth@^0.0.16":
   version "0.0.16"

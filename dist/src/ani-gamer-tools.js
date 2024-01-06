@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name           ani gamer video
-// @version        1.0.1
-// @description    動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度
+// @version        1.0.2
+// @description    動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author         Vanisoul
 // @match          https://ani.gamer.com.tw/*
 // @license        MIT
 // @namespace      https://greasyfork.org/users/429936
 // @grant          unsafeWindow
 // @updateHistory  1.0.1 (2024-01-04) 增加各種快捷鍵功能 & 新增時間設定選項 & 自動撥放啟用提示
+// @updateHistory  1.0.2 (2024-01-06) 增加隱藏歷史觀看紀錄功能, 但是畫面會先出現在隱藏, 只是方便隱藏試看影片
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
@@ -915,6 +916,26 @@
         updateAutoNext(isAutoNext);
         alert(`已設定自動切換下一集功能 ${isAutoNext}`);
     }));
+    const defaultHideHistoryIds = [];
+    const {data: hideHistoryIds, updateData: updateHideHistoryIds} = useGmValue("hideHistoryIds", defaultHideHistoryIds);
+    const {onTriggerMenu: onHideHistoryIdsTriggerMenu} = useGmMenu("設定隱藏觀看紀錄");
+    onHideHistoryIdsTriggerMenu((() => {
+        var _a;
+        const ids = prompt("請輸入要隱藏的觀看紀錄 影片 Sn , 分隔, EX : 12345, 54321", (_a = hideHistoryIds.value) === null || _a === void 0 ? void 0 : _a.join(","));
+        if (ids === null) {
+            return;
+        }
+        if (ids) {
+            const idsArray = ids.split(",").map((id => parseInt(id.trim(), 10)));
+            updateHideHistoryIds(idsArray);
+            triggerHideHistoryIds();
+            alert(`已設定隱藏觀看紀錄 ${idsArray.toString()}`);
+        } else {
+            updateHideHistoryIds([]);
+            triggerHideHistoryIds();
+            alert(`已取消隱藏觀看紀錄`);
+        }
+    }));
     const defaultAutoPlay = false;
     const {data: autoPlay, updateData: updateAutoPlay} = useGmValue("autoPlay", defaultAutoPlay);
     const {onTriggerMenu: onAutoPlayTriggerMenu} = useGmMenu("設定自動同意撥放");
@@ -968,6 +989,35 @@
             }
         }));
     }
+    function triggerHideHistoryIds() {
+        const historyList = unsafeWindow.$(".user-watch-list .click-area");
+        if (historyList.length === 0) {
+            return false;
+        }
+        if (hideHistoryIds.value.length === 0) {
+            historyList.each((function() {
+                unsafeWindow.$(this).closest(".user-watch-list").show();
+            }));
+            return false;
+        }
+        historyList.each((function() {
+            var _a;
+            const href = unsafeWindow.$(this).attr("href");
+            const sn = parseInt((_a = href === null || href === void 0 ? void 0 : href.split("=")[1].trim()) !== null && _a !== void 0 ? _a : "", 10);
+            if (sn && hideHistoryIds.value.includes(sn)) {
+                unsafeWindow.$(this).closest(".user-watch-list").hide();
+            }
+        }));
+        return true;
+    }
+    document.addEventListener("keydown", (function(event) {
+        if (event.key.toLocaleLowerCase() === gamerSkipKey.value && gamerVideo.value && gamerOPTime.value) {
+            gamerVideo.value.currentTime += gamerOPTime.value;
+        }
+        if (event.key.toLocaleLowerCase() === fullScanKey.value) {
+            unsafeWindow.$(".vjs-fullscreen-control").trigger("click");
+        }
+    }));
     const gamerInterval = setInterval((() => __awaiter(void 0, void 0, void 0, (function*() {
         gamerVideo.value = document.getElementById("ani_video_html5_api");
         if (!unsafeWindow.$ || !gamerVideo.value) {
@@ -986,12 +1036,10 @@
             }
         }));
     }))), 2e3);
-    document.addEventListener("keydown", (function(event) {
-        if (event.key.toLocaleLowerCase() === gamerSkipKey.value && gamerVideo.value && gamerOPTime.value) {
-            gamerVideo.value.currentTime += gamerOPTime.value;
-        }
-        if (event.key.toLocaleLowerCase() === fullScanKey.value) {
-            unsafeWindow.$(".vjs-fullscreen-control").trigger("click");
-        }
-    }));
+    const hideHistoryIdsInterval = setInterval((() => {
+        triggerHideHistoryIds();
+    }), 10);
+    setTimeout((() => {
+        clearInterval(hideHistoryIdsInterval);
+    }), 3e3);
 })();
