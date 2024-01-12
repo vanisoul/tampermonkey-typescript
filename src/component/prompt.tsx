@@ -1,84 +1,81 @@
-import { defineComponent, ref, PropType, onMounted, onUnmounted } from 'vue';
-import { ElDialog, ElInput, ElButton } from 'element-plus';
+import React, { useState, useEffect } from 'react';
+
+import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import Button from '@mui/material/Button';
+import Input from '@mui/material/Input';
 
 import '../css/tailwind.css';
-import 'element-plus/dist/index.css';
 
-export type PromptEvent = {
-    confirm: (input: string) => void;
-    close: () => void;
-};
+interface PromptProps {
+    title: string;
+    showDialog: boolean;
+    inputValue: string;
+    validate: (input: string) => boolean | string;
+    onConfirm: (input: string) => void;
+    onClose: () => void;
+}
 
-export const PromptComponent = defineComponent({
-    name: 'PromptComponent',
-    props: {
-        title: {
-            type: String,
-            required: true
-        },
-        showDialog: {
-            type: Boolean,
-            required: true
-        },
-        inputValue: {
-            type: String,
-            required: true
-        },
-        validate: {
-            type: Function as PropType<(input: string) => boolean | string>,
-            required: true
+
+export const PromptComponent = ({ title, showDialog, inputValue: initialInputValue, validate, onClose, onConfirm }: PromptProps) => {
+    const [inputValue, setInputValue] = useState(initialInputValue);
+    const [errorMessage, setErrorMessage] = useState('');
+
+    const handleClose = () => {
+        setErrorMessage('');
+        onClose();
+    };
+
+    const handleConfirm = () => {
+        const validationResult = validate(inputValue);
+        if (validationResult === true) {
+            onConfirm(inputValue);
+            handleClose();
+        } else {
+            setErrorMessage(typeof validationResult === 'string' ? validationResult : 'Invalid input');
         }
-    },
-    emits: {
-        confirm: null as any as PromptEvent["confirm"],
-        close: null as any as PromptEvent["close"],
-    },
-    setup(props, { emit }) {
-        const errorMessage = ref('');
-
-        const handleClose = () => {
-            errorMessage.value = '';
-            emit("close");
-        };
-
-        const handleConfirm = () => {
-            const validationResult = props.validate(props.inputValue);
-            if (validationResult === true) {
-                emit('confirm', props.inputValue);
-                handleClose();
-            } else {
-                errorMessage.value = typeof validationResult === 'string' ? validationResult : 'Invalid input';
-            }
-        };
-
-        // onMounted, onUnmounted 綁定 Enter 事件 觸發 handleConfirm
-        function handleEnter(event: KeyboardEvent) {
-            if (event.key === 'Enter') {
-                handleConfirm();
-            }
+    };
+    // 處理 Enter 鍵事件
+    const handleEnter = (event: KeyboardEvent) => {
+        if (event.key === 'Enter') {
+            handleConfirm();
         }
+    };
 
-        onMounted(() => {
-            document.addEventListener('keydown', handleEnter);
-        });
-
-        onUnmounted(() => {
+    // 使用 useEffect 來添加和移除事件監聽器
+    useEffect(() => {
+        document.addEventListener('keydown', handleEnter);
+        return () => {
             document.removeEventListener('keydown', handleEnter);
-        });
+        };
+    }, [inputValue]); // 依賴 inputValue 確保最新的值被使用
 
-        const dialogClass = "!rounded-md";
-
-        return () => (
-            <div class={"tailwind"}>
-                <ElDialog class={dialogClass} modelValue={props.showDialog} onClose={handleClose} title={props.title}>
-                    <ElInput v-model={props.inputValue} />
-                    <p class="text-red-600 h-2">{errorMessage.value}</p>
-                    <div>
-                        <ElButton onClick={handleClose}>取消</ElButton>
-                        <ElButton type="primary" onClick={handleConfirm}>確認</ElButton>
-                    </div>
-                </ElDialog>
-            </div>
-        );
-    }
-});
+    return (
+        <div>
+            <Dialog
+                className={"tailwind"}
+                PaperProps={{
+                    className: "p-4"
+                }}
+                open={showDialog}
+                onClose={handleClose}
+                title={title}
+            >
+                <ScopedCssBaseline>
+                    <DialogTitle className='text-xs'>{title}</DialogTitle>
+                    <DialogContent>
+                        <Input value={inputValue} className='text-xs' onChange={(e) => setInputValue(e.target.value)} />
+                        <p className="text-red-600 h-2 text-xs">{errorMessage}</p>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type='reset' className='text-xs' onClick={handleClose}>取消</Button>
+                        <Button type="submit" className='text-xs' onClick={handleConfirm}>確認</Button>
+                    </DialogActions>
+                </ScopedCssBaseline>
+            </Dialog>
+        </div>
+    );
+};

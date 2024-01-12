@@ -1,19 +1,15 @@
 // ==UserScript==
 // @grant        GM_registerMenuCommand
+// @grant        GM_unregisterMenuCommand
 // ==/UserScript==
 
-import { ref } from "vue";
+import { useEffect } from 'react';
 
-export function useGmMenu(menuText: string) {
-    const event = ref<() => void>(() => { });
-
-    const onTriggerMenu = (fn: () => void) => {
-        event.value = fn;
-    }
-
-    GM_registerMenuCommand(menuText, () => { event.value() });
-
-    return {
-        onTriggerMenu
-    };
-}
+export const useGmMenu = (menuText: string, onTriggerMenu: () => void) => {
+    useEffect(() => {
+        const id = GM_registerMenuCommand(menuText, onTriggerMenu);
+        return () => {
+            GM_unregisterMenuCommand(id);
+        };
+    }, [menuText, onTriggerMenu]);
+};

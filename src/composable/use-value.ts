@@ -3,24 +3,14 @@
 // @grant        GM_getValue
 // ==/UserScript==
 
-import { computed, ref } from "vue";
+import { useState } from 'react';
 
 export function useGmValue<T>(key: string, defaultValue: T) {
-    const refValue = ref<T>();
-    refValue.value = GM_getValue<T>(key, defaultValue);
-
-    const data = computed({
-        get() {
-            return refValue.value
-        },
-        set(val) {
-            GM_setValue(key, val);
-            refValue.value = val;
-        }
-    })
+    const [data, setValue] = useState<T>(GM_getValue<T>(key, defaultValue));
 
     function updateData(input: T) {
-        data.value = input;
+        GM_setValue(key, input);
+        setValue(input);
     }
 
     return { data, updateData };
