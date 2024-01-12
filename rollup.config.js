@@ -1,14 +1,13 @@
-import fs from 'fs';
-import path from 'path';
+import fs from "fs";
+import path from "path";
 import { rollup } from "rollup";
-import postcss from 'rollup-plugin-postcss';
-import prefixSelector from 'postcss-prefix-selector';
-import tailwindcss from 'tailwindcss';
-import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import babel from '@rollup/plugin-babel';
-import typescript from '@rollup/plugin-typescript';
-import { terser } from 'rollup-plugin-terser';
+import postcss from "rollup-plugin-postcss";
+import prefixSelector from "postcss-prefix-selector";
+import commonjs from "@rollup/plugin-commonjs";
+import resolve from "@rollup/plugin-node-resolve";
+import babel from "@rollup/plugin-babel";
+import typescript from "@rollup/plugin-typescript";
+import { terser } from "rollup-plugin-terser";
 
 // 檢查文件是否包含 export 語句
 function containsExport(filePath) {
@@ -156,8 +155,7 @@ async function buildFile(filePath) {
             resolve(),
             commonjs(),
             babel({
-                presets: ["@babel/preset-typescript"],
-                plugins: ["@vue/babel-plugin-jsx"],
+                presets: ["@babel/preset-typescript", "@babel/env", "@babel/preset-react"],
                 babelHelpers: 'bundled',
                 extensions: ['.jsx', '.tsx'],
             }),
@@ -172,6 +170,16 @@ async function buildFile(filePath) {
             })
         ],
         onwarn(warning, warn) {
+            // 忽略 use client was ignored 警告
+            if (warning.message.includes("use client") && warning.message.includes("was ignored")) {
+                // 不调用 warn 函数，从而忽略这个警告
+                return;
+            }
+            // 忽略 /*#__PURE__*/ 警告, 註解無法解析警告
+            if (warning.message.includes("/*#__PURE__*/")) {
+                return;
+            }
+
             warn(warning);
         }
     });

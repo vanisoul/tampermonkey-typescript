@@ -1,40 +1,37 @@
-import { defineComponent, PropType } from 'vue';
-import { ElButton, ElRow, ElCol } from 'element-plus';
+import React from 'react';
 
-export type SelectOptionComponentEvent = {
-    selectOption: (idx: number, option: string) => void;
-};
+import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
+import Button from '@mui/material/Button';
+import Grid from '@mui/material/Grid';
 
-export const SelectOptionComponent = defineComponent({
-    name: 'SelectOptionComponent',
-    props: {
-        renderTitle: {
-            type: Function,
-            required: true
-        },
-        options: Array as PropType<string[]>,
-    },
-    emits: {
-        selectOption: null as any as SelectOptionComponentEvent["selectOption"],
-    },
-    setup(props, { emit }) {
-        const handleSelectOption = (idx: number, option: string) => {
-            emit('selectOption', idx, option);
-        };
+interface SelectOptionComponentProps {
+    renderTitle: () => JSX.Element;
+    options: string[];
+    onSelectOption: (idx: number, option: string) => void;
+}
 
-        return () => (
-            <div>
-                <ElRow>
-                    <ElCol>{props.renderTitle()}</ElCol>
-                </ElRow>
-                <ElRow>
-                    {props.options?.map((option, idx) => (
-                        <ElCol key={option}>
-                            <ElButton onClick={() => handleSelectOption(idx, option)}>{option}</ElButton>
-                        </ElCol>
+export function SelectOptionComponent({ renderTitle, options, onSelectOption }: SelectOptionComponentProps) {
+
+    function handleSelectOption(idx: number, option: string): void {
+        onSelectOption(idx, option);
+    }
+
+    return (
+        <div>
+            <ScopedCssBaseline>
+                <Grid container spacing={2}>
+                    <Grid item xs={12}>
+                        {renderTitle()}
+                    </Grid>
+                    {options.map((option, idx) => (
+                        <Grid item key={option}>
+                            <Button variant="contained" onClick={() => handleSelectOption(idx, option)}>
+                                {option}
+                            </Button>
+                        </Grid>
                     ))}
-                </ElRow>
-            </div>
-        );
-    },
-});
+                </Grid>
+            </ScopedCssBaseline>
+        </div>
+    );
+}

@@ -1,57 +1,55 @@
-import { defineComponent, ref } from "vue";
+import React, { useState } from 'react';
 
-import { ElDialog, ElButton } from 'element-plus'
-import 'element-plus/dist/index.css'
+import ScopedCssBaseline from '@mui/material/ScopedCssBaseline';
+import Dialog from '@mui/material/Dialog';
+import Button from '@mui/material/Button';
 
-export type ButtonDialogEvent = {
-  openDialog: () => void;
-  closeDialog: () => void;
-};
+import '../css/tailwind.css';
 
+interface ButtonDialogInput {
+  buttonLabel: string;
+  renderDialog: () => React.ReactNode;
+  onOpenDialog?: () => void;
+  onCloseDialog?: () => void;
+}
 
-export const ButtonDialog = defineComponent({
-  name: 'ModernButtonDialog',
-  props: {
-    buttonLabel: {
-      type: String,
-      required: true
-    },
-    renderDialog: {
-      type: Function,
-      required: true
+export function ButtonDialog({ buttonLabel, renderDialog, onOpenDialog, onCloseDialog }: ButtonDialogInput) {
+  const [showDialog, setShowDialog] = useState(false);
+
+  const handleOpenDialog = () => {
+    setShowDialog(true);
+    if (onOpenDialog) {
+      onOpenDialog(); // 觸發外部傳入的打開對話框行為
     }
-  },
-  emits: {
-    closeDialog: null as any as ButtonDialogEvent["closeDialog"],
-    openDialog: null as any as ButtonDialogEvent["openDialog"],
-  },
-  setup(props, { emit }) {
-    const showDialog = ref(false);
+  };
 
-    function openDialog() {
-      showDialog.value = true
-      emit('openDialog')
+  const handleCloseDialog = () => {
+    setShowDialog(false);
+    if (onCloseDialog) {
+      onCloseDialog(); // 觸發外部傳入的關閉對話框行為
     }
+  };
 
-    function closeDialog() {
-      showDialog.value = false
-      emit('closeDialog')
-    }
+  return (
+    <div>
+      <ScopedCssBaseline>
+        <Button onClick={handleOpenDialog}>
+          {buttonLabel}
+        </Button>
+      </ScopedCssBaseline>
 
-    return () => (
-      <div>
-        <ElButton
-          onClick={openDialog}
+      {showDialog && (
+        <Dialog
+          className='tailwind'
+          PaperProps={{
+            className: "p-4",
+          }}
+          open={showDialog}
+          onClose={handleCloseDialog}
         >
-          {props.buttonLabel}
-        </ElButton>
-
-        {showDialog.value && (
-          <ElDialog v-model={showDialog.value} onClosed={closeDialog}>
-            {props.renderDialog()}
-          </ElDialog>
-        )}
-      </div>
-    );
-  }
-});
+          {renderDialog()}
+        </Dialog>
+      )}
+    </div>
+  );
+}
