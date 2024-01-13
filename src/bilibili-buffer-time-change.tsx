@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili BufferTime Change
-// @version      1.1.0
+// @version      1.1.1
 // @description  BufferTime Set 250s
 // @author       Vanisoul
 // @match        https://www.bilibili.com/*
@@ -8,6 +8,7 @@
 // @namespace    https://greasyfork.org/users/429936
 // @updateHistory    1.0.1 (2024-01-04) 改變設定觸發鍵 & 可以改變Buffer時間
 // @updateHistory    1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
+// @updateHistory    1.1.1 (2024-01-13) dashPlayer 改為狀態
 // ==/UserScript==
 
 import React, { useEffect } from "react";
@@ -15,7 +16,7 @@ import { appendComponentToElement } from "@/lib/react-mount-after";
 
 import { useGmValue } from "@/composable/use-value";
 import { useGmMenu } from "@/composable/use-menu";
-import { dashPlayerManager } from "@/lib/bilibili-get-video-player.js";
+import { useBilibiliGetVideoPlayer } from "@/composable/use-bilibili-get-video-player";
 
 const App = () => {
     const defaultKey = "v";
@@ -49,11 +50,12 @@ const App = () => {
         }
     });
 
+    const { dashPlayer } = useBilibiliGetVideoPlayer();
+
     // 改變其 Buffer 值
     useEffect(() => {
         function changeBuffer(bufferTime: number) {
             const setBufferInterval = setInterval(() => {
-                const dashPlayer = dashPlayerManager.dashPlayer;
                 if (dashPlayer) {
                     dashPlayer.player.setBufferPruningInterval(3);
                     dashPlayer.player.setStableBufferTime(bufferTime);
@@ -68,13 +70,12 @@ const App = () => {
             }, 1000);
         }
         changeBuffer(bufferTime);
-    }, [bufferTime]);
+    }, [bufferTime, dashPlayer]);
 
     // 改變 查看 buffer 觸發鍵
     useEffect(() => {
         function triggerKeyFunc(event: KeyboardEvent) {
             if (event.key.toLocaleLowerCase() === triggerKey.toLocaleLowerCase()) {
-                const dashPlayer = dashPlayerManager.dashPlayer;
                 alert(`Now BufferLength : ${dashPlayer?.getBufferLength("video")}`);
             }
         }
@@ -82,7 +83,7 @@ const App = () => {
         return () => {
             document.removeEventListener('keydown', triggerKeyFunc);
         }
-    }, [triggerKey])
+    }, [triggerKey, dashPlayer])
 
     return <div />;
 };

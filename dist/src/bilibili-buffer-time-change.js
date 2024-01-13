@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           bilibili BufferTime Change
-// @version        1.1.0
+// @version        1.1.1
 // @description    BufferTime Set 250s
 // @author         Vanisoul
 // @match          https://www.bilibili.com/*
@@ -8,6 +8,7 @@
 // @namespace      https://greasyfork.org/users/429936
 // @updateHistory  1.0.1 (2024-01-04) 改變設定觸發鍵 & 可以改變Buffer時間
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
+// @updateHistory  1.1.1 (2024-01-13) dashPlayer 改為狀態
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
@@ -7921,27 +7922,33 @@
             };
         }), [ menuText, onTriggerMenu ]);
     };
-    class DashPlayerManager {}
-    const dashPlayerManager = new DashPlayerManager;
-    function stealPlayerByFire(DashPlayer) {
-        const origFire = DashPlayer.prototype.fire;
-        if (origFire) {
-            DashPlayer.prototype.fire = function(...args) {
-                dashPlayerManager.dashPlayer = this;
-                DashPlayer.prototype.fire = origFire;
-                origFire.apply(this, args);
-            };
+    function useBilibiliGetVideoPlayer() {
+        const [dashPlayer, setDashPlayer] = reactExports.useState(undefined);
+        function stealPlayerByFire(DashPlayer) {
+            const origFire = DashPlayer.prototype.fire;
+            if (origFire) {
+                DashPlayer.prototype.fire = function(...args) {
+                    setDashPlayer(this);
+                    DashPlayer.prototype.fire = origFire;
+                    origFire.apply(this, args);
+                };
+            }
         }
+        reactExports.useEffect((() => {
+            const hackInterval = setInterval((() => {
+                if (dashPlayer) {
+                    clearInterval(hackInterval);
+                }
+                const DashPlayer = unsafeWindow.DashPlayer;
+                if (DashPlayer) {
+                    stealPlayerByFire(DashPlayer);
+                }
+            }), 1e3);
+        }), []);
+        return {
+            dashPlayer: dashPlayer
+        };
     }
-    const hackInterval = setInterval((() => {
-        const DashPlayer = unsafeWindow.DashPlayer;
-        if (DashPlayer) {
-            stealPlayerByFire(DashPlayer);
-        }
-        if (dashPlayerManager.dashPlayer) {
-            clearInterval(hackInterval);
-        }
-    }), 1e3);
     var App = function App() {
         var defaultKey = "v";
         var _useGmValue = useGmValue("key", defaultKey), triggerKey = _useGmValue.data, updateKey = _useGmValue.updateData;
@@ -7970,10 +7977,10 @@
                 alert("已設定Buffer時間為 ".concat(_bufferTime));
             }
         }));
+        var _useBilibiliGetVideoP = useBilibiliGetVideoPlayer(), dashPlayer = _useBilibiliGetVideoP.dashPlayer;
         reactExports.useEffect((function() {
             function changeBuffer(bufferTime) {
                 var setBufferInterval = setInterval((function() {
-                    var dashPlayer = dashPlayerManager.dashPlayer;
                     if (dashPlayer) {
                         dashPlayer.player.setBufferPruningInterval(3);
                         dashPlayer.player.setStableBufferTime(bufferTime);
@@ -7987,11 +7994,10 @@
                 }), 1e3);
             }
             changeBuffer(bufferTime);
-        }), [ bufferTime ]);
+        }), [ bufferTime, dashPlayer ]);
         reactExports.useEffect((function() {
             function triggerKeyFunc(event) {
                 if (event.key.toLocaleLowerCase() === triggerKey.toLocaleLowerCase()) {
-                    var dashPlayer = dashPlayerManager.dashPlayer;
                     alert("Now BufferLength : ".concat(dashPlayer === null || dashPlayer === void 0 ? void 0 : dashPlayer.getBufferLength("video")));
                 }
             }
@@ -7999,7 +8005,7 @@
             return function() {
                 document.removeEventListener("keydown", triggerKeyFunc);
             };
-        }), [ triggerKey ]);
+        }), [ triggerKey, dashPlayer ]);
         return React.createElement("div", null);
     };
     var mountInterval = setInterval((function() {
