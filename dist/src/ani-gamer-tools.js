@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           ani gamer video
-// @version        1.0.2
+// @version        1.1.0
 // @description    動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author         Vanisoul
 // @match          https://ani.gamer.com.tw/*
