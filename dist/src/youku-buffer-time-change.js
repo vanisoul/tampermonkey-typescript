@@ -7983,7 +7983,7 @@
         }));
     }
     var App = function App() {
-        var _useState = reactExports.useState(false), _useState2 = _slicedToArray(_useState, 2), isVideoInit = _useState2[0], setIsVideoInit = _useState2[1];
+        var _useState = reactExports.useState(1), _useState2 = _slicedToArray(_useState, 2), statusChange = _useState2[0], triggerStatusChange = _useState2[1];
         reactExports.useEffect((function() {
             var checkAndSetOnPlaying = function checkAndSetOnPlaying() {
                 var videoPlayer = unsafeWindow.videoPlayer;
@@ -7993,17 +7993,16 @@
                         if (typeof originalOnPlaying === "function") {
                             originalOnPlaying();
                         }
-                        if (!isVideoInit) {
-                            setIsVideoInit(true);
-                        }
+                        triggerStatusChange(statusChange + 1);
                     };
                     videoPlayer._player.onPlaying = enhancedOnPlaying;
                     clearInterval(checkInterval);
                 }
             };
             var triggerPlaying = function triggerPlaying() {
+                var _a, _b;
                 var videoPlayer = unsafeWindow.videoPlayer;
-                if (!isVideoInit && videoPlayer && videoPlayer._player && typeof videoPlayer._player.onPlaying === "function") {
+                if (videoPlayer && videoPlayer._player && typeof videoPlayer._player.onPlaying === "function" && ((_b = (_a = videoPlayer.context) === null || _a === void 0 ? void 0 : _a.core) === null || _b === void 0 ? void 0 : _b.state) === "playing") {
                     videoPlayer._player.onPlaying();
                 }
             };
@@ -8013,7 +8012,7 @@
                 clearInterval(checkInterval);
                 clearInterval(triggerInterval);
             };
-        }), [ isVideoInit ]);
+        }), [ statusChange ]);
         var defaultKey = "v";
         var _useGmValue = useGmValue("key", defaultKey), triggerKey = _useGmValue.data, updateKey = _useGmValue.updateData;
         useGmMenu("設定查看目前 video buffer 按鈕", (function() {
@@ -8043,7 +8042,7 @@
         }));
         reactExports.useEffect((function() {
             updateBufferLength(bufferTime);
-        }), [ bufferTime, isVideoInit ]);
+        }), [ bufferTime, statusChange ]);
         reactExports.useEffect((function() {
             function triggerKeyFunc(event) {
                 if (event.key.toLocaleLowerCase() === triggerKey.toLocaleLowerCase()) {
@@ -8055,7 +8054,7 @@
             return function() {
                 document.removeEventListener("keydown", triggerKeyFunc);
             };
-        }), [ triggerKey, isVideoInit ]);
+        }), [ triggerKey, statusChange ]);
         return React.createElement("div", null);
     };
     var mountInterval = setInterval((function() {

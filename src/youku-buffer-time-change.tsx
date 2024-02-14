@@ -17,7 +17,7 @@ import { useGmValue } from "@/composable/use-value";
 import { useGmMenu } from "@/composable/use-menu";
 
 interface VideoBufferInfo {
-    bufferLength?: number; 
+    bufferLength?: number;
 }
 
 interface MediaEngine {
@@ -27,11 +27,12 @@ interface MediaEngine {
 }
 
 interface VideoPlayer {
-    _player?:{
+    _player?: {
         onPlaying?: () => void;
     },
     context?: {
         core?: {
+            state?: "playing" | "paused",
             _proxy?: {
                 player?: {
                     mainController?: {
@@ -76,7 +77,7 @@ function updateBufferLength(newBufferLength: number) {
 }
 
 const App = () => {
-    const [isVideoInit, setIsVideoInit] = useState(false);
+    const [statusChange, triggerStatusChange] = useState(1);
 
     useEffect(() => {
         // 定義一個函數來檢查和設置 onPlaying 處理器
@@ -86,15 +87,13 @@ const App = () => {
             if (videoPlayer && videoPlayer._player && typeof videoPlayer._player.onPlaying !== 'undefined') {
                 // 保存原始的 onPlaying 處理器
                 const originalOnPlaying = videoPlayer._player.onPlaying;
-                
+
                 // 定義一個新的處理器
                 const enhancedOnPlaying = () => {
                     if (typeof originalOnPlaying === 'function') {
                         originalOnPlaying();
                     }
-                    if (!isVideoInit) {
-                        setIsVideoInit(true);
-                    }
+                    triggerStatusChange(statusChange + 1);
                 };
 
                 // 將新的處理器設置為 onPlaying
@@ -108,7 +107,7 @@ const App = () => {
         // 定義一個函數來觸發 onPlaying 處理器
         const triggerPlaying = () => {
             const videoPlayer = (unsafeWindow as any).videoPlayer as VideoPlayer;
-            if (!isVideoInit && videoPlayer && videoPlayer._player && typeof videoPlayer._player.onPlaying === 'function') {
+            if (videoPlayer && videoPlayer._player && typeof videoPlayer._player.onPlaying === 'function' && videoPlayer.context?.core?.state === "playing") {
                 videoPlayer._player.onPlaying();
             }
         }
@@ -122,7 +121,7 @@ const App = () => {
             clearInterval(checkInterval);
             clearInterval(triggerInterval);
         };
-    }, [isVideoInit]); 
+    }, [statusChange]);
 
     const defaultKey = "v";
     const { data: triggerKey, updateData: updateKey } = useGmValue("key", defaultKey)
@@ -159,7 +158,7 @@ const App = () => {
     // 改變其 Buffer 值
     useEffect(() => {
         updateBufferLength(bufferTime);
-    }, [bufferTime, isVideoInit]);
+    }, [bufferTime, statusChange]);
 
     // 改變 查看 buffer 觸發鍵
     useEffect(() => {
@@ -173,7 +172,7 @@ const App = () => {
         return () => {
             document.removeEventListener('keydown', triggerKeyFunc);
         }
-    }, [triggerKey, isVideoInit])
+    }, [triggerKey, statusChange])
 
     return <div />;
 };
