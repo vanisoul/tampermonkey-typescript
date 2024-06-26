@@ -1,12 +1,13 @@
 // ==UserScript==
 // @name           bilibili Video CDN
-// @version        1.1.0
+// @version        1.1.1
 // @description    change bilibili video CDN URL
 // @author         Vanisoul
 // @match          https://www.bilibili.com/*
 // @license        MIT
 // @namespace      https://greasyfork.org/users/429936
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本
+// @updateHistory  1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
@@ -7948,6 +7949,12 @@
                 dialog.appendChild(label);
                 dialog.appendChild(document.createElement("br"));
             }));
+            var customInput = document.createElement("input");
+            customInput.type = "text";
+            customInput.placeholder = "請輸入自定義 CDN";
+            customInput.style.marginTop = "10px";
+            dialog.appendChild(customInput);
+            dialog.appendChild(document.createElement("br"));
             var saveButton = document.createElement("button");
             saveButton.textContent = "保存設置";
             saveButton.onclick = function() {
@@ -7955,11 +7962,22 @@
                     var _a;
                     return (_a = document.getElementById(cdn)) === null || _a === void 0 ? void 0 : _a.checked;
                 }));
+                if (customInput.value.trim() !== "") {
+                    selectedCDNs.push(customInput.value.trim());
+                }
                 updateSavedCDNs(selectedCDNs);
                 alert("設置已保存");
                 dialog.remove();
             };
             dialog.appendChild(saveButton);
+            var resetButton = document.createElement("button");
+            resetButton.textContent = "清空設定";
+            resetButton.onclick = function() {
+                updateSavedCDNs([]);
+                alert("設置已清空");
+                dialog.remove();
+            };
+            dialog.appendChild(resetButton);
             document.body.appendChild(dialog);
         }));
         reactExports.useEffect((function() {
@@ -7968,6 +7986,9 @@
                 var _arguments = Array.prototype.slice.call(arguments), method = _arguments[0], url = _arguments[1], async = _arguments[2], user = _arguments[3], password = _arguments[4];
                 var isBiliBiliVideo = bilivideoRegex.test(url) || akamaizedRegex.test(url);
                 if (!isBiliBiliVideo) {
+                    return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
+                }
+                if (savedCDNs.length === 0) {
                     return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
                 }
                 var videoUrl = new URL(url);
