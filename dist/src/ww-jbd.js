@@ -3,7 +3,7 @@
 // @version      1.0
 // @description  kjb m3u8
 // @author       Your Name
-// @match        XXXXX
+// @match        *****
 // @grant        GM_registerMenuCommand
 // @require      https://cdn.jsdelivr.net/npm/hls.js@latest
 // ==/UserScript==
@@ -25,8 +25,24 @@
         if (video) {
             replaceVideoSource(video);
         } else {
-            setTimeout(waitForVideo, 500); // Check again after 500ms
+            const player = document.querySelector('body > div.container > div.content > div.block-video > div > div.player');
+            newVideoSource(player);
+
         }
+    }
+
+    function newVideoSource(player) {
+        const newVideo = document.createElement('video');
+        newVideo.controls = true;
+        newVideo.style.width = '640px';
+        newVideo.style.height = '360px';
+
+        player.parentNode.appendChild(newVideo);
+
+        const playerHolder = player.querySelector('div.player-holder');
+        player.removeChild(playerHolder);
+
+        replaceVideoSource(newVideo);
     }
 
     // Replace the video source and use HLS.js if needed
@@ -61,7 +77,7 @@
         const idGroup = `${Math.floor(id / 1000) * 1000}`;
 
         // 組合目標 m3u8 URL
-        const m3u8Url = `https://r22.jb-zxx.cc/contents/videos/${idGroup}/${id}/index.m3u8`;
+        const m3u8Url = `https://r22.jb-zxxk.cc/contents/videos/${idGroup}/${id}/index.m3u8`;
         return m3u8Url;
     }
 })();
