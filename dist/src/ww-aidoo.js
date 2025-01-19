@@ -2,7 +2,7 @@
 // @name         研究
 // @namespace    http://tampermonkey.net/
 // @version      1.0
-// @match        none
+// @match        https://*/*
 // @grant        GM_registerMenuCommand
 // @license MIT
 // ==/UserScript==
