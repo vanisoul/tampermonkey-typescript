@@ -72,6 +72,14 @@
         const links = Array.from(document.querySelectorAll("a"));
         return links.find((a => a.textContent && a.textContent.includes("下一集")));
     }
+    const tryAutoStart = () => {
+        const autoStart = getSetting("autoStart", DEFAULT_AUTO_START);
+        if (!autoStart) return;
+        const playBtn = document.querySelector(".vjs-big-play-button");
+        if (playBtn && playBtn.offsetParent !== null) {
+            playBtn.click();
+        }
+    };
     function setupMenu() {
         GM_registerMenuCommand("設定快轉按鍵", (() => {
             const current = getSetting("skipKey", DEFAULT_SKIP_KEY);
@@ -104,14 +112,6 @@
     function main() {
         setupMenu();
         setupSkipKey();
-        const tryAutoStart = () => {
-            const autoStart = getSetting("autoStart", DEFAULT_AUTO_START);
-            if (!autoStart) return;
-            const playBtn = document.querySelector(".vjs-big-play-button");
-            if (playBtn && playBtn.offsetParent !== null) {
-                playBtn.click();
-            }
-        };
         const trySetupAutoNext = () => {
             const video = getVideo();
             if (video && !video.dataset._autoNextSetup) {

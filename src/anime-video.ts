@@ -16,6 +16,7 @@ const DEFAULT_SKIP_SECONDS = 90;
 const DEFAULT_AUTO_NEXT = true;
 const DEFAULT_END_OFFSET = 0;
 const DEFAULT_AUTO_START = true;
+const DEFAULT_AUTO_FULLSCREEN = true;
 
 // 取得/儲存設定
 function getSetting<T>(key: string, defaultValue: T): T {
@@ -89,6 +90,17 @@ function findNextEpisodeLink(): HTMLAnchorElement | null {
     return links.find(a => a.textContent && a.textContent.includes("下一集")) as HTMLAnchorElement | null;
 }
 
+// 自動點擊 vjs-big-play-button 以啟動影片（可開關）
+const tryAutoStart = () => {
+    const autoStart = getSetting("autoStart", DEFAULT_AUTO_START);
+    if (!autoStart) return;
+    const playBtn = document.querySelector('.vjs-big-play-button') as HTMLElement | null;
+    if (playBtn && playBtn.offsetParent !== null) {
+        playBtn.click();
+    }
+};
+
+
 // 設定 UI
 function setupMenu() {
     GM_registerMenuCommand("設定快轉按鍵", () => {
@@ -124,16 +136,6 @@ function setupMenu() {
 function main() {
     setupMenu();
     setupSkipKey();
-
-    // 自動點擊 vjs-big-play-button 以啟動影片（可開關）
-    const tryAutoStart = () => {
-        const autoStart = getSetting("autoStart", DEFAULT_AUTO_START);
-        if (!autoStart) return;
-        const playBtn = document.querySelector('.vjs-big-play-button') as HTMLElement | null;
-        if (playBtn && playBtn.offsetParent !== null) {
-            playBtn.click();
-        }
-    };
 
     // video 可能動態載入，需監聽 DOM
     const trySetupAutoNext = () => {
