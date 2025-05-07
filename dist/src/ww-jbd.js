@@ -3,7 +3,7 @@
 // @version      1.0
 // @description  kjb m3u8
 // @author       Your Name
-// @match        *****
+// @match        https://*/*
 // @grant        GM_registerMenuCommand
 // @require      https://cdn.jsdelivr.net/npm/hls.js@latest
 // ==/UserScript==
