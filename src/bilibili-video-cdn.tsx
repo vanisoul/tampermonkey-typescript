@@ -64,7 +64,7 @@ const App: React.FC = () => {
     ]
   );
 
-  const { data: savedCDNs, updateData: updateSavedCDNs } = useGmValue<string[]>(
+  const { data: savedCdns, updateData: updateSavedCdns } = useGmValue<string[]>(
     "selectedCDNs",
     [],
   );
@@ -82,8 +82,8 @@ const App: React.FC = () => {
   // 選擇 CDN Dialog 狀態
   const [checked, setChecked] = useState<string[]>([]);
   useEffect(() => {
-    if (dialog === "select") setChecked(savedCDNs);
-  }, [dialog, savedCDNs]);
+    if (dialog === "select") setChecked(savedCdns);
+  }, [dialog, savedCdns]);
 
   // 管理 CDN Dialog 狀態
   const [input, setInput] = useState("");
@@ -100,7 +100,7 @@ const App: React.FC = () => {
 
   // 輪詢 CDN index
   function getNextCdnIndex(): number {
-    const maxIndex = savedCDNs.length - 1;
+    const maxIndex = savedCdns.length - 1;
     const next = currIndexRef.current + 1 > maxIndex ? 0 : currIndexRef.current + 1;
     currIndexRef.current = next;
     return next;
@@ -112,10 +112,10 @@ const App: React.FC = () => {
     XMLHttpRequest.prototype.open = function () {
       const [method, url, async, user, password] = arguments;
       const isBiliBiliVideo = bilibiliVideoRegexList.some((regex) => regex.test(url));
-      if (isBiliBiliVideo && savedCDNs.length > 0) {
+      if (isBiliBiliVideo && savedCdns.length > 0) {
         const videoUrl = new URL(url);
         const currIndex = getNextCdnIndex();
-        videoUrl.host = savedCDNs[currIndex];
+        videoUrl.host = savedCdns[currIndex];
         return httpRequestOriginOpen.apply(this, [
           method,
           videoUrl.href,
@@ -135,7 +135,7 @@ const App: React.FC = () => {
     return () => {
       XMLHttpRequest.prototype.open = httpRequestOriginOpen;
     };
-  }, [savedCDNs]);
+  }, [savedCdns]);
 
   // Dialog 事件
   // 選擇 CDN
@@ -145,13 +145,13 @@ const App: React.FC = () => {
     );
   };
   const handleSave = () => {
-    updateSavedCDNs(checked);
+    updateSavedCdns(checked);
     showSnackbar("設置已保存", "success");
     setDialog(null);
   };
   const handleReset = () => {
     setChecked([]);
-    updateSavedCDNs([]);
+    updateSavedCdns([]);
     showSnackbar("設置已清空", "success");
     setDialog(null);
   };
@@ -174,7 +174,7 @@ const App: React.FC = () => {
   const handleDelete = (idx: number) => {
     const newPool = localPool.filter((_, i) => i !== idx);
     updatePoolCdns(newPool);
-    updateSavedCDNs(savedCDNs.filter(cdn => newPool.includes(cdn)));
+    updateSavedCdns(savedCdns.filter(cdn => newPool.includes(cdn)));
     showSnackbar("CDN 已刪除", "success");
   };
 
