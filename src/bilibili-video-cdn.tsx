@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili Video CDN
-// @version      1.1.3
+// @version      1.1.4
 // @description  change bilibili video CDN URL
 // @author       Vanisoul
 // @match        https://www.bilibili.com/*
@@ -10,6 +10,7 @@
 // @updateHistory    1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
 // @updateHistory    1.1.2 (2025-05-18) update CDN management functionality and refactor dialog implementation to React.
 // @updateHistory    1.1.3 (2025-05-18) enhance CDN management by adding current index tracking and refactoring video URL handling.
+// @updateHistory    1.1.4 (2025-05-18) synchronize savedCDNs removal with pool updates in handleDelete function
 // ==/UserScript==
 
 import React, { useEffect, useState, useRef } from "react";
@@ -140,6 +141,8 @@ const App = () => {
     const handleDelete = (idx: number) => {
       const newPool = localPool.filter((_, i) => i !== idx);
       updatePoolCdns(newPool);
+      // 同步移除 savedCDNs 中已被刪除的 CDN
+      updateSavedCDNs(savedCDNs.filter(cdn => newPool.includes(cdn)));
     };
 
     return (
