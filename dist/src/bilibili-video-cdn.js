@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           bilibili Video CDN
-// @version        1.1.2
+// @version        1.1.3
 // @description    change bilibili video CDN URL
 // @author         Vanisoul
 // @match          https://www.bilibili.com/*
@@ -9,6 +9,7 @@
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本
 // @updateHistory  1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
 // @updateHistory  1.1.2 (2025-05-18) update CDN management functionality and refactor dialog implementation to React.
+// @updateHistory  1.1.3 (2025-05-18) enhance CDN management by adding current index tracking and refactoring video URL handling.
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
@@ -7977,10 +7978,10 @@
         return true;
     }
     var App = function App() {
-        var bilivideoRegex = /^https:\/\/[a-z.-\d]*(bilivideo.com)/i;
-        var akamaizedRegex = /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i;
+        var bilibiliVideoRegexList = [ /^https:\/\/[a-z.-\d]*(bilivideo.com)/i, /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i ];
         var _useGmValue = useGmValue("poolCdns", [ "upos-sz-mirrorks3.bilivideo.com", "upos-sz-mirrorks3b.bilivideo.com", "upos-sz-mirrorks3c.bilivideo.com", "upos-sz-mirrorks32.bilivideo.com", "upos-sz-mirrorcos.bilivideo.com", "upos-sz-mirrorcosb.bilivideo.com", "upos-sz-mirrorbos.bilivideo.com", "upos-sz-mirrorhw.bilivideo.com", "upos-sz-mirrorhwb.bilivideo.com", "upos-sz-upcdnbda2.bilivideo.com", "upos-sz-upcdnws.bilivideo.com", "upos-sz-upcdnhw.bilivideo.com", "upos-tf-all-js.bilivideo.com", "cn-hk-eq-bcache-01.bilivideo.com", "upos-hz-mirrorakam.akamaized.net", "upos-sz-mirrorali.bilivideo.com", "upos-sz-mirroraliov.bilivideo.com", "upos-sz-mirror08h.bilivideo.com", "upos-sz-mirror08c.bilivideo.com" ]), poolCdns = _useGmValue.data, updatePoolCdns = _useGmValue.updateData;
         var _useGmValue2 = useGmValue("selectedCDNs", []), savedCDNs = _useGmValue2.data, updateSavedCDNs = _useGmValue2.updateData;
+        var currIndexRef = reactExports.useRef(0);
         var _useState = reactExports.useState(null), _useState2 = _slicedToArray(_useState, 2), openDialog = _useState2[0], setOpenDialog = _useState2[1];
         useGmMenu("選擇 CDN", (function() {
             return setOpenDialog("select");
@@ -8133,26 +8134,27 @@
                 }
             }, "關閉"));
         };
+        function getCurrIndex() {
+            var maxIndex = savedCDNs.length - 1;
+            var newIndex = currIndexRef.current + 1 > maxIndex ? 0 : currIndexRef.current + 1;
+            currIndexRef.current = newIndex;
+            return newIndex;
+        }
         reactExports.useEffect((function() {
             var httpRequestOriginOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function() {
                 var _arguments = Array.prototype.slice.call(arguments), method = _arguments[0], url = _arguments[1], async = _arguments[2], user = _arguments[3], password = _arguments[4];
-                var isBiliBiliVideo = bilivideoRegex.test(url) || akamaizedRegex.test(url);
-                if (!isBiliBiliVideo) {
-                    return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
-                }
-                if (savedCDNs.length === 0) {
-                    return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
-                }
-                var videoUrl = new URL(url);
-                var isGoodUrl = savedCDNs.includes(videoUrl.host);
-                if (isGoodUrl) {
-                    return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
-                } else {
-                    var goodUrl = savedCDNs[Math.floor(Math.random() * savedCDNs.length)];
+                var isBiliBiliVideo = bilibiliVideoRegexList.some((function(regex) {
+                    return regex.test(url);
+                }));
+                if (isBiliBiliVideo && savedCDNs.length > 0) {
+                    var videoUrl = new URL(url);
+                    var currIndex = getCurrIndex();
+                    var goodUrl = savedCDNs[currIndex];
                     videoUrl.host = goodUrl;
                     return httpRequestOriginOpen.apply(this, [ method, videoUrl.href, async, user, password ]);
                 }
+                return httpRequestOriginOpen.apply(this, [ method, url, async, user, password ]);
             };
             return function() {
                 XMLHttpRequest.prototype.open = httpRequestOriginOpen;

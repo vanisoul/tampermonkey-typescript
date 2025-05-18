@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili Video CDN
-// @version      1.1.2
+// @version      1.1.3
 // @description  change bilibili video CDN URL
 // @author       Vanisoul
 // @match        https://www.bilibili.com/*
@@ -9,9 +9,10 @@
 // @updateHistory    1.1.0 (2024-01-13) 改為 react 版本
 // @updateHistory    1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
 // @updateHistory    1.1.2 (2025-05-18) update CDN management functionality and refactor dialog implementation to React.
+// @updateHistory    1.1.3 (2025-05-18) enhance CDN management by adding current index tracking and refactoring video URL handling.
 // ==/UserScript==
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 
 import { useGmValue } from "@/composable/use-value";
 import { useGmMenu } from "@/composable/use-menu";
@@ -19,8 +20,10 @@ import { useGmMenu } from "@/composable/use-menu";
 import { appendComponentToElement } from "@/lib/react-mount-after";
 
 const App = () => {
-  const bilivideoRegex = /^https:\/\/[a-z.-\d]*(bilivideo.com)/i;
-  const akamaizedRegex = /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i;
+  const bilibiliVideoRegexList = [
+    /^https:\/\/[a-z.-\d]*(bilivideo.com)/i,
+    /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i
+  ];
 
   const { data: poolCdns, updateData: updatePoolCdns } = useGmValue<string[]>(
     "poolCdns",
@@ -51,6 +54,8 @@ const App = () => {
     "selectedCDNs",
     [],
   );
+
+  const currIndexRef = useRef(0);
 
   // 控制 dialog 顯示狀態
   const [openDialog, setOpenDialog] = useState<null | "select" | "manage">(null);
@@ -168,48 +173,26 @@ const App = () => {
     );
   };
 
+  // 每次呼叫 + 1, 但是最大值不超過 savedCDNs.length - 1
+  function getCurrIndex(): number {
+    const maxIndex = savedCDNs.length - 1;
+    const newIndex = currIndexRef.current + 1 > maxIndex ? 0 : currIndexRef.current + 1;
+    currIndexRef.current = newIndex; // 更新目前的 index
+    return newIndex;
+  }
+
   // 當 savedCDNs 改變時, 重新設定 XMLHttpRequest.prototype.open
   useEffect(() => {
     const httpRequestOriginOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function () {
       const [method, url, async, user, password] = arguments;
+      const isBiliBiliVideo = bilibiliVideoRegexList.some((regex) => regex.test(url));
 
-      // 不是 bilibili 影片目標
-      const isBiliBiliVideo = bilivideoRegex.test(url) ||
-        akamaizedRegex.test(url);
-      if (!isBiliBiliVideo) {
-        return httpRequestOriginOpen.apply(this, [
-          method,
-          url,
-          async,
-          user,
-          password,
-        ]);
-      }
-
-      // savedCDNs 為空則不改變目標
-      if (savedCDNs.length === 0) {
-        return httpRequestOriginOpen.apply(this, [
-          method,
-          url,
-          async,
-          user,
-          password,
-        ]);
-      }
-
-      const videoUrl = new URL(url);
-      const isGoodUrl = savedCDNs.includes(videoUrl.host);
-      if (isGoodUrl) {
-        return httpRequestOriginOpen.apply(this, [
-          method,
-          url,
-          async,
-          user,
-          password,
-        ]);
-      } else {
-        const goodUrl = savedCDNs[Math.floor(Math.random() * savedCDNs.length)];
+      // 僅當是 bilibili video 且 savedCDNs 不為空時 hack
+      if (isBiliBiliVideo && savedCDNs.length > 0) {
+        const videoUrl = new URL(url);
+        const currIndex = getCurrIndex();
+        const goodUrl = savedCDNs[currIndex];
         videoUrl.host = goodUrl;
         return httpRequestOriginOpen.apply(this, [
           method,
@@ -219,6 +202,15 @@ const App = () => {
           password,
         ]);
       }
+
+      // 其他情況直接調用原本的
+      return httpRequestOriginOpen.apply(this, [
+        method,
+        url,
+        async,
+        user,
+        password,
+      ]);
     };
     return () => {
       XMLHttpRequest.prototype.open = httpRequestOriginOpen;
