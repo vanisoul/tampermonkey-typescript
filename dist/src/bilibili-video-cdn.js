@@ -8,6 +8,7 @@
 // @namespace      https://greasyfork.org/users/429936
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本
 // @updateHistory  1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
+// @updateHistory  1.1.2 (2025-05-18) 刪除選擇 CDN 時自訂功能, 加入 CDN Pool 管理功能
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
@@ -16,6 +17,61 @@
 
 (function() {
     "use strict";
+    function _iterableToArrayLimit(r, l) {
+        var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
+        if (null != t) {
+            var e, n, i, u, a = [], f = !0, o = !1;
+            try {
+                if (i = (t = t.call(r)).next, 0 === l) {
+                    if (Object(t) !== t) return;
+                    f = !1;
+                } else for (;!(f = (e = i.call(t)).done) && (a.push(e.value), a.length !== l); f = !0) ;
+            } catch (r) {
+                o = !0, n = r;
+            } finally {
+                try {
+                    if (!f && null != t.return && (u = t.return(), Object(u) !== u)) return;
+                } finally {
+                    if (o) throw n;
+                }
+            }
+            return a;
+        }
+    }
+    function _slicedToArray(arr, i) {
+        return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest();
+    }
+    function _toConsumableArray(arr) {
+        return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
+    }
+    function _arrayWithoutHoles(arr) {
+        if (Array.isArray(arr)) return _arrayLikeToArray(arr);
+    }
+    function _arrayWithHoles(arr) {
+        if (Array.isArray(arr)) return arr;
+    }
+    function _iterableToArray(iter) {
+        if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+    }
+    function _unsupportedIterableToArray(o, minLen) {
+        if (!o) return;
+        if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+        var n = Object.prototype.toString.call(o).slice(8, -1);
+        if (n === "Object" && o.constructor) n = o.constructor.name;
+        if (n === "Map" || n === "Set") return Array.from(o);
+        if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+    }
+    function _arrayLikeToArray(arr, len) {
+        if (len == null || len > arr.length) len = arr.length;
+        for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+        return arr2;
+    }
+    function _nonIterableSpread() {
+        throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _nonIterableRest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
     function getDefaultExportFromCjs(x) {
         return x && x.__esModule && Object.prototype.hasOwnProperty.call(x, "default") ? x["default"] : x;
     }
@@ -24,14 +80,14 @@
     };
     var react_production_min = {};
     /**
-	 * @license React
-	 * react.production.min.js
-	 *
-	 * Copyright (c) Facebook, Inc. and its affiliates.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */    var hasRequiredReact_production_min;
+   * @license React
+   * react.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */    var hasRequiredReact_production_min;
     function requireReact_production_min() {
         if (hasRequiredReact_production_min) return react_production_min;
         hasRequiredReact_production_min = 1;
@@ -389,14 +445,14 @@
     };
     var scheduler_production_min = {};
     /**
-	 * @license React
-	 * scheduler.production.min.js
-	 *
-	 * Copyright (c) Facebook, Inc. and its affiliates.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */    var hasRequiredScheduler_production_min;
+   * @license React
+   * scheduler.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */    var hasRequiredScheduler_production_min;
     function requireScheduler_production_min() {
         if (hasRequiredScheduler_production_min) return scheduler_production_min;
         hasRequiredScheduler_production_min = 1;
@@ -648,14 +704,14 @@
     }
     var reactDom_production_min = {};
     /**
-	 * @license React
-	 * react-dom.production.min.js
-	 *
-	 * Copyright (c) Facebook, Inc. and its affiliates.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */    var hasRequiredReactDom_production_min;
+   * @license React
+   * react-dom.production.min.js
+   *
+   * Copyright (c) Facebook, Inc. and its affiliates.
+   *
+   * This source code is licensed under the MIT license found in the
+   * LICENSE file in the root directory of this source tree.
+   */    var hasRequiredReactDom_production_min;
     function requireReactDom_production_min() {
         if (hasRequiredReactDom_production_min) return reactDom_production_min;
         hasRequiredReactDom_production_min = 1;
@@ -7923,63 +7979,160 @@
     var App = function App() {
         var bilivideoRegex = /^https:\/\/[a-z.-\d]*(bilivideo.com)/i;
         var akamaizedRegex = /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i;
-        var poolCdns = [ "upos-sz-mirrorks3.bilivideo.com", "upos-sz-mirrorks3b.bilivideo.com", "upos-sz-mirrorks3c.bilivideo.com", "upos-sz-mirrorks32.bilivideo.com", "upos-sz-mirrorcos.bilivideo.com", "upos-sz-mirrorcosb.bilivideo.com", "upos-sz-mirrorbos.bilivideo.com", "upos-sz-mirrorhw.bilivideo.com", "upos-sz-mirrorhwb.bilivideo.com", "upos-sz-upcdnbda2.bilivideo.com", "upos-sz-upcdnws.bilivideo.com", "upos-sz-upcdnhw.bilivideo.com", "upos-tf-all-js.bilivideo.com", "cn-hk-eq-bcache-01.bilivideo.com", "upos-hz-mirrorakam.akamaized.net", "upos-sz-mirrorali.bilivideo.com", "upos-sz-mirroraliov.bilivideo.com", "upos-sz-mirror08h.bilivideo.com" ];
-        var _useGmValue = useGmValue("selectedCDNs", []), savedCDNs = _useGmValue.data, updateSavedCDNs = _useGmValue.updateData;
+        var _useGmValue = useGmValue("poolCdns", [ "upos-sz-mirrorks3.bilivideo.com", "upos-sz-mirrorks3b.bilivideo.com", "upos-sz-mirrorks3c.bilivideo.com", "upos-sz-mirrorks32.bilivideo.com", "upos-sz-mirrorcos.bilivideo.com", "upos-sz-mirrorcosb.bilivideo.com", "upos-sz-mirrorbos.bilivideo.com", "upos-sz-mirrorhw.bilivideo.com", "upos-sz-mirrorhwb.bilivideo.com", "upos-sz-upcdnbda2.bilivideo.com", "upos-sz-upcdnws.bilivideo.com", "upos-sz-upcdnhw.bilivideo.com", "upos-tf-all-js.bilivideo.com", "cn-hk-eq-bcache-01.bilivideo.com", "upos-hz-mirrorakam.akamaized.net", "upos-sz-mirrorali.bilivideo.com", "upos-sz-mirroraliov.bilivideo.com", "upos-sz-mirror08h.bilivideo.com", "upos-sz-mirror08c.bilivideo.com" ]), poolCdns = _useGmValue.data, updatePoolCdns = _useGmValue.updateData;
+        var _useGmValue2 = useGmValue("selectedCDNs", []), savedCDNs = _useGmValue2.data, updateSavedCDNs = _useGmValue2.updateData;
+        var _useState = reactExports.useState(null), _useState2 = _slicedToArray(_useState, 2), openDialog = _useState2[0], setOpenDialog = _useState2[1];
         useGmMenu("選擇 CDN", (function() {
-            var dialog = document.createElement("div");
-            dialog.style.position = "absolute";
-            dialog.style.top = "50%";
-            dialog.style.left = "50%";
-            dialog.style.transform = "translate(-50%, -50%)";
-            dialog.style.backgroundColor = "white";
-            dialog.style.padding = "20px";
-            dialog.style.border = "1px solid black";
-            dialog.style.boxShadow = "0px 0px 10px rgba(0,0,0,0.5)";
-            dialog.style.zIndex = "1000";
-            dialog.innerHTML = "<h3>選擇 CDN</h3>";
-            poolCdns.forEach((function(cdn) {
-                var checkbox = document.createElement("input");
-                checkbox.type = "checkbox";
-                checkbox.id = cdn;
-                checkbox.checked = savedCDNs.includes(cdn);
-                var label = document.createElement("label");
-                label.htmlFor = cdn;
-                label.textContent = cdn;
-                dialog.appendChild(checkbox);
-                dialog.appendChild(label);
-                dialog.appendChild(document.createElement("br"));
-            }));
-            var customInput = document.createElement("input");
-            customInput.type = "text";
-            customInput.placeholder = "請輸入自定義 CDN";
-            customInput.style.marginTop = "10px";
-            dialog.appendChild(customInput);
-            dialog.appendChild(document.createElement("br"));
-            var saveButton = document.createElement("button");
-            saveButton.textContent = "保存設置";
-            saveButton.onclick = function() {
-                var selectedCDNs = poolCdns.filter((function(cdn) {
-                    var _a;
-                    return (_a = document.getElementById(cdn)) === null || _a === void 0 ? void 0 : _a.checked;
+            return setOpenDialog("select");
+        }));
+        useGmMenu("管理 CDN 池", (function() {
+            return setOpenDialog("manage");
+        }));
+        var SelectCdnDialog = function SelectCdnDialog() {
+            var _useState3 = reactExports.useState(savedCDNs), _useState4 = _slicedToArray(_useState3, 2), checked = _useState4[0], setChecked = _useState4[1];
+            var handleCheck = function handleCheck(cdn) {
+                setChecked((function(prev) {
+                    return prev.includes(cdn) ? prev.filter((function(c) {
+                        return c !== cdn;
+                    })) : [].concat(_toConsumableArray(prev), [ cdn ]);
                 }));
-                if (customInput.value.trim() !== "") {
-                    selectedCDNs.push(customInput.value.trim());
-                }
-                updateSavedCDNs(selectedCDNs);
-                alert("設置已保存");
-                dialog.remove();
             };
-            dialog.appendChild(saveButton);
-            var resetButton = document.createElement("button");
-            resetButton.textContent = "清空設定";
-            resetButton.onclick = function() {
+            var handleSave = function handleSave() {
+                updateSavedCDNs(checked);
+                alert("設置已保存");
+                setOpenDialog(null);
+            };
+            var handleReset = function handleReset() {
+                setChecked([]);
                 updateSavedCDNs([]);
                 alert("設置已清空");
-                dialog.remove();
+                setOpenDialog(null);
             };
-            dialog.appendChild(resetButton);
-            document.body.appendChild(dialog);
-        }));
+            return React.createElement("div", {
+                style: {
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "white",
+                    padding: 20,
+                    border: "1px solid black",
+                    boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+                    zIndex: 1e3
+                }
+            }, React.createElement("h3", null, "選擇 CDN"), poolCdns.map((function(cdn) {
+                return React.createElement("div", {
+                    key: cdn
+                }, React.createElement("input", {
+                    type: "checkbox",
+                    id: cdn,
+                    checked: checked.includes(cdn),
+                    onChange: function onChange() {
+                        return handleCheck(cdn);
+                    }
+                }), React.createElement("label", {
+                    htmlFor: cdn
+                }, cdn));
+            })), React.createElement("button", {
+                onClick: handleSave
+            }, "保存設置"), React.createElement("button", {
+                onClick: handleReset
+            }, "清空設定"), React.createElement("button", {
+                onClick: function onClick() {
+                    return setOpenDialog(null);
+                },
+                style: {
+                    marginLeft: 8
+                }
+            }, "關閉"));
+        };
+        var ManageCdnDialog = function ManageCdnDialog() {
+            var _useState5 = reactExports.useState(""), _useState6 = _slicedToArray(_useState5, 2), input = _useState6[0], setInput = _useState6[1];
+            var _useState7 = reactExports.useState(poolCdns), _useState8 = _slicedToArray(_useState7, 2), localPool = _useState8[0], setLocalPool = _useState8[1];
+            React.useEffect((function() {
+                setLocalPool(poolCdns);
+            }), [ poolCdns ]);
+            var handleAdd = function handleAdd() {
+                var val = input.trim();
+                if (!val) {
+                    alert("請輸入 CDN host");
+                    return;
+                }
+                if (localPool.includes(val)) {
+                    alert("CDN 已存在");
+                    return;
+                }
+                updatePoolCdns([].concat(_toConsumableArray(localPool), [ val ]));
+                setInput("");
+            };
+            var handleDelete = function handleDelete(idx) {
+                var newPool = localPool.filter((function(_, i) {
+                    return i !== idx;
+                }));
+                updatePoolCdns(newPool);
+            };
+            return React.createElement("div", {
+                style: {
+                    position: "absolute",
+                    top: "50%",
+                    left: "50%",
+                    transform: "translate(-50%, -50%)",
+                    backgroundColor: "white",
+                    padding: 20,
+                    border: "1px solid black",
+                    boxShadow: "0px 0px 10px rgba(0,0,0,0.5)",
+                    zIndex: 1e3
+                }
+            }, React.createElement("h3", null, "管理 CDN 池"), React.createElement("div", null, localPool.map((function(cdn, idx) {
+                return React.createElement("div", {
+                    key: cdn,
+                    style: {
+                        display: "flex",
+                        alignItems: "center",
+                        marginBottom: 4
+                    }
+                }, React.createElement("span", {
+                    style: {
+                        flex: 1
+                    }
+                }, cdn), React.createElement("button", {
+                    style: {
+                        marginLeft: 8
+                    },
+                    onClick: function onClick() {
+                        return handleDelete(idx);
+                    }
+                }, "刪除"));
+            }))), React.createElement("div", {
+                style: {
+                    marginTop: 12,
+                    display: "flex",
+                    alignItems: "center"
+                }
+            }, React.createElement("input", {
+                type: "text",
+                placeholder: "輸入新的 CDN host",
+                value: input,
+                onChange: function onChange(e) {
+                    return setInput(e.target.value);
+                },
+                style: {
+                    flex: 1
+                }
+            }), React.createElement("button", {
+                style: {
+                    marginLeft: 8
+                },
+                onClick: handleAdd
+            }, "新增")), React.createElement("button", {
+                onClick: function onClick() {
+                    return setOpenDialog(null);
+                },
+                style: {
+                    marginTop: 16
+                }
+            }, "關閉"));
+        };
         reactExports.useEffect((function() {
             var httpRequestOriginOpen = XMLHttpRequest.prototype.open;
             XMLHttpRequest.prototype.open = function() {
@@ -8005,7 +8158,7 @@
                 XMLHttpRequest.prototype.open = httpRequestOriginOpen;
             };
         }), [ savedCDNs ]);
-        return React.createElement("div", null);
+        return React.createElement(React.Fragment, null, openDialog === "select" && React.createElement(SelectCdnDialog, null), openDialog === "manage" && React.createElement(ManageCdnDialog, null), React.createElement("div", null));
     };
     var mountInterval = setInterval((function() {
         var success = appendComponentToElement(App, "body");
