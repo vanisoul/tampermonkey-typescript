@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         bilibili Video CDN
-// @version      1.1.4
+// @version      1.1.5
 // @description  change bilibili video CDN URL
 // @author       Vanisoul
 // @match        https://www.bilibili.com/*
@@ -11,16 +11,29 @@
 // @updateHistory    1.1.2 (2025-05-18) update CDN management functionality and refactor dialog implementation to React.
 // @updateHistory    1.1.3 (2025-05-18) enhance CDN management by adding current index tracking and refactoring video URL handling.
 // @updateHistory    1.1.4 (2025-05-18) synchronize savedCDNs removal with pool updates in handleDelete function
+// @updateHistory    1.1.5 (2025-05-18) refactor code and UI.
 // ==/UserScript==
 
 import React, { useEffect, useState, useRef } from "react";
+
+import Dialog from "@mui/material/Dialog";
+import DialogTitle from "@mui/material/DialogTitle";
+import DialogContent from "@mui/material/DialogContent";
+import DialogActions from "@mui/material/DialogActions";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import TextField from "@mui/material/TextField";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 import { useGmValue } from "@/composable/use-value";
 import { useGmMenu } from "@/composable/use-menu";
 
 import { appendComponentToElement } from "@/lib/react-mount-after";
 
-const App = () => {
+
+const App: React.FC = () => {
   const bilibiliVideoRegexList = [
     /^https:\/\/[a-z.-\d]*(bilivideo.com)/i,
     /^https:\/\/upos[a-z.-\d]*(akamaized.net)/i
@@ -56,147 +69,53 @@ const App = () => {
     [],
   );
 
+  // Dialog 狀態
+  const [dialog, setDialog] = useState<null | "select" | "manage">(null);
+
+  // GM Menu
+  useGmMenu("選擇 CDN", () => setDialog("select"));
+  useGmMenu("管理 CDN 池", () => setDialog("manage"));
+
+  // CDN 輪詢 index
   const currIndexRef = useRef(0);
 
-  // 控制 dialog 顯示狀態
-  const [openDialog, setOpenDialog] = useState<null | "select" | "manage">(null);
+  // 選擇 CDN Dialog 狀態
+  const [checked, setChecked] = useState<string[]>([]);
+  useEffect(() => {
+    if (dialog === "select") setChecked(savedCDNs);
+  }, [dialog, savedCDNs]);
 
-  // GM Menu 只負責切換 dialog 狀態
-  useGmMenu("選擇 CDN", () => setOpenDialog("select"));
-  useGmMenu("管理 CDN 池", () => setOpenDialog("manage"));
+  // 管理 CDN Dialog 狀態
+  const [input, setInput] = useState("");
+  const [localPool, setLocalPool] = useState<string[]>(poolCdns);
+  useEffect(() => {
+    setLocalPool(poolCdns);
+  }, [poolCdns]);
 
-  // React Dialog 元件
-  const SelectCdnDialog = () => {
-    // 本地 state 用於勾選
-    const [checked, setChecked] = useState<string[]>(savedCDNs);
-
-    const handleCheck = (cdn: string) => {
-      setChecked((prev) =>
-        prev.includes(cdn) ? prev.filter((c) => c !== cdn) : [...prev, cdn]
-      );
-    };
-
-    const handleSave = () => {
-      updateSavedCDNs(checked);
-      alert("設置已保存");
-      setOpenDialog(null);
-    };
-
-    const handleReset = () => {
-      setChecked([]);
-      updateSavedCDNs([]);
-      alert("設置已清空");
-      setOpenDialog(null);
-    };
-
-    return (
-      <div style={{
-        position: "absolute", top: "50%", left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white", padding: 20, border: "1px solid black",
-        boxShadow: "0px 0px 10px rgba(0,0,0,0.5)", zIndex: 1000
-      }}>
-        <h3>選擇 CDN</h3>
-        {poolCdns.map((cdn) => (
-          <div key={cdn}>
-            <input
-              type="checkbox"
-              id={cdn}
-              checked={checked.includes(cdn)}
-              onChange={() => handleCheck(cdn)}
-            />
-            <label htmlFor={cdn}>{cdn}</label>
-          </div>
-        ))}
-        <button onClick={handleSave}>保存設置</button>
-        <button onClick={handleReset}>清空設定</button>
-        <button onClick={() => setOpenDialog(null)} style={{ marginLeft: 8 }}>關閉</button>
-      </div>
-    );
+  // Snackbar 狀態
+  const [snackbar, setSnackbar] = useState<{ open: boolean, message: string, type: "success" | "error" }>({ open: false, message: "", type: "success" });
+  const showSnackbar = (message: string, type: "success" | "error" = "success") => {
+    setSnackbar({ open: true, message, type });
   };
 
-  const ManageCdnDialog = () => {
-    const [input, setInput] = useState("");
-    const [localPool, setLocalPool] = useState<string[]>(poolCdns);
-
-    // poolCdns 變動時同步 localPool
-    React.useEffect(() => {
-      setLocalPool(poolCdns);
-    }, [poolCdns]);
-
-    const handleAdd = () => {
-      const val = input.trim();
-      if (!val) {
-        alert("請輸入 CDN host");
-        return;
-      }
-      if (localPool.includes(val)) {
-        alert("CDN 已存在");
-        return;
-      }
-      updatePoolCdns([...localPool, val]);
-      setInput("");
-    };
-
-    const handleDelete = (idx: number) => {
-      const newPool = localPool.filter((_, i) => i !== idx);
-      updatePoolCdns(newPool);
-      // 同步移除 savedCDNs 中已被刪除的 CDN
-      updateSavedCDNs(savedCDNs.filter(cdn => newPool.includes(cdn)));
-    };
-
-    return (
-      <div style={{
-        position: "absolute", top: "50%", left: "50%",
-        transform: "translate(-50%, -50%)",
-        backgroundColor: "white", padding: 20, border: "1px solid black",
-        boxShadow: "0px 0px 10px rgba(0,0,0,0.5)", zIndex: 1000
-      }}>
-        <h3>管理 CDN 池</h3>
-        <div>
-          {localPool.map((cdn, idx) => (
-            <div key={cdn} style={{ display: "flex", alignItems: "center", marginBottom: 4 }}>
-              <span style={{ flex: 1 }}>{cdn}</span>
-              <button style={{ marginLeft: 8 }} onClick={() => handleDelete(idx)}>刪除</button>
-            </div>
-          ))}
-        </div>
-        <div style={{ marginTop: 12, display: "flex", alignItems: "center" }}>
-          <input
-            type="text"
-            placeholder="輸入新的 CDN host"
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            style={{ flex: 1 }}
-          />
-          <button style={{ marginLeft: 8 }} onClick={handleAdd}>新增</button>
-        </div>
-        <button onClick={() => setOpenDialog(null)} style={{ marginTop: 16 }}>關閉</button>
-      </div>
-    );
-  };
-
-  // 每次呼叫 + 1, 但是最大值不超過 savedCDNs.length - 1
-  function getCurrIndex(): number {
+  // 輪詢 CDN index
+  function getNextCdnIndex(): number {
     const maxIndex = savedCDNs.length - 1;
-    const newIndex = currIndexRef.current + 1 > maxIndex ? 0 : currIndexRef.current + 1;
-    currIndexRef.current = newIndex; // 更新目前的 index
-    return newIndex;
+    const next = currIndexRef.current + 1 > maxIndex ? 0 : currIndexRef.current + 1;
+    currIndexRef.current = next;
+    return next;
   }
 
-  // 當 savedCDNs 改變時, 重新設定 XMLHttpRequest.prototype.open
+  // XMLHttpRequest hack
   useEffect(() => {
     const httpRequestOriginOpen = XMLHttpRequest.prototype.open;
     XMLHttpRequest.prototype.open = function () {
       const [method, url, async, user, password] = arguments;
       const isBiliBiliVideo = bilibiliVideoRegexList.some((regex) => regex.test(url));
-
-      // 僅當是 bilibili video 且 savedCDNs 不為空時 hack
       if (isBiliBiliVideo && savedCDNs.length > 0) {
         const videoUrl = new URL(url);
-        const currIndex = getCurrIndex();
-        const goodUrl = savedCDNs[currIndex];
-        videoUrl.host = goodUrl;
+        const currIndex = getNextCdnIndex();
+        videoUrl.host = savedCDNs[currIndex];
         return httpRequestOriginOpen.apply(this, [
           method,
           videoUrl.href,
@@ -205,8 +124,6 @@ const App = () => {
           password,
         ]);
       }
-
-      // 其他情況直接調用原本的
       return httpRequestOriginOpen.apply(this, [
         method,
         url,
@@ -220,17 +137,128 @@ const App = () => {
     };
   }, [savedCDNs]);
 
+  // Dialog 事件
+  // 選擇 CDN
+  const handleCheck = (cdn: string) => {
+    setChecked((prev) =>
+      prev.includes(cdn) ? prev.filter((c) => c !== cdn) : [...prev, cdn]
+    );
+  };
+  const handleSave = () => {
+    updateSavedCDNs(checked);
+    showSnackbar("設置已保存", "success");
+    setDialog(null);
+  };
+  const handleReset = () => {
+    setChecked([]);
+    updateSavedCDNs([]);
+    showSnackbar("設置已清空", "success");
+    setDialog(null);
+  };
+
+  // 管理 CDN
+  const handleAdd = () => {
+    const val = input.trim();
+    if (!val) {
+      showSnackbar("請輸入 CDN host", "error");
+      return;
+    }
+    if (localPool.includes(val)) {
+      showSnackbar("CDN 已存在", "error");
+      return;
+    }
+    updatePoolCdns([...localPool, val]);
+    setInput("");
+    showSnackbar("CDN 已新增", "success");
+  };
+  const handleDelete = (idx: number) => {
+    const newPool = localPool.filter((_, i) => i !== idx);
+    updatePoolCdns(newPool);
+    updateSavedCDNs(savedCDNs.filter(cdn => newPool.includes(cdn)));
+    showSnackbar("CDN 已刪除", "success");
+  };
+
   return (
     <>
-      {openDialog === "select" && <SelectCdnDialog />}
-      {openDialog === "manage" && <ManageCdnDialog />}
+      {/* 選擇 CDN Dialog */}
+      <Dialog open={dialog === "select"} onClose={() => setDialog(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>選擇 CDN</DialogTitle>
+        <DialogContent>
+          {poolCdns.map((cdn) => (
+            <FormControlLabel
+              key={cdn}
+              control={
+                <Checkbox
+                  checked={checked.includes(cdn)}
+                  onChange={() => handleCheck(cdn)}
+                  color="primary"
+                />
+              }
+              label={cdn}
+              sx={{ display: "block", marginBottom: 1 }}
+            />
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button variant="contained" color="primary" onClick={handleSave}>保存設置</Button>
+          <Button variant="outlined" color="secondary" onClick={handleReset}>清空設定</Button>
+          <Button onClick={() => setDialog(null)}>關閉</Button>
+        </DialogActions>
+      </Dialog>
+      {/* 管理 CDN Dialog */}
+      <Dialog open={dialog === "manage"} onClose={() => setDialog(null)} maxWidth="xs" fullWidth>
+        <DialogTitle>管理 CDN 池</DialogTitle>
+        <DialogContent>
+          {localPool.map((cdn, idx) => (
+            <div key={cdn} style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
+              <span style={{ flex: 1, wordBreak: "break-all" }}>{cdn}</span>
+              <Button
+                variant="outlined"
+                color="error"
+                size="small"
+                onClick={() => handleDelete(idx)}
+                sx={{ marginLeft: 1 }}
+              >刪除</Button>
+            </div>
+          ))}
+          <div style={{ marginTop: 16, display: "flex", alignItems: "center", gap: 8 }}>
+            <TextField
+              label="輸入新的 CDN host"
+              variant="outlined"
+              size="small"
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              fullWidth
+            />
+            <Button variant="contained" color="primary" onClick={handleAdd}>新增</Button>
+          </div>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDialog(null)}>關閉</Button>
+        </DialogActions>
+      </Dialog>
+      {/* Snackbar 通知 */}
+      <Snackbar
+        open={snackbar.open}
+        autoHideDuration={2200}
+        onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+      >
+        <Alert
+          onClose={() => setSnackbar(s => ({ ...s, open: false }))}
+          severity={snackbar.type}
+          sx={{ width: "100%" }}
+        >
+          {snackbar.message}
+        </Alert>
+      </Snackbar>
       <div />
     </>
   );
 };
 
 const mountInterval = setInterval(() => {
-  const success = appendComponentToElement(App, "body");
+  const success = appendComponentToElement(() => <App />, "body");
   if (success) {
     clearInterval(mountInterval);
   }
