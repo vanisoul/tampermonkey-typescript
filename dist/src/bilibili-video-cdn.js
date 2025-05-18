@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           bilibili Video CDN
-// @version        1.1.1
+// @version        1.1.2
 // @description    change bilibili video CDN URL
 // @author         Vanisoul
 // @match          https://www.bilibili.com/*
@@ -8,7 +8,7 @@
 // @namespace      https://greasyfork.org/users/429936
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本
 // @updateHistory  1.1.1 (2024-06-26) 增加 Reset 設定, 方便關閉時不用 disable 腳本, 並增加一個自定義欄位
-// @updateHistory  1.1.2 (2025-05-18) 刪除選擇 CDN 時自訂功能, 加入 CDN Pool 管理功能
+// @updateHistory  1.1.2 (2025-05-18) update CDN management functionality and refactor dialog implementation to React.
 // @grant          GM_setValue
 // @grant          GM_getValue
 // @grant          GM_registerMenuCommand
