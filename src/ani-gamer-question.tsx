@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ani-gamer-question
-// @version      1.2.1
+// @version      1.3.0
 // @description  巴哈頁面新增動畫瘋答題按鈕，點擊後會跳出動畫瘋答題視窗
 // @author       Vanisoul
 // @match        https://www.gamer.com.tw/*
@@ -11,6 +11,7 @@
 // @updateHistory    1.1.0 (2024-01-12) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory    1.2.0 (2025-05-30) 適配巴哈姆特新版網站，更新掛載點到左側選單動畫瘋項目附近
 // @updateHistory    1.2.1 (2025-05-30) 優化 UX
+// @updateHistory    1.3.0 (2025-05-30) 多網站適配：支援主站和論壇站不同的掛載方式
 // ==/UserScript==
 
 import React, { useState, useCallback } from "react";
@@ -22,6 +23,7 @@ import { notify } from "@/component/notification";
 import { GamerAPI } from "@/service/gamer-api";
 
 import { SelectOptionComponent } from "@/component/select-option-component";
+import AnimeIcon from './assets/serviceicon_anime.svg';
 
 // 狀態管理介面
 interface QuestionState {
@@ -34,7 +36,7 @@ interface QuestionState {
     questionToken: string;
 }
 
-function ButtonDialogApp() {
+function ButtonDialogApp(mode: "gamer" | "forum") {
     const gamerAPI = new GamerAPI();
 
     // 統一的狀態管理
@@ -189,61 +191,156 @@ function ButtonDialogApp() {
             maxWidth="md"
             fullWidth={true}
             useScopedCssBaseline={false}
-            customButtonRender={() => (
-                <a
-                    href="#"
-                    className="sidenav-section__link hover:bg-gray-50 transition-colors duration-200 rounded-lg"
-                    onClick={(e) => e.preventDefault()}
-                    style={{ textDecoration: 'none' }}
-                >
-                    <div className="sidenav__icon service__icon icon-ani"></div>
-                    <p className="sidenav-section__title">動畫瘋答題</p>
-                </a>
+            CustomButtonRender={({ onClick }) => (
+                <>
+                    {mode === "forum" ? (
+                        <a
+                            href="javascript:void(0)"
+                            className="topb5"
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }} onClick={(e) => { e.preventDefault(); onClick() }}
+                            data-tooltiptext="動畫瘋答題"
+                        >
+                            <AnimeIcon />
+                            <span className="text-tooltip">動畫瘋答題</span>
+                        </a>
+                    ) : (
+                        <a
+                            href="#"
+                            className="sidenav-section__link hover:bg-gray-50 transition-colors duration-200 rounded-lg"
+                            onClick={(e) => { e.preventDefault(); onClick() }}
+                            style={{ textDecoration: 'none' }}
+                        >
+                            <div className="sidenav__icon service__icon icon-ani"></div>
+                            <p className="sidenav-section__title">動畫瘋答題</p>
+                        </a>
+                    )}
+                </>
             )}
         />
     );
 }
 
-const parentElement = document.createElement('li');
-parentElement.className = 'sidenav-section__item';
+// 網站類型檢測
+function detectSiteType(): 'main' | 'forum' | 'unknown' {
+    const hostname = window.location.hostname;
+    if (hostname === 'www.gamer.com.tw') return 'main';
+    if (hostname === 'forum.gamer.com.tw') return 'forum';
+    return 'unknown';
+}
 
-const insertBtnInterval = setInterval(() => {
+// 主站掛載邏輯
+function mountToMainSite(): boolean {
+    const parentElement = document.createElement('li');
+    parentElement.className = 'sidenav-section__item';
+
     // 方案1: 尋找動畫瘋項目並在其後插入
     const aniGamerLink = document.querySelector('a[href="https://ani.gamer.com.tw"]');
     const aniGamerItem = aniGamerLink?.closest('li');
 
     if (aniGamerItem && aniGamerItem.parentNode) {
-        const success = insertItemAfterElement(ButtonDialogApp, parentElement, aniGamerItem);
+        const success = insertItemAfterElement(() => ButtonDialogApp("gamer"), parentElement, aniGamerItem);
         if (success) {
-            clearInterval(insertBtnInterval);
-            console.log('動畫瘋答題按鈕已成功掛載到動畫瘋項目後');
-
-            // 顯示成功通知
+            console.log('[動畫瘋答題] 主站：已成功掛載到動畫瘋項目後');
             notify.success(
                 '動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。',
                 '功能載入成功'
             );
-            return;
+            return true;
         }
     }
 
     // 方案2: 備選位置 - 服務列表末尾
     const serviceList = document.querySelector('.sidenav-section__row');
     if (serviceList) {
-        const success = appendComponentToElement(ButtonDialogApp, ".sidenav-section__row");
+        const success = appendComponentToElement(() => ButtonDialogApp("gamer"), ".sidenav-section__row");
         if (success) {
-            clearInterval(insertBtnInterval);
-            console.log('動畫瘋答題按鈕已成功掛載到服務列表末尾');
-
-            // 顯示成功通知
+            console.log('[動畫瘋答題] 主站：已成功掛載到服務列表末尾');
             notify.success(
                 '動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。',
                 '功能載入成功'
             );
-            return;
+            return true;
         }
     }
 
-    console.log('正在尋找合適的掛載點...');
-}, 3000);
+    return false;
+}
 
+// 論壇站掛載邏輯
+function mountToForumSite(): boolean {
+    const topBtnArea = document.querySelector('.TOP-btn');
+    if (!topBtnArea) {
+        console.log('[動畫瘋答題] 論壇站：找不到 TOP-btn 區域');
+        return false;
+    }
+
+    // 直接使用 appendComponentToElement 添加到 TOP-btn 區域
+    const success = appendComponentToElement(() => ButtonDialogApp("forum"), ".TOP-btn");
+
+    if (success) {
+        console.log('[動畫瘋答題] 論壇站：已成功掛載到頂部導航欄');
+        notify.success(
+            '動畫瘋答題功能已成功載入！點擊頂部導航欄中的動畫瘋答題按鈕開始答題。',
+            '功能載入成功'
+        );
+        return true;
+    }
+
+    return false;
+}
+
+// 通用回退掛載邏輯
+function mountToGenericFallback(): boolean {
+    // 嘗試一些通用的掛載點
+    const fallbackSelectors = [
+        'body',
+        '#main',
+        '.container',
+        'header'
+    ];
+
+    for (const selector of fallbackSelectors) {
+        const element = document.querySelector(selector);
+        if (element) {
+            const success = appendComponentToElement(() => ButtonDialogApp("gamer"), selector);
+            if (success) {
+                console.log(`[動畫瘋答題] 通用回退：已成功掛載到 ${selector}`);
+                notify.success(
+                    '動畫瘋答題功能已成功載入！',
+                    '功能載入成功'
+                );
+                return true;
+            }
+        }
+    }
+
+    return false;
+}
+
+// 統一的掛載邏輯
+const siteType = detectSiteType();
+console.log(`[動畫瘋答題] 檢測到網站類型: ${siteType}`);
+
+const insertBtnInterval = setInterval(() => {
+    let success = false;
+
+    switch (siteType) {
+        case 'main':
+            success = mountToMainSite();
+            break;
+        case 'forum':
+            success = mountToForumSite();
+            break;
+        default:
+            console.log('[動畫瘋答題] 未知網站類型，嘗試通用掛載方式');
+            success = mountToGenericFallback();
+            break;
+    }
+
+    if (success) {
+        clearInterval(insertBtnInterval);
+        return;
+    }
+
+    console.log(`[動畫瘋答題] 正在尋找 ${siteType} 網站的合適掛載點...`);
+}, 3000);

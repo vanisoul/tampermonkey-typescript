@@ -13,12 +13,16 @@ import { useTheme } from '@mui/material/styles';
 
 import '../css/tailwind.css';
 
+interface MyComponentProps {
+  onClick: () => void; // 可選的 callback prop
+}
+
 interface ButtonDialogInput {
   buttonLabel: string;
   renderDialog: () => React.ReactNode;
   onOpenDialog?: () => void;
   onCloseDialog?: () => void;
-  customButtonRender?: () => React.ReactNode;
+  CustomButtonRender?: React.FC<MyComponentProps>;
   useScopedCssBaseline?: boolean;
   title?: string;
   maxWidth?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
@@ -30,7 +34,7 @@ export function ButtonDialog({
   renderDialog,
   onOpenDialog,
   onCloseDialog,
-  customButtonRender,
+  CustomButtonRender,
   useScopedCssBaseline = true,
   title = "",
   maxWidth = "md",
@@ -56,10 +60,8 @@ export function ButtonDialog({
 
   // 如果有自定義按鈕渲染，則使用它，否則使用默認按鈕
   const ButtonContent = () => (
-    customButtonRender ? (
-      <div onClick={handleOpenDialog} className="cursor-pointer">
-        {customButtonRender()}
-      </div>
+    CustomButtonRender ? (
+      <CustomButtonRender onClick={handleOpenDialog} />
     ) : (
       <Button
         onClick={handleOpenDialog}
@@ -72,7 +74,7 @@ export function ButtonDialog({
   );
 
   return (
-    <div>
+    <>
       {useScopedCssBaseline ? (
         <ScopedCssBaseline>
           <ButtonContent />
@@ -136,6 +138,6 @@ export function ButtonDialog({
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </>
   );
 }

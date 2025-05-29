@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           ani-gamer-question
-// @version        1.2.1
+// @version        1.3.0
 // @description    巴哈頁面新增動畫瘋答題按鈕，點擊後會跳出動畫瘋答題視窗
 // @author         Vanisoul
 // @match          https://www.gamer.com.tw/*
@@ -11,6 +11,7 @@
 // @updateHistory  1.1.0 (2024-01-12) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory  1.2.0 (2025-05-30) 適配巴哈姆特新版網站，更新掛載點到左側選單動畫瘋項目附近
 // @updateHistory  1.2.1 (2025-05-30) 優化 UX
+// @updateHistory  1.3.0 (2025-05-30) 多網站適配：支援主站和論壇站不同的掛載方式
 // @connect        ani.gamer.com.tw
 // @grant          GM_xmlhttpRequest
 // ==/UserScript==
@@ -59,14 +60,14 @@
             writable: false
         }), e;
     }
-    function _extends$2() {
-        return _extends$2 = Object.assign ? Object.assign.bind() : function(n) {
+    function _extends$3() {
+        return _extends$3 = Object.assign ? Object.assign.bind() : function(n) {
             for (var e = 1; e < arguments.length; e++) {
                 var t = arguments[e];
                 for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
             }
             return n;
-        }, _extends$2.apply(null, arguments);
+        }, _extends$3.apply(null, arguments);
     }
     function _iterableToArray(r) {
         if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
@@ -8370,14 +8371,14 @@
         }
         return t;
     }
-    function _extends$1() {
-        return _extends$1 = Object.assign ? Object.assign.bind() : function(n) {
+    function _extends$2() {
+        return _extends$2 = Object.assign ? Object.assign.bind() : function(n) {
             for (var e = 1; e < arguments.length; e++) {
                 var t = arguments[e];
                 for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
             }
             return n;
-        }, _extends$1.apply(null, arguments);
+        }, _extends$2.apply(null, arguments);
     }
     function r(e) {
         var t, f, n = "";
@@ -8411,10 +8412,10 @@
         return output;
     }
     function resolveProps(defaultProps, props) {
-        const output = _extends$1({}, props);
+        const output = _extends$2({}, props);
         Object.keys(defaultProps).forEach((propName => {
             if (propName.toString().match(/^(components|slots)$/)) {
-                output[propName] = _extends$1({}, defaultProps[propName], output[propName]);
+                output[propName] = _extends$2({}, defaultProps[propName], output[propName]);
             } else if (propName.toString().match(/^(componentsProps|slotProps)$/)) {
                 const defaultSlotProps = defaultProps[propName] || {};
                 const slotProps = props[propName];
@@ -8424,7 +8425,7 @@
                 } else if (!defaultSlotProps || !Object.keys(defaultSlotProps)) {
                     output[propName] = slotProps;
                 } else {
-                    output[propName] = _extends$1({}, slotProps);
+                    output[propName] = _extends$2({}, slotProps);
                     Object.keys(defaultSlotProps).forEach((slotPropName => {
                         output[propName][slotPropName] = resolveProps(defaultSlotProps[slotPropName], slotProps[slotPropName]);
                     }));
@@ -8523,12 +8524,12 @@
         module.exports = _interopRequireDefault, module.exports.__esModule = true, module.exports["default"] = module.exports;
     })(interopRequireDefault);
     var interopRequireDefaultExports = interopRequireDefault.exports;
-    var _extends = {
+    var _extends$1 = {
         exports: {}
     };
     var hasRequired_extends;
     function require_extends() {
-        if (hasRequired_extends) return _extends.exports;
+        if (hasRequired_extends) return _extends$1.exports;
         hasRequired_extends = 1;
         (function(module) {
             function _extends() {
@@ -8542,8 +8543,8 @@
                 _extends.apply(null, arguments);
             }
             module.exports = _extends, module.exports.__esModule = true, module.exports["default"] = module.exports;
-        })(_extends);
-        return _extends.exports;
+        })(_extends$1);
+        return _extends$1.exports;
     }
     var objectWithoutPropertiesLoose = {
         exports: {}
@@ -10110,7 +10111,7 @@
                 }
             });
             Styled.withComponent = function(nextTag, nextOptions) {
-                var newStyled = createStyled(nextTag, _extends$1({}, options, nextOptions, {
+                var newStyled = createStyled(nextTag, _extends$2({}, options, nextOptions, {
                     shouldForwardProp: composeShouldForwardProps(Styled, nextOptions, true)
                 }));
                 return newStyled.apply(void 0, styles);
@@ -10193,7 +10194,7 @@
     function deepmerge$1(target, source, options = {
         clone: true
     }) {
-        const output = options.clone ? _extends$1({}, target) : target;
+        const output = options.clone ? _extends$2({}, target) : target;
         if (isPlainObject(target) && isPlainObject(source)) {
             Object.keys(source).forEach((key => {
                 if (reactExports.isValidElement(source[key])) {
@@ -10398,7 +10399,7 @@
             val: values[key]
         }))) || [];
         breakpointsAsArray.sort(((breakpoint1, breakpoint2) => breakpoint1.val - breakpoint2.val));
-        return breakpointsAsArray.reduce(((acc, obj) => _extends$1({}, acc, {
+        return breakpointsAsArray.reduce(((acc, obj) => _extends$2({}, acc, {
             [obj.key]: obj.val
         })), {});
     };
@@ -10440,7 +10441,7 @@
             }
             return between(key, keys[keys.indexOf(key) + 1]).replace("@media", "@media not all and");
         }
-        return _extends$1({
+        return _extends$2({
             keys: keys,
             values: sortedValues,
             up: up,
@@ -11347,15 +11348,15 @@
             breakpoints: breakpoints,
             direction: "ltr",
             components: {},
-            palette: _extends$1({
+            palette: _extends$2({
                 mode: "light"
             }, paletteInput),
             spacing: spacing,
-            shape: _extends$1({}, shape, shapeInput)
+            shape: _extends$2({}, shape, shapeInput)
         }, other);
         muiTheme.applyStyles = applyStyles;
         muiTheme = args.reduce(((acc, argument) => deepmerge$1(acc, argument)), muiTheme);
-        muiTheme.unstable_sxConfig = _extends$1({}, defaultSxConfig, other == null ? void 0 : other.unstable_sxConfig);
+        muiTheme.unstable_sxConfig = _extends$2({}, defaultSxConfig, other == null ? void 0 : other.unstable_sxConfig);
         muiTheme.unstable_sx = function sx(props) {
             return styleFunctionSx$1({
                 sx: props,
@@ -11400,12 +11401,12 @@
                 if (!isPlainObject(result)) {
                     return systemProps;
                 }
-                return _extends$1({}, systemProps, result);
+                return _extends$2({}, systemProps, result);
             };
         } else {
-            finalSx = _extends$1({}, systemProps, inSx);
+            finalSx = _extends$2({}, systemProps, inSx);
         }
-        return _extends$1({}, otherProps, {
+        return _extends$2({}, otherProps, {
             sx: finalSx
         });
     }
@@ -11656,7 +11657,7 @@
         return globalStateClass ? `${globalStatePrefix}-${globalStateClass}` : `${ClassNameGenerator.generate(componentName)}-${slot}`;
     }
     function createMixins(breakpoints, mixins) {
-        return _extends$1({
+        return _extends$2({
             toolbar: {
                 minHeight: 56,
                 [breakpoints.up("xs")]: {
@@ -12132,7 +12133,7 @@
             return contrastText;
         }
         const augmentColor = ({color: color, name: name, mainShade: mainShade = 500, lightShade: lightShade = 300, darkShade: darkShade = 700}) => {
-            color = _extends$1({}, color);
+            color = _extends$2({}, color);
             if (!color.main && color[mainShade]) {
                 color.main = color[mainShade];
             }
@@ -12153,8 +12154,8 @@
             dark: dark,
             light: light
         };
-        const paletteOutput = deepmerge$1(_extends$1({
-            common: _extends$1({}, common),
+        const paletteOutput = deepmerge$1(_extends$2({
+            common: _extends$2({}, common),
             mode: mode,
             primary: augmentColor({
                 color: primary,
@@ -12203,7 +12204,7 @@
         const _ref = typeof typography === "function" ? typography(palette) : typography, {fontFamily: fontFamily = defaultFontFamily, fontSize: fontSize = 14, fontWeightLight: fontWeightLight = 300, fontWeightRegular: fontWeightRegular = 400, fontWeightMedium: fontWeightMedium = 500, fontWeightBold: fontWeightBold = 700, htmlFontSize: htmlFontSize = 16, allVariants: allVariants, pxToRem: pxToRem2} = _ref, other = _objectWithoutPropertiesLoose(_ref, _excluded$u);
         const coef = fontSize / 14;
         const pxToRem = pxToRem2 || (size => `${size / htmlFontSize * coef}rem`);
-        const buildVariant = (fontWeight, size, lineHeight, letterSpacing, casing) => _extends$1({
+        const buildVariant = (fontWeight, size, lineHeight, letterSpacing, casing) => _extends$2({
             fontFamily: fontFamily,
             fontWeight: fontWeight,
             fontSize: pxToRem(size),
@@ -12233,7 +12234,7 @@
                 letterSpacing: "inherit"
             }
         };
-        return deepmerge$1(_extends$1({
+        return deepmerge$1(_extends$2({
             htmlFontSize: htmlFontSize,
             pxToRem: pxToRem,
             fontFamily: fontFamily,
@@ -12280,14 +12281,14 @@
         return Math.round((4 + 15 * constant ** .25 + constant / 5) * 10);
     }
     function createTransitions(inputTransitions) {
-        const mergedEasing = _extends$1({}, easing, inputTransitions.easing);
-        const mergedDuration = _extends$1({}, duration, inputTransitions.duration);
+        const mergedEasing = _extends$2({}, easing, inputTransitions.easing);
+        const mergedDuration = _extends$2({}, duration, inputTransitions.duration);
         const create = (props = [ "all" ], options = {}) => {
             const {duration: durationOption = mergedDuration.standard, easing: easingOption = mergedEasing.easeInOut, delay: delay = 0} = options;
             _objectWithoutPropertiesLoose(options, _excluded$t);
             return (Array.isArray(props) ? props : [ props ]).map((animatedProp => `${animatedProp} ${typeof durationOption === "string" ? durationOption : formatMs(durationOption)} ${easingOption} ${typeof delay === "string" ? delay : formatMs(delay)}`)).join(",");
         };
-        return _extends$1({
+        return _extends$2({
             getAutoHeightDuration: getAutoHeightDuration,
             create: create
         }, inputTransitions, {
@@ -12319,11 +12320,11 @@
             shadows: shadows.slice(),
             typography: createTypography(palette, typographyInput),
             transitions: createTransitions(transitionsInput),
-            zIndex: _extends$1({}, zIndex)
+            zIndex: _extends$2({}, zIndex)
         });
         muiTheme = deepmerge$1(muiTheme, other);
         muiTheme = args.reduce(((acc, argument) => deepmerge$1(acc, argument)), muiTheme);
-        muiTheme.unstable_sxConfig = _extends$1({}, defaultSxConfig, other == null ? void 0 : other.unstable_sxConfig);
+        muiTheme.unstable_sxConfig = _extends$2({}, defaultSxConfig, other == null ? void 0 : other.unstable_sxConfig);
         muiTheme.unstable_sx = function sx(props) {
             return styleFunctionSx$1({
                 sx: props,
@@ -12363,7 +12364,7 @@
         const Box = reactExports.forwardRef((function Box(inProps, ref) {
             const theme = useTheme$1(defaultTheme);
             const _extendSxProp = extendSxProp(inProps), {className: className, component: component = "div"} = _extendSxProp, other = _objectWithoutPropertiesLoose(_extendSxProp, _excluded$r);
-            return jsxRuntimeExports.jsx(BoxRoot, _extends$1({
+            return jsxRuntimeExports.jsx(BoxRoot, _extends$2({
                 as: component,
                 ref: ref,
                 className: clsx(className, generateClassName ? generateClassName(defaultClassName) : defaultClassName),
@@ -12680,8 +12681,8 @@
         if (elementType === undefined || isHostComponent(elementType)) {
             return otherProps;
         }
-        return _extends$1({}, otherProps, {
-            ownerState: _extends$1({}, otherProps.ownerState, ownerState)
+        return _extends$2({}, otherProps, {
+            ownerState: _extends$2({}, otherProps.ownerState, ownerState)
         });
     }
     function extractEventHandlers(object, excludeKeys = []) {
@@ -12708,8 +12709,8 @@
         const {getSlotProps: getSlotProps, additionalProps: additionalProps, externalSlotProps: externalSlotProps, externalForwardedProps: externalForwardedProps, className: className} = parameters;
         if (!getSlotProps) {
             const joinedClasses = clsx(additionalProps == null ? void 0 : additionalProps.className, className, externalForwardedProps == null ? void 0 : externalForwardedProps.className, externalSlotProps == null ? void 0 : externalSlotProps.className);
-            const mergedStyle = _extends$1({}, additionalProps == null ? void 0 : additionalProps.style, externalForwardedProps == null ? void 0 : externalForwardedProps.style, externalSlotProps == null ? void 0 : externalSlotProps.style);
-            const props = _extends$1({}, additionalProps, externalForwardedProps, externalSlotProps);
+            const mergedStyle = _extends$2({}, additionalProps == null ? void 0 : additionalProps.style, externalForwardedProps == null ? void 0 : externalForwardedProps.style, externalSlotProps == null ? void 0 : externalSlotProps.style);
+            const props = _extends$2({}, additionalProps, externalForwardedProps, externalSlotProps);
             if (joinedClasses.length > 0) {
                 props.className = joinedClasses;
             }
@@ -12721,13 +12722,13 @@
                 internalRef: undefined
             };
         }
-        const eventHandlers = extractEventHandlers(_extends$1({}, externalForwardedProps, externalSlotProps));
+        const eventHandlers = extractEventHandlers(_extends$2({}, externalForwardedProps, externalSlotProps));
         const componentsPropsWithoutEventHandlers = omitEventHandlers(externalSlotProps);
         const otherPropsWithoutEventHandlers = omitEventHandlers(externalForwardedProps);
         const internalSlotProps = getSlotProps(eventHandlers);
         const joinedClasses = clsx(internalSlotProps == null ? void 0 : internalSlotProps.className, additionalProps == null ? void 0 : additionalProps.className, className, externalForwardedProps == null ? void 0 : externalForwardedProps.className, externalSlotProps == null ? void 0 : externalSlotProps.className);
-        const mergedStyle = _extends$1({}, internalSlotProps == null ? void 0 : internalSlotProps.style, additionalProps == null ? void 0 : additionalProps.style, externalForwardedProps == null ? void 0 : externalForwardedProps.style, externalSlotProps == null ? void 0 : externalSlotProps.style);
-        const props = _extends$1({}, internalSlotProps, additionalProps, otherPropsWithoutEventHandlers, componentsPropsWithoutEventHandlers);
+        const mergedStyle = _extends$2({}, internalSlotProps == null ? void 0 : internalSlotProps.style, additionalProps == null ? void 0 : additionalProps.style, externalForwardedProps == null ? void 0 : externalForwardedProps.style, externalSlotProps == null ? void 0 : externalSlotProps.style);
+        const props = _extends$2({}, internalSlotProps, additionalProps, otherPropsWithoutEventHandlers, componentsPropsWithoutEventHandlers);
         if (joinedClasses.length > 0) {
             props.className = joinedClasses;
         }
@@ -12750,11 +12751,11 @@
         var _parameters$additiona;
         const {elementType: elementType, externalSlotProps: externalSlotProps, ownerState: ownerState, skipResolvingSlotProps: skipResolvingSlotProps = false} = parameters, rest = _objectWithoutPropertiesLoose(parameters, _excluded$q);
         const resolvedComponentsProps = skipResolvingSlotProps ? {} : resolveComponentProps(externalSlotProps, ownerState);
-        const {props: mergedProps, internalRef: internalRef} = mergeSlotProps(_extends$1({}, rest, {
+        const {props: mergedProps, internalRef: internalRef} = mergeSlotProps(_extends$2({}, rest, {
             externalSlotProps: resolvedComponentsProps
         }));
         const ref = useForkRef(internalRef, resolvedComponentsProps == null ? void 0 : resolvedComponentsProps.ref, (_parameters$additiona = parameters.additionalProps) == null ? void 0 : _parameters$additiona.ref);
-        const props = appendOwnerState(elementType, _extends$1({}, mergedProps, {
+        const props = appendOwnerState(elementType, _extends$2({}, mergedProps, {
             ref: ref
         }), ownerState);
         return props;
@@ -12771,7 +12772,7 @@
         const value = reactExports.useContext(RtlContext);
         return value != null ? value : false;
     };
-    const html = (theme, enableColorScheme) => _extends$1({
+    const html = (theme, enableColorScheme) => _extends$2({
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
         boxSizing: "border-box",
@@ -12779,7 +12780,7 @@
     }, enableColorScheme && !theme.vars && {
         colorScheme: theme.palette.mode
     });
-    const body = theme => _extends$1({
+    const body = theme => _extends$2({
         color: (theme.vars || theme).palette.text.primary
     }, theme.typography.body1, {
         backgroundColor: (theme.vars || theme).palette.background.default,
@@ -12813,7 +12814,7 @@
                 };
             }));
         }
-        return _extends$1({}, html(theme, ownerState.enableColorScheme), body(theme), {
+        return _extends$2({}, html(theme, ownerState.enableColorScheme), body(theme), {
             "& *, & *::before, & *::after": {
                 boxSizing: "inherit"
             },
@@ -12828,11 +12829,11 @@
             name: "MuiScopedCssBaseline"
         });
         const {className: className, component: component = "div"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$p);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             component: component
         });
         const classes = useUtilityClasses$k(ownerState);
-        return jsxRuntimeExports.jsx(ScopedCssBaselineRoot, _extends$1({
+        return jsxRuntimeExports.jsx(ScopedCssBaselineRoot, _extends$2({
             as: component,
             className: clsx(classes.root, className),
             ref: ref,
@@ -13667,7 +13668,7 @@
             }
             if (this.mounted) {
                 this.setState((function(state) {
-                    var children = _extends$1({}, state.children);
+                    var children = _extends$2({}, state.children);
                     delete children[child.key];
                     return {
                         children: children
@@ -13775,7 +13776,7 @@
                 addEndListener(nodeRef.current, next);
             }
         };
-        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
             appear: appear,
             in: inProp,
             nodeRef: nodeRef,
@@ -13788,8 +13789,8 @@
             addEndListener: handleAddEndListener,
             timeout: timeout
         }, other, {
-            children: (state, childProps) => reactExports.cloneElement(children, _extends$1({
-                style: _extends$1({
+            children: (state, childProps) => reactExports.cloneElement(children, _extends$2({
+                style: _extends$2({
                     opacity: 0,
                     visibility: state === "exited" && !inProp ? "hidden" : undefined
                 }, styles$1[state], style, children.props.style),
@@ -13816,7 +13817,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, ownerState.invisible && styles.invisible ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         position: "fixed",
         display: "flex",
         alignItems: "center",
@@ -13837,22 +13838,22 @@
             name: "MuiBackdrop"
         });
         const {children: children, className: className, component: component = "div", components: components = {}, componentsProps: componentsProps = {}, invisible: invisible = false, open: open, slotProps: slotProps = {}, slots: slots = {}, TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration} = props, other = _objectWithoutPropertiesLoose(props, _excluded$n);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             component: component,
             invisible: invisible
         });
         const classes = useUtilityClasses$j(ownerState);
         const rootSlotProps = (_slotProps$root = slotProps.root) != null ? _slotProps$root : componentsProps.root;
-        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
             in: open,
             timeout: transitionDuration
         }, other, {
-            children: jsxRuntimeExports.jsx(BackdropRoot, _extends$1({
+            children: jsxRuntimeExports.jsx(BackdropRoot, _extends$2({
                 "aria-hidden": true
             }, rootSlotProps, {
                 as: (_ref = (_slots$root = slots.root) != null ? _slots$root : components.Root) != null ? _ref : component,
                 className: clsx(classes.root, className, rootSlotProps == null ? void 0 : rootSlotProps.className),
-                ownerState: _extends$1({}, ownerState, rootSlotProps == null ? void 0 : rootSlotProps.ownerState),
+                ownerState: _extends$2({}, ownerState, rootSlotProps == null ? void 0 : rootSlotProps.ownerState),
                 classes: classes,
                 ref: ref,
                 children: children
@@ -13951,8 +13952,8 @@
             const propsEventHandlers = extractEventHandlers(parameters);
             delete propsEventHandlers.onTransitionEnter;
             delete propsEventHandlers.onTransitionExited;
-            const externalEventHandlers = _extends$1({}, propsEventHandlers, otherHandlers);
-            return _extends$1({
+            const externalEventHandlers = _extends$2({}, propsEventHandlers, otherHandlers);
+            return _extends$2({
                 role: "presentation"
             }, externalEventHandlers, {
                 onKeyDown: createHandleKeyDown(externalEventHandlers),
@@ -13961,7 +13962,7 @@
         };
         const getBackdropProps = (otherHandlers = {}) => {
             const externalEventHandlers = otherHandlers;
-            return _extends$1({
+            return _extends$2({
                 "aria-hidden": true
             }, externalEventHandlers, {
                 onClick: createHandleBackdropClick(externalEventHandlers),
@@ -14020,7 +14021,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, !ownerState.open && ownerState.exited && styles.hidden ];
         }
-    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+    })((({theme: theme, ownerState: ownerState}) => _extends$2({
         position: "fixed",
         zIndex: (theme.vars || theme).zIndex.modal,
         right: 0,
@@ -14044,7 +14045,7 @@
             props: inProps
         });
         const {BackdropComponent: BackdropComponent = ModalBackdrop, BackdropProps: BackdropProps, className: className, closeAfterTransition: closeAfterTransition = false, children: children, container: container, component: component, components: components = {}, componentsProps: componentsProps = {}, disableAutoFocus: disableAutoFocus = false, disableEnforceFocus: disableEnforceFocus = false, disableEscapeKeyDown: disableEscapeKeyDown = false, disablePortal: disablePortal = false, disableRestoreFocus: disableRestoreFocus = false, disableScrollLock: disableScrollLock = false, hideBackdrop: hideBackdrop = false, keepMounted: keepMounted = false, onBackdropClick: onBackdropClick, open: open, slotProps: slotProps, slots: slots} = props, other = _objectWithoutPropertiesLoose(props, _excluded$m);
-        const propsWithDefaults = _extends$1({}, props, {
+        const propsWithDefaults = _extends$2({}, props, {
             closeAfterTransition: closeAfterTransition,
             disableAutoFocus: disableAutoFocus,
             disableEnforceFocus: disableEnforceFocus,
@@ -14055,10 +14056,10 @@
             hideBackdrop: hideBackdrop,
             keepMounted: keepMounted
         });
-        const {getRootProps: getRootProps, getBackdropProps: getBackdropProps, getTransitionProps: getTransitionProps, portalRef: portalRef, isTopModal: isTopModal, exited: exited, hasTransition: hasTransition} = useModal(_extends$1({}, propsWithDefaults, {
+        const {getRootProps: getRootProps, getBackdropProps: getBackdropProps, getTransitionProps: getTransitionProps, portalRef: portalRef, isTopModal: isTopModal, exited: exited, hasTransition: hasTransition} = useModal(_extends$2({}, propsWithDefaults, {
             rootRef: ref
         }));
-        const ownerState = _extends$1({}, propsWithDefaults, {
+        const ownerState = _extends$2({}, propsWithDefaults, {
             exited: exited
         });
         const classes = useUtilityClasses$i(ownerState);
@@ -14091,7 +14092,7 @@
             elementType: BackdropSlot,
             externalSlotProps: backdropSlotProps,
             additionalProps: BackdropProps,
-            getSlotProps: otherHandlers => getBackdropProps(_extends$1({}, otherHandlers, {
+            getSlotProps: otherHandlers => getBackdropProps(_extends$2({}, otherHandlers, {
                 onClick: e => {
                     if (onBackdropClick) {
                         onBackdropClick(e);
@@ -14111,8 +14112,8 @@
             ref: portalRef,
             container: container,
             disablePortal: disablePortal,
-            children: jsxRuntimeExports.jsxs(RootSlot, _extends$1({}, rootProps, {
-                children: [ !hideBackdrop && BackdropComponent ? jsxRuntimeExports.jsx(BackdropSlot, _extends$1({}, backdropProps)) : null, jsxRuntimeExports.jsx(FocusTrap, {
+            children: jsxRuntimeExports.jsxs(RootSlot, _extends$2({}, rootProps, {
+                children: [ !hideBackdrop && BackdropComponent ? jsxRuntimeExports.jsx(BackdropSlot, _extends$2({}, backdropProps)) : null, jsxRuntimeExports.jsx(FocusTrap, {
                     disableEnforceFocus: disableEnforceFocus,
                     disableAutoFocus: disableAutoFocus,
                     disableRestoreFocus: disableRestoreFocus,
@@ -14153,7 +14154,7 @@
         }
     })((({theme: theme, ownerState: ownerState}) => {
         var _theme$vars$overlays;
-        return _extends$1({
+        return _extends$2({
             backgroundColor: (theme.vars || theme).palette.background.paper,
             color: (theme.vars || theme).palette.text.primary,
             transition: theme.transitions.create("box-shadow")
@@ -14161,7 +14162,7 @@
             borderRadius: theme.shape.borderRadius
         }, ownerState.variant === "outlined" && {
             border: `1px solid ${(theme.vars || theme).palette.divider}`
-        }, ownerState.variant === "elevation" && _extends$1({
+        }, ownerState.variant === "elevation" && _extends$2({
             boxShadow: (theme.vars || theme).shadows[ownerState.elevation]
         }, !theme.vars && theme.palette.mode === "dark" && {
             backgroundImage: `linear-gradient(${alpha_1("#fff", getOverlayAlpha(ownerState.elevation))}, ${alpha_1("#fff", getOverlayAlpha(ownerState.elevation))})`
@@ -14175,14 +14176,14 @@
             name: "MuiPaper"
         });
         const {className: className, component: component = "div", elevation: elevation = 1, square: square = false, variant: variant = "elevation"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$l);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             component: component,
             elevation: elevation,
             square: square,
             variant: variant
         });
         const classes = useUtilityClasses$h(ownerState);
-        return jsxRuntimeExports.jsx(PaperRoot, _extends$1({
+        return jsxRuntimeExports.jsx(PaperRoot, _extends$2({
             as: component,
             ownerState: ownerState,
             className: clsx(classes.root, className),
@@ -14227,7 +14228,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.container, styles[`scroll${capitalize$1(ownerState.scroll)}`] ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         height: "100%",
         "@media print": {
             height: "auto"
@@ -14256,7 +14257,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.paper, styles[`scrollPaper${capitalize$1(ownerState.scroll)}`], styles[`paperWidth${capitalize$1(String(ownerState.maxWidth))}`], ownerState.fullWidth && styles.paperFullWidth, ownerState.fullScreen && styles.paperFullScreen ];
         }
-    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+    })((({theme: theme, ownerState: ownerState}) => _extends$2({
         margin: 32,
         position: "relative",
         overflowY: "auto",
@@ -14313,7 +14314,7 @@
             exit: theme.transitions.duration.leavingScreen
         };
         const {"aria-describedby": ariaDescribedby, "aria-labelledby": ariaLabelledbyProp, BackdropComponent: BackdropComponent, BackdropProps: BackdropProps, children: children, className: className, disableEscapeKeyDown: disableEscapeKeyDown = false, fullScreen: fullScreen = false, fullWidth: fullWidth = false, maxWidth: maxWidth = "sm", onBackdropClick: onBackdropClick, onClick: onClick, onClose: onClose, open: open, PaperComponent: PaperComponent = Paper, PaperProps: PaperProps = {}, scroll: scroll = "paper", TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration = defaultTransitionDuration, TransitionProps: TransitionProps} = props, other = _objectWithoutPropertiesLoose(props, _excluded$k);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             disableEscapeKeyDown: disableEscapeKeyDown,
             fullScreen: fullScreen,
             fullWidth: fullWidth,
@@ -14344,14 +14345,14 @@
         const dialogContextValue = reactExports.useMemo((() => ({
             titleId: ariaLabelledby
         })), [ ariaLabelledby ]);
-        return jsxRuntimeExports.jsx(DialogRoot, _extends$1({
+        return jsxRuntimeExports.jsx(DialogRoot, _extends$2({
             className: clsx(classes.root, className),
             closeAfterTransition: true,
             components: {
                 Backdrop: DialogBackdrop
             },
             componentsProps: {
-                backdrop: _extends$1({
+                backdrop: _extends$2({
                     transitionDuration: transitionDuration,
                     as: BackdropComponent
                 }, BackdropProps)
@@ -14363,7 +14364,7 @@
             onClick: handleBackdropClick,
             ownerState: ownerState
         }, other, {
-            children: jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+            children: jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
                 appear: true,
                 in: open,
                 timeout: transitionDuration,
@@ -14373,7 +14374,7 @@
                     className: clsx(classes.container),
                     onMouseDown: handleMouseDown,
                     ownerState: ownerState,
-                    children: jsxRuntimeExports.jsx(DialogPaper, _extends$1({
+                    children: jsxRuntimeExports.jsx(DialogPaper, _extends$2({
                         as: PaperComponent,
                         elevation: 24,
                         role: "dialog",
@@ -14410,7 +14411,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, ownerState.variant && styles[ownerState.variant], ownerState.align !== "inherit" && styles[`align${capitalize$1(ownerState.align)}`], ownerState.noWrap && styles.noWrap, ownerState.gutterBottom && styles.gutterBottom, ownerState.paragraph && styles.paragraph ];
         }
-    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+    })((({theme: theme, ownerState: ownerState}) => _extends$2({
         margin: 0
     }, ownerState.variant === "inherit" && {
         font: "inherit"
@@ -14452,11 +14453,11 @@
             name: "MuiTypography"
         });
         const color = transformDeprecatedColors(themeProps.color);
-        const props = extendSxProp(_extends$1({}, themeProps, {
+        const props = extendSxProp(_extends$2({}, themeProps, {
             color: color
         }));
         const {align: align = "inherit", className: className, component: component, gutterBottom: gutterBottom = false, noWrap: noWrap = false, paragraph: paragraph = false, variant: variant = "body1", variantMapping: variantMapping = defaultVariantMapping} = props, other = _objectWithoutPropertiesLoose(props, _excluded$j);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             align: align,
             color: color,
             className: className,
@@ -14469,7 +14470,7 @@
         });
         const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
         const classes = useUtilityClasses$f(ownerState);
-        return jsxRuntimeExports.jsx(TypographyRoot, _extends$1({
+        return jsxRuntimeExports.jsx(TypographyRoot, _extends$2({
             as: Component,
             ref: ref,
             ownerState: ownerState,
@@ -14505,7 +14506,7 @@
         const ownerState = props;
         const classes = useUtilityClasses$e(ownerState);
         const {titleId: titleId = idProp} = reactExports.useContext(DialogContext);
-        return jsxRuntimeExports.jsx(DialogTitleRoot, _extends$1({
+        return jsxRuntimeExports.jsx(DialogTitleRoot, _extends$2({
             component: "h2",
             className: clsx(classes.root, className),
             ownerState: ownerState,
@@ -14533,7 +14534,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, ownerState.dividers && styles.dividers ];
         }
-    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+    })((({theme: theme, ownerState: ownerState}) => _extends$2({
         flex: "1 1 auto",
         WebkitOverflowScrolling: "touch",
         overflowY: "auto",
@@ -14553,11 +14554,11 @@
             name: "MuiDialogContent"
         });
         const {className: className, dividers: dividers = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$h);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             dividers: dividers
         });
         const classes = useUtilityClasses$d(ownerState);
-        return jsxRuntimeExports.jsx(DialogContentRoot, _extends$1({
+        return jsxRuntimeExports.jsx(DialogContentRoot, _extends$2({
             className: clsx(classes.root, className),
             ownerState: ownerState,
             ref: ref
@@ -14582,7 +14583,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, !ownerState.disableSpacing && styles.spacing ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         display: "flex",
         alignItems: "center",
         padding: 8,
@@ -14599,11 +14600,11 @@
             name: "MuiDialogActions"
         });
         const {className: className, disableSpacing: disableSpacing = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$g);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             disableSpacing: disableSpacing
         });
         const classes = useUtilityClasses$c(ownerState);
-        return jsxRuntimeExports.jsx(DialogActionsRoot, _extends$1({
+        return jsxRuntimeExports.jsx(DialogActionsRoot, _extends$2({
             className: clsx(classes.root, className),
             ownerState: ownerState,
             ref: ref
@@ -14872,7 +14873,7 @@
             start: start,
             stop: stop
         })), [ pulsate, start, stop ]);
-        return jsxRuntimeExports.jsx(TouchRippleRoot, _extends$1({
+        return jsxRuntimeExports.jsx(TouchRippleRoot, _extends$2({
             className: clsx(touchRippleClasses.root, classes.root, className),
             ref: container
         }, other, {
@@ -15071,7 +15072,7 @@
             }
         }
         const handleRef = useForkRef(ref, focusVisibleRef, buttonRef);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             centerRipple: centerRipple,
             component: component,
             disabled: disabled,
@@ -15082,7 +15083,7 @@
             focusVisible: focusVisible
         });
         const classes = useUtilityClasses$b(ownerState);
-        return jsxRuntimeExports.jsxs(ButtonBaseRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(ButtonBaseRoot, _extends$2({
             as: ComponentProp,
             className: clsx(classes.root, className),
             ownerState: ownerState,
@@ -15103,7 +15104,7 @@
             tabIndex: disabled ? -1 : tabIndex,
             type: type
         }, buttonProps, other, {
-            children: [ children, enableTouchRipple ? jsxRuntimeExports.jsx(TouchRipple, _extends$1({
+            children: [ children, enableTouchRipple ? jsxRuntimeExports.jsx(TouchRipple, _extends$2({
                 ref: handleRippleRef,
                 center: centerRipple
             }, TouchRippleProps)) : null ]
@@ -15125,9 +15126,9 @@
             endIcon: [ "icon", "endIcon", `iconSize${capitalize$1(size)}` ]
         };
         const composedClasses = composeClasses(slots, getButtonUtilityClass, classes);
-        return _extends$1({}, classes, composedClasses);
+        return _extends$2({}, classes, composedClasses);
     };
-    const commonIconStyles = ownerState => _extends$1({}, ownerState.size === "small" && {
+    const commonIconStyles = ownerState => _extends$2({}, ownerState.size === "small" && {
         "& > *:nth-of-type(1)": {
             fontSize: 18
         }
@@ -15152,14 +15153,14 @@
         var _theme$palette$getCon, _theme$palette;
         const inheritContainedBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey[300] : theme.palette.grey[800];
         const inheritContainedHoverBackgroundColor = theme.palette.mode === "light" ? theme.palette.grey.A100 : theme.palette.grey[700];
-        return _extends$1({}, theme.typography.button, {
+        return _extends$2({}, theme.typography.button, {
             minWidth: 64,
             padding: "6px 16px",
             borderRadius: (theme.vars || theme).shape.borderRadius,
             transition: theme.transitions.create([ "background-color", "box-shadow", "border-color", "color" ], {
                 duration: theme.transitions.duration.short
             }),
-            "&:hover": _extends$1({
+            "&:hover": _extends$2({
                 textDecoration: "none",
                 backgroundColor: theme.vars ? `rgba(${theme.vars.palette.text.primaryChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha_1(theme.palette.text.primary, theme.palette.action.hoverOpacity),
                 "@media (hover: none)": {
@@ -15189,13 +15190,13 @@
                     backgroundColor: (theme.vars || theme).palette[ownerState.color].main
                 }
             }),
-            "&:active": _extends$1({}, ownerState.variant === "contained" && {
+            "&:active": _extends$2({}, ownerState.variant === "contained" && {
                 boxShadow: (theme.vars || theme).shadows[8]
             }),
-            [`&.${buttonClasses.focusVisible}`]: _extends$1({}, ownerState.variant === "contained" && {
+            [`&.${buttonClasses.focusVisible}`]: _extends$2({}, ownerState.variant === "contained" && {
                 boxShadow: (theme.vars || theme).shadows[6]
             }),
-            [`&.${buttonClasses.disabled}`]: _extends$1({
+            [`&.${buttonClasses.disabled}`]: _extends$2({
                 color: (theme.vars || theme).palette.action.disabled
             }, ownerState.variant === "outlined" && {
                 border: `1px solid ${(theme.vars || theme).palette.action.disabledBackground}`
@@ -15267,7 +15268,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.startIcon, styles[`iconSize${capitalize$1(ownerState.size)}`] ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         display: "inherit",
         marginRight: 8,
         marginLeft: -4
@@ -15281,7 +15282,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.endIcon, styles[`iconSize${capitalize$1(ownerState.size)}`] ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         display: "inherit",
         marginRight: -4,
         marginLeft: 8
@@ -15297,7 +15298,7 @@
             name: "MuiButton"
         });
         const {children: children, color: color = "primary", component: component = "button", className: className, disabled: disabled = false, disableElevation: disableElevation = false, disableFocusRipple: disableFocusRipple = false, endIcon: endIconProp, focusVisibleClassName: focusVisibleClassName, fullWidth: fullWidth = false, size: size = "medium", startIcon: startIconProp, type: type, variant: variant = "text"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$d);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             color: color,
             component: component,
             disabled: disabled,
@@ -15320,7 +15321,7 @@
             children: endIconProp
         });
         const positionClassName = buttonGroupButtonContextPositionClassName || "";
-        return jsxRuntimeExports.jsxs(ButtonRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(ButtonRoot, _extends$2({
             ownerState: ownerState,
             className: clsx(contextProps.className, classes.root, className, positionClassName),
             component: component,
@@ -15353,7 +15354,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, ownerState.color !== "default" && styles[`color${capitalize$1(ownerState.color)}`], ownerState.edge && styles[`edge${capitalize$1(ownerState.edge)}`], styles[`size${capitalize$1(ownerState.size)}`] ];
         }
-    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+    })((({theme: theme, ownerState: ownerState}) => _extends$2({
         textAlign: "center",
         flex: "0 0 auto",
         fontSize: theme.typography.pxToRem(24),
@@ -15378,12 +15379,12 @@
     })), (({theme: theme, ownerState: ownerState}) => {
         var _palette;
         const palette = (_palette = (theme.vars || theme).palette) == null ? void 0 : _palette[ownerState.color];
-        return _extends$1({}, ownerState.color === "inherit" && {
+        return _extends$2({}, ownerState.color === "inherit" && {
             color: "inherit"
-        }, ownerState.color !== "inherit" && ownerState.color !== "default" && _extends$1({
+        }, ownerState.color !== "inherit" && ownerState.color !== "default" && _extends$2({
             color: palette == null ? void 0 : palette.main
         }, !ownerState.disableRipple && {
-            "&:hover": _extends$1({}, palette && {
+            "&:hover": _extends$2({}, palette && {
                 backgroundColor: theme.vars ? `rgba(${palette.mainChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha_1(palette.main, theme.palette.action.hoverOpacity)
             }, {
                 "@media (hover: none)": {
@@ -15409,7 +15410,7 @@
             name: "MuiIconButton"
         });
         const {edge: edge = false, children: children, className: className, color: color = "default", disabled: disabled = false, disableFocusRipple: disableFocusRipple = false, size: size = "medium"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$c);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             edge: edge,
             color: color,
             disabled: disabled,
@@ -15417,7 +15418,7 @@
             size: size
         });
         const classes = useUtilityClasses$9(ownerState);
-        return jsxRuntimeExports.jsx(IconButtonRoot, _extends$1({
+        return jsxRuntimeExports.jsx(IconButtonRoot, _extends$2({
             className: clsx(classes.root, className),
             centerRipple: true,
             focusRipple: !disableFocusRipple,
@@ -15452,10 +15453,10 @@
             style.appendChild(document.createTextNode(css));
         }
     }
-    var css_248z = "*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n.tailwind .container {\n  width: 100%\n}\n\n@media (min-width: 640px) {\n  .tailwind .container {\n    max-width: 640px\n  }\n}\n\n@media (min-width: 768px) {\n  .tailwind .container {\n    max-width: 768px\n  }\n}\n\n@media (min-width: 1024px) {\n  .tailwind .container {\n    max-width: 1024px\n  }\n}\n\n@media (min-width: 1280px) {\n  .tailwind .container {\n    max-width: 1280px\n  }\n}\n\n@media (min-width: 1536px) {\n  .tailwind .container {\n    max-width: 1536px\n  }\n}\n\n.tailwind .static {\n  position: static\n}\n\n.tailwind .fixed {\n  position: fixed\n}\n\n.tailwind .absolute {\n  position: absolute\n}\n\n.tailwind .relative {\n  position: relative\n}\n\n.tailwind .right-2 {\n  right: 0.5rem\n}\n\n.tailwind .top-2 {\n  top: 0.5rem\n}\n\n.tailwind .m-0 {\n  margin: 0px\n}\n\n.tailwind .m-4 {\n  margin: 1rem\n}\n\n.tailwind .mb-2 {\n  margin-bottom: 0.5rem\n}\n\n.tailwind .ml-2 {\n  margin-left: 0.5rem\n}\n\n.tailwind .mr-2 {\n  margin-right: 0.5rem\n}\n\n.tailwind .mr-3 {\n  margin-right: 0.75rem\n}\n\n.tailwind .mt-1 {\n  margin-top: 0.25rem\n}\n\n.tailwind .mt-2 {\n  margin-top: 0.5rem\n}\n\n.tailwind .mt-4 {\n  margin-top: 1rem\n}\n\n.tailwind .block {\n  display: block\n}\n\n.tailwind .inline-block {\n  display: inline-block\n}\n\n.tailwind .flex {\n  display: flex\n}\n\n.tailwind .table {\n  display: table\n}\n\n.tailwind .grid {\n  display: grid\n}\n\n.tailwind .h-12 {\n  height: 3rem\n}\n\n.tailwind .h-2 {\n  height: 0.5rem\n}\n\n.tailwind .h-4 {\n  height: 1rem\n}\n\n.tailwind .h-5 {\n  height: 1.25rem\n}\n\n.tailwind .h-6 {\n  height: 1.5rem\n}\n\n.tailwind .h-full {\n  height: 100%\n}\n\n.tailwind .min-h-\\[200px\\] {\n  min-height: 200px\n}\n\n.tailwind .w-1\\/2 {\n  width: 50%\n}\n\n.tailwind .w-3\\/4 {\n  width: 75%\n}\n\n.tailwind .w-5 {\n  width: 1.25rem\n}\n\n.tailwind .w-6 {\n  width: 1.5rem\n}\n\n.tailwind .w-full {\n  width: 100%\n}\n\n.tailwind .min-w-\\[300px\\] {\n  min-width: 300px\n}\n\n.tailwind .min-w-full {\n  min-width: 100%\n}\n\n.tailwind .max-w-2xl {\n  max-width: 42rem\n}\n\n.tailwind .max-w-4xl {\n  max-width: 56rem\n}\n\n.tailwind .max-w-\\[400px\\] {\n  max-width: 400px\n}\n\n.tailwind .max-w-none {\n  max-width: none\n}\n\n.tailwind .flex-1 {\n  flex: 1 1 0%\n}\n\n@keyframes pulse {\n  50% {\n    opacity: .5\n  }\n}\n\n.tailwind .animate-pulse {\n  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite\n}\n\n.tailwind .cursor-not-allowed {\n  cursor: not-allowed\n}\n\n.tailwind .cursor-pointer {\n  cursor: pointer\n}\n\n.tailwind .grid-cols-1 {\n  grid-template-columns: repeat(1, minmax(0, 1fr))\n}\n\n.tailwind .items-center {\n  align-items: center\n}\n\n.tailwind .justify-start {\n  justify-content: flex-start\n}\n\n.tailwind .justify-end {\n  justify-content: flex-end\n}\n\n.tailwind .justify-center {\n  justify-content: center\n}\n\n.tailwind .gap-3 {\n  gap: 0.75rem\n}\n\n.tailwind .space-y-4 > :not([hidden]) ~ :not([hidden]) {\n  --tw-space-y-reverse: 0;\n  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));\n  margin-bottom: calc(1rem * var(--tw-space-y-reverse))\n}\n\n.tailwind .divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse))\n}\n\n.tailwind .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-divide-opacity, 1))\n}\n\n.tailwind .overflow-auto {\n  overflow: auto\n}\n\n.tailwind .overflow-y-auto {\n  overflow-y: auto\n}\n\n.tailwind .truncate {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap\n}\n\n.tailwind .whitespace-nowrap {\n  white-space: nowrap\n}\n\n.tailwind .break-all {\n  word-break: break-all\n}\n\n.tailwind .rounded {\n  border-radius: 0.25rem\n}\n\n.tailwind .rounded-full {\n  border-radius: 9999px\n}\n\n.tailwind .rounded-lg {\n  border-radius: 0.5rem\n}\n\n.tailwind .rounded-md {\n  border-radius: 0.375rem\n}\n\n.tailwind .rounded-none {\n  border-radius: 0px\n}\n\n.tailwind .rounded-xl {\n  border-radius: 0.75rem\n}\n\n.tailwind .border {\n  border-width: 1px\n}\n\n.tailwind .border-b {\n  border-bottom-width: 1px\n}\n\n.tailwind .border-t {\n  border-top-width: 1px\n}\n\n.tailwind .border-blue-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(191 219 254 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-100 {\n  --tw-border-opacity: 1;\n  border-color: rgb(243 244 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-300 {\n  --tw-border-opacity: 1;\n  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-green-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(187 247 208 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-red-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-yellow-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 240 138 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .bg-blue-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-blue-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-200 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-green-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(240 253 244 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-red-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-white {\n  --tw-bg-opacity: 1;\n  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-yellow-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gradient-to-r {\n  background-image: linear-gradient(to right, var(--tw-gradient-stops))\n}\n\n.tailwind .from-blue-50 {\n  --tw-gradient-from: #eff6ff var(--tw-gradient-from-position);\n  --tw-gradient-to: rgb(239 246 255 / 0) var(--tw-gradient-to-position);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)\n}\n\n.tailwind .to-indigo-50 {\n  --tw-gradient-to: #eef2ff var(--tw-gradient-to-position)\n}\n\n.tailwind .p-4 {\n  padding: 1rem\n}\n\n.tailwind .p-6 {\n  padding: 1.5rem\n}\n\n.tailwind .px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem\n}\n\n.tailwind .px-6 {\n  padding-left: 1.5rem;\n  padding-right: 1.5rem\n}\n\n.tailwind .py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem\n}\n\n.tailwind .py-3 {\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem\n}\n\n.tailwind .py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem\n}\n\n.tailwind .pr-8 {\n  padding-right: 2rem\n}\n\n.tailwind .text-left {\n  text-align: left\n}\n\n.tailwind .text-center {\n  text-align: center\n}\n\n.tailwind .text-right {\n  text-align: right\n}\n\n.tailwind .text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem\n}\n\n.tailwind .text-xl {\n  font-size: 1.25rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem\n}\n\n.tailwind .font-medium {\n  font-weight: 500\n}\n\n.tailwind .font-normal {\n  font-weight: 400\n}\n\n.tailwind .font-semibold {\n  font-weight: 600\n}\n\n.tailwind .uppercase {\n  text-transform: uppercase\n}\n\n.tailwind .normal-case {\n  text-transform: none\n}\n\n.tailwind .leading-relaxed {\n  line-height: 1.625\n}\n\n.tailwind .tracking-wider {\n  letter-spacing: 0.05em\n}\n\n.tailwind .text-blue-800 {\n  --tw-text-opacity: 1;\n  color: rgb(30 64 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-400 {\n  --tw-text-opacity: 1;\n  color: rgb(156 163 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-600 {\n  --tw-text-opacity: 1;\n  color: rgb(75 85 99 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-700 {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-800 {\n  --tw-text-opacity: 1;\n  color: rgb(31 41 55 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-700 {\n  --tw-text-opacity: 1;\n  color: rgb(21 128 61 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-800 {\n  --tw-text-opacity: 1;\n  color: rgb(22 101 52 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-indigo-600 {\n  --tw-text-opacity: 1;\n  color: rgb(79 70 229 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-600 {\n  --tw-text-opacity: 1;\n  color: rgb(220 38 38 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-700 {\n  --tw-text-opacity: 1;\n  color: rgb(185 28 28 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-800 {\n  --tw-text-opacity: 1;\n  color: rgb(153 27 27 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-yellow-800 {\n  --tw-text-opacity: 1;\n  color: rgb(133 77 14 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .opacity-50 {\n  opacity: 0.5\n}\n\n.tailwind .shadow-2xl {\n  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);\n  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-lg {\n  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);\n  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-none {\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-sm {\n  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);\n  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)\n}\n\n.tailwind .transition-all {\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-colors {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-shadow {\n  transition-property: box-shadow;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .duration-200 {\n  transition-duration: 200ms\n}\n\n.tailwind .hover\\:border-blue-500:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:border-gray-400:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-700:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-100:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:text-gray-700:hover {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-indigo-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(49 46 129 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-red-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(127 29 29 / var(--tw-text-opacity, 1))\n}\n\n@media (min-width: 640px) {\n  .tailwind .sm\\:grid-cols-2 {\n    grid-template-columns: repeat(2, minmax(0, 1fr))\n  }\n}";
+    var css_248z = "*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n.tailwind .container {\n  width: 100%\n}\n\n@media (min-width: 640px) {\n  .tailwind .container {\n    max-width: 640px\n  }\n}\n\n@media (min-width: 768px) {\n  .tailwind .container {\n    max-width: 768px\n  }\n}\n\n@media (min-width: 1024px) {\n  .tailwind .container {\n    max-width: 1024px\n  }\n}\n\n@media (min-width: 1280px) {\n  .tailwind .container {\n    max-width: 1280px\n  }\n}\n\n@media (min-width: 1536px) {\n  .tailwind .container {\n    max-width: 1536px\n  }\n}\n\n.tailwind .static {\n  position: static\n}\n\n.tailwind .fixed {\n  position: fixed\n}\n\n.tailwind .absolute {\n  position: absolute\n}\n\n.tailwind .relative {\n  position: relative\n}\n\n.tailwind .right-2 {\n  right: 0.5rem\n}\n\n.tailwind .top-2 {\n  top: 0.5rem\n}\n\n.tailwind .m-0 {\n  margin: 0px\n}\n\n.tailwind .m-4 {\n  margin: 1rem\n}\n\n.tailwind .mb-2 {\n  margin-bottom: 0.5rem\n}\n\n.tailwind .ml-2 {\n  margin-left: 0.5rem\n}\n\n.tailwind .mr-2 {\n  margin-right: 0.5rem\n}\n\n.tailwind .mr-3 {\n  margin-right: 0.75rem\n}\n\n.tailwind .mt-1 {\n  margin-top: 0.25rem\n}\n\n.tailwind .mt-2 {\n  margin-top: 0.5rem\n}\n\n.tailwind .mt-4 {\n  margin-top: 1rem\n}\n\n.tailwind .block {\n  display: block\n}\n\n.tailwind .inline-block {\n  display: inline-block\n}\n\n.tailwind .flex {\n  display: flex\n}\n\n.tailwind .table {\n  display: table\n}\n\n.tailwind .grid {\n  display: grid\n}\n\n.tailwind .h-12 {\n  height: 3rem\n}\n\n.tailwind .h-2 {\n  height: 0.5rem\n}\n\n.tailwind .h-4 {\n  height: 1rem\n}\n\n.tailwind .h-5 {\n  height: 1.25rem\n}\n\n.tailwind .h-6 {\n  height: 1.5rem\n}\n\n.tailwind .h-full {\n  height: 100%\n}\n\n.tailwind .min-h-\\[200px\\] {\n  min-height: 200px\n}\n\n.tailwind .w-1\\/2 {\n  width: 50%\n}\n\n.tailwind .w-3\\/4 {\n  width: 75%\n}\n\n.tailwind .w-5 {\n  width: 1.25rem\n}\n\n.tailwind .w-6 {\n  width: 1.5rem\n}\n\n.tailwind .w-full {\n  width: 100%\n}\n\n.tailwind .min-w-\\[300px\\] {\n  min-width: 300px\n}\n\n.tailwind .min-w-full {\n  min-width: 100%\n}\n\n.tailwind .max-w-2xl {\n  max-width: 42rem\n}\n\n.tailwind .max-w-4xl {\n  max-width: 56rem\n}\n\n.tailwind .max-w-\\[400px\\] {\n  max-width: 400px\n}\n\n.tailwind .max-w-none {\n  max-width: none\n}\n\n.tailwind .flex-1 {\n  flex: 1 1 0%\n}\n\n@keyframes pulse {\n  50% {\n    opacity: .5\n  }\n}\n\n.tailwind .animate-pulse {\n  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite\n}\n\n.tailwind .cursor-not-allowed {\n  cursor: not-allowed\n}\n\n.tailwind .grid-cols-1 {\n  grid-template-columns: repeat(1, minmax(0, 1fr))\n}\n\n.tailwind .items-center {\n  align-items: center\n}\n\n.tailwind .justify-start {\n  justify-content: flex-start\n}\n\n.tailwind .justify-end {\n  justify-content: flex-end\n}\n\n.tailwind .justify-center {\n  justify-content: center\n}\n\n.tailwind .gap-3 {\n  gap: 0.75rem\n}\n\n.tailwind .space-y-4 > :not([hidden]) ~ :not([hidden]) {\n  --tw-space-y-reverse: 0;\n  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));\n  margin-bottom: calc(1rem * var(--tw-space-y-reverse))\n}\n\n.tailwind .divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse))\n}\n\n.tailwind .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-divide-opacity, 1))\n}\n\n.tailwind .overflow-auto {\n  overflow: auto\n}\n\n.tailwind .overflow-y-auto {\n  overflow-y: auto\n}\n\n.tailwind .truncate {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap\n}\n\n.tailwind .whitespace-nowrap {\n  white-space: nowrap\n}\n\n.tailwind .break-all {\n  word-break: break-all\n}\n\n.tailwind .rounded {\n  border-radius: 0.25rem\n}\n\n.tailwind .rounded-full {\n  border-radius: 9999px\n}\n\n.tailwind .rounded-lg {\n  border-radius: 0.5rem\n}\n\n.tailwind .rounded-md {\n  border-radius: 0.375rem\n}\n\n.tailwind .rounded-none {\n  border-radius: 0px\n}\n\n.tailwind .rounded-xl {\n  border-radius: 0.75rem\n}\n\n.tailwind .border {\n  border-width: 1px\n}\n\n.tailwind .border-b {\n  border-bottom-width: 1px\n}\n\n.tailwind .border-t {\n  border-top-width: 1px\n}\n\n.tailwind .border-blue-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(191 219 254 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-100 {\n  --tw-border-opacity: 1;\n  border-color: rgb(243 244 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-300 {\n  --tw-border-opacity: 1;\n  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-green-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(187 247 208 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-red-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-yellow-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 240 138 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .bg-blue-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-blue-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-200 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-green-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(240 253 244 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-red-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-white {\n  --tw-bg-opacity: 1;\n  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-yellow-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gradient-to-r {\n  background-image: linear-gradient(to right, var(--tw-gradient-stops))\n}\n\n.tailwind .from-blue-50 {\n  --tw-gradient-from: #eff6ff var(--tw-gradient-from-position);\n  --tw-gradient-to: rgb(239 246 255 / 0) var(--tw-gradient-to-position);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)\n}\n\n.tailwind .to-indigo-50 {\n  --tw-gradient-to: #eef2ff var(--tw-gradient-to-position)\n}\n\n.tailwind .p-4 {\n  padding: 1rem\n}\n\n.tailwind .p-6 {\n  padding: 1.5rem\n}\n\n.tailwind .px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem\n}\n\n.tailwind .px-6 {\n  padding-left: 1.5rem;\n  padding-right: 1.5rem\n}\n\n.tailwind .py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem\n}\n\n.tailwind .py-3 {\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem\n}\n\n.tailwind .py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem\n}\n\n.tailwind .pr-8 {\n  padding-right: 2rem\n}\n\n.tailwind .text-left {\n  text-align: left\n}\n\n.tailwind .text-center {\n  text-align: center\n}\n\n.tailwind .text-right {\n  text-align: right\n}\n\n.tailwind .text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem\n}\n\n.tailwind .text-xl {\n  font-size: 1.25rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem\n}\n\n.tailwind .font-medium {\n  font-weight: 500\n}\n\n.tailwind .font-normal {\n  font-weight: 400\n}\n\n.tailwind .font-semibold {\n  font-weight: 600\n}\n\n.tailwind .uppercase {\n  text-transform: uppercase\n}\n\n.tailwind .normal-case {\n  text-transform: none\n}\n\n.tailwind .leading-relaxed {\n  line-height: 1.625\n}\n\n.tailwind .tracking-wider {\n  letter-spacing: 0.05em\n}\n\n.tailwind .text-blue-800 {\n  --tw-text-opacity: 1;\n  color: rgb(30 64 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-400 {\n  --tw-text-opacity: 1;\n  color: rgb(156 163 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-600 {\n  --tw-text-opacity: 1;\n  color: rgb(75 85 99 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-700 {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-800 {\n  --tw-text-opacity: 1;\n  color: rgb(31 41 55 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-700 {\n  --tw-text-opacity: 1;\n  color: rgb(21 128 61 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-800 {\n  --tw-text-opacity: 1;\n  color: rgb(22 101 52 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-indigo-600 {\n  --tw-text-opacity: 1;\n  color: rgb(79 70 229 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-600 {\n  --tw-text-opacity: 1;\n  color: rgb(220 38 38 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-700 {\n  --tw-text-opacity: 1;\n  color: rgb(185 28 28 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-800 {\n  --tw-text-opacity: 1;\n  color: rgb(153 27 27 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-yellow-800 {\n  --tw-text-opacity: 1;\n  color: rgb(133 77 14 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .opacity-50 {\n  opacity: 0.5\n}\n\n.tailwind .shadow-2xl {\n  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);\n  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-lg {\n  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);\n  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-none {\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-sm {\n  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);\n  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)\n}\n\n.tailwind .transition-all {\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-colors {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-shadow {\n  transition-property: box-shadow;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .duration-200 {\n  transition-duration: 200ms\n}\n\n.tailwind .hover\\:border-blue-500:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:border-gray-400:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-700:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-100:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:text-gray-700:hover {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-indigo-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(49 46 129 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-red-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(127 29 29 / var(--tw-text-opacity, 1))\n}\n\n@media (min-width: 640px) {\n  .tailwind .sm\\:grid-cols-2 {\n    grid-template-columns: repeat(2, minmax(0, 1fr))\n  }\n}";
     styleInject(css_248z);
     function ButtonDialog(_ref) {
-        var buttonLabel = _ref.buttonLabel, renderDialog = _ref.renderDialog, onOpenDialog = _ref.onOpenDialog, onCloseDialog = _ref.onCloseDialog, customButtonRender = _ref.customButtonRender, _ref$useScopedCssBase = _ref.useScopedCssBaseline, useScopedCssBaseline = _ref$useScopedCssBase === void 0 ? true : _ref$useScopedCssBase, _ref$title = _ref.title, title = _ref$title === void 0 ? "" : _ref$title, _ref$maxWidth = _ref.maxWidth, maxWidth = _ref$maxWidth === void 0 ? "md" : _ref$maxWidth, _ref$fullWidth = _ref.fullWidth, fullWidth = _ref$fullWidth === void 0 ? true : _ref$fullWidth;
+        var buttonLabel = _ref.buttonLabel, renderDialog = _ref.renderDialog, onOpenDialog = _ref.onOpenDialog, onCloseDialog = _ref.onCloseDialog, CustomButtonRender = _ref.CustomButtonRender, _ref$useScopedCssBase = _ref.useScopedCssBaseline, useScopedCssBaseline = _ref$useScopedCssBase === void 0 ? true : _ref$useScopedCssBase, _ref$title = _ref.title, title = _ref$title === void 0 ? "" : _ref$title, _ref$maxWidth = _ref.maxWidth, maxWidth = _ref$maxWidth === void 0 ? "md" : _ref$maxWidth, _ref$fullWidth = _ref.fullWidth, fullWidth = _ref$fullWidth === void 0 ? true : _ref$fullWidth;
         var _useState = reactExports.useState(false), _useState2 = _slicedToArray(_useState, 2), showDialog = _useState2[0], setShowDialog = _useState2[1];
         var theme = useTheme();
         var isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -15472,16 +15473,15 @@
             }
         };
         var ButtonContent = function ButtonContent() {
-            return customButtonRender ? React.createElement("div", {
-                onClick: handleOpenDialog,
-                className: "cursor-pointer"
-            }, customButtonRender()) : React.createElement(Button, {
+            return CustomButtonRender ? React.createElement(CustomButtonRender, {
+                onClick: handleOpenDialog
+            }) : React.createElement(Button, {
                 onClick: handleOpenDialog,
                 variant: "contained",
                 className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
             }, buttonLabel);
         };
-        return React.createElement("div", null, useScopedCssBaseline ? React.createElement(ScopedCssBaseline, null, React.createElement(ButtonContent, null)) : React.createElement(ButtonContent, null), React.createElement(Dialog, {
+        return React.createElement(React.Fragment, null, useScopedCssBaseline ? React.createElement(ScopedCssBaseline, null, React.createElement(ButtonContent, null)) : React.createElement(ButtonContent, null), React.createElement(Dialog, {
             className: "tailwind",
             open: showDialog,
             onClose: handleCloseDialog,
@@ -15603,8 +15603,8 @@
             return undefined;
         }), [ disableWindowBlurListener, open, handleResume, handlePause ]);
         const getRootProps = (externalProps = {}) => {
-            const externalEventHandlers = _extends$1({}, extractEventHandlers(parameters), extractEventHandlers(externalProps));
-            return _extends$1({
+            const externalEventHandlers = _extends$2({}, extractEventHandlers(parameters), extractEventHandlers(externalProps));
+            return _extends$2({
                 role: "presentation"
             }, externalProps, externalEventHandlers, {
                 onBlur: createHandleBlur(externalEventHandlers),
@@ -15808,7 +15808,7 @@
                 addEndListener(nodeRef.current, next);
             }
         };
-        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
             appear: appear,
             in: inProp,
             nodeRef: nodeRef,
@@ -15821,8 +15821,8 @@
             addEndListener: handleAddEndListener,
             timeout: timeout === "auto" ? null : timeout
         }, other, {
-            children: (state, childProps) => reactExports.cloneElement(children, _extends$1({
-                style: _extends$1({
+            children: (state, childProps) => reactExports.cloneElement(children, _extends$2({
+                style: _extends$2({
                     opacity: 0,
                     transform: getScale(.75),
                     visibility: state === "exited" && !inProp ? "hidden" : undefined
@@ -15853,7 +15853,7 @@
     })((({theme: theme}) => {
         const emphasis = theme.palette.mode === "light" ? .8 : .98;
         const backgroundColor = emphasize_1(theme.palette.background.default, emphasis);
-        return _extends$1({}, theme.typography.body2, {
+        return _extends$2({}, theme.typography.body2, {
             color: theme.vars ? theme.vars.palette.SnackbarContent.color : theme.palette.getContrastText(backgroundColor),
             backgroundColor: theme.vars ? theme.vars.palette.SnackbarContent.bg : backgroundColor,
             display: "flex",
@@ -15894,7 +15894,7 @@
         const {action: action, className: className, message: message, role: role = "alert"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$a);
         const ownerState = props;
         const classes = useUtilityClasses$8(ownerState);
-        return jsxRuntimeExports.jsxs(SnackbarContentRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(SnackbarContentRoot, _extends$2({
             role: role,
             square: true,
             elevation: 6,
@@ -15938,7 +15938,7 @@
             right: "auto",
             transform: "translateX(-50%)"
         };
-        return _extends$1({
+        return _extends$2({
             zIndex: (theme.vars || theme).zIndex.snackbar,
             position: "fixed",
             display: "flex",
@@ -15955,7 +15955,7 @@
         }, ownerState.anchorOrigin.horizontal === "right" && {
             justifyContent: "flex-end"
         }, {
-            [theme.breakpoints.up("sm")]: _extends$1({}, ownerState.anchorOrigin.vertical === "top" ? {
+            [theme.breakpoints.up("sm")]: _extends$2({}, ownerState.anchorOrigin.vertical === "top" ? {
                 top: 24
             } : {
                 bottom: 24
@@ -15982,7 +15982,7 @@
             vertical: "bottom",
             horizontal: "left"
         }, autoHideDuration: autoHideDuration = null, children: children, className: className, ClickAwayListenerProps: ClickAwayListenerProps, ContentProps: ContentProps, disableWindowBlurListener: disableWindowBlurListener = false, message: message, open: open, TransitionComponent: TransitionComponent = Grow, transitionDuration: transitionDuration = defaultTransitionDuration, TransitionProps: {onEnter: onEnter, onExited: onExited} = {}} = props, TransitionProps = _objectWithoutPropertiesLoose(props.TransitionProps, _excluded$9), other = _objectWithoutPropertiesLoose(props, _excluded2$1);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             anchorOrigin: {
                 vertical: vertical,
                 horizontal: horizontal
@@ -15993,7 +15993,7 @@
             transitionDuration: transitionDuration
         });
         const classes = useUtilityClasses$7(ownerState);
-        const {getRootProps: getRootProps, onClickAway: onClickAway} = useSnackbar(_extends$1({}, ownerState));
+        const {getRootProps: getRootProps, onClickAway: onClickAway} = useSnackbar(_extends$2({}, ownerState));
         const [exited, setExited] = reactExports.useState(true);
         const rootProps = useSlotProps({
             elementType: SnackbarRoot,
@@ -16020,11 +16020,11 @@
         if (!open && exited) {
             return null;
         }
-        return jsxRuntimeExports.jsx(ClickAwayListener, _extends$1({
+        return jsxRuntimeExports.jsx(ClickAwayListener, _extends$2({
             onClickAway: onClickAway
         }, ClickAwayListenerProps, {
-            children: jsxRuntimeExports.jsx(SnackbarRoot, _extends$1({}, rootProps, {
-                children: jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+            children: jsxRuntimeExports.jsx(SnackbarRoot, _extends$2({}, rootProps, {
+                children: jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
                     appear: true,
                     in: open,
                     timeout: transitionDuration,
@@ -16032,7 +16032,7 @@
                     onEnter: handleEnter,
                     onExited: handleExited
                 }, TransitionProps, {
-                    children: children || jsxRuntimeExports.jsx(SnackbarContent, _extends$1({
+                    children: children || jsxRuntimeExports.jsx(SnackbarContent, _extends$2({
                         message: message,
                         action: action
                     }, ContentProps))
@@ -16050,7 +16050,7 @@
         }} = externalForwardedProps, other = _objectWithoutPropertiesLoose(externalForwardedProps, _excluded2);
         const elementType = slots[name] || initialElementType;
         const resolvedComponentsProps = resolveComponentProps(slotProps[name], ownerState);
-        const _mergeSlotProps = mergeSlotProps(_extends$1({
+        const _mergeSlotProps = mergeSlotProps(_extends$2({
             className: className
         }, useSlotPropsParams, {
             externalForwardedProps: name === "root" ? other : undefined,
@@ -16058,9 +16058,9 @@
         })), {props: {component: slotComponent}, internalRef: internalRef} = _mergeSlotProps, mergedProps = _objectWithoutPropertiesLoose(_mergeSlotProps.props, _excluded3);
         const ref = useForkRef(internalRef, resolvedComponentsProps == null ? void 0 : resolvedComponentsProps.ref, parameters.ref);
         const slotOwnerState = getSlotOwnerState ? getSlotOwnerState(mergedProps) : {};
-        const finalOwnerState = _extends$1({}, ownerState, slotOwnerState);
+        const finalOwnerState = _extends$2({}, ownerState, slotOwnerState);
         const LeafComponent = name === "root" ? slotComponent || rootComponent : slotComponent;
-        const props = appendOwnerState(elementType, _extends$1({}, name === "root" && !rootComponent && !slots[name] && internalForwardedProps, name !== "root" && !slots[name] && internalForwardedProps, mergedProps, LeafComponent && {
+        const props = appendOwnerState(elementType, _extends$2({}, name === "root" && !rootComponent && !slots[name] && internalForwardedProps, name !== "root" && !slots[name] && internalForwardedProps, mergedProps, LeafComponent && {
             as: LeafComponent
         }, {
             ref: ref
@@ -16125,7 +16125,7 @@
         });
         const {children: children, className: className, color: color = "inherit", component: component = "svg", fontSize: fontSize = "medium", htmlColor: htmlColor, inheritViewBox: inheritViewBox = false, titleAccess: titleAccess, viewBox: viewBox = "0 0 24 24"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$7);
         const hasSvgAsChild = reactExports.isValidElement(children) && children.type === "svg";
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             color: color,
             component: component,
             fontSize: fontSize,
@@ -16139,7 +16139,7 @@
             more.viewBox = viewBox;
         }
         const classes = useUtilityClasses$6(ownerState);
-        return jsxRuntimeExports.jsxs(SvgIconRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(SvgIconRoot, _extends$2({
             as: component,
             className: clsx(classes.root, className),
             focusable: "false",
@@ -16157,7 +16157,7 @@
     SvgIcon.muiName = "SvgIcon";
     function createSvgIcon(path, displayName) {
         function Component(props, ref) {
-            return jsxRuntimeExports.jsx(SvgIcon, _extends$1({
+            return jsxRuntimeExports.jsx(SvgIcon, _extends$2({
                 "data-testid": `${displayName}Icon`,
                 ref: ref
             }, props, {
@@ -16203,7 +16203,7 @@
     })((({theme: theme}) => {
         const getColor = theme.palette.mode === "light" ? darken_1 : lighten_1;
         const getBackgroundColor = theme.palette.mode === "light" ? lighten_1 : darken_1;
-        return _extends$1({}, theme.typography.body2, {
+        return _extends$2({}, theme.typography.body2, {
             backgroundColor: "transparent",
             display: "flex",
             padding: "6px 16px",
@@ -16240,7 +16240,7 @@
                     colorSeverity: color,
                     variant: "filled"
                 },
-                style: _extends$1({
+                style: _extends$2({
                     fontWeight: theme.typography.fontWeightMedium
                 }, theme.vars ? {
                     color: theme.vars.palette.Alert[`${color}FilledColor`],
@@ -16303,7 +16303,7 @@
             name: "MuiAlert"
         });
         const {action: action, children: children, className: className, closeText: closeText = "Close", color: color, components: components = {}, componentsProps: componentsProps = {}, icon: icon, iconMapping: iconMapping = defaultIconMapping, onClose: onClose, role: role = "alert", severity: severity = "success", slotProps: slotProps = {}, slots: slots = {}, variant: variant = "standard"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$6);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             color: color,
             severity: severity,
             variant: variant,
@@ -16311,11 +16311,11 @@
         });
         const classes = useUtilityClasses$5(ownerState);
         const externalForwardedProps = {
-            slots: _extends$1({
+            slots: _extends$2({
                 closeButton: components.CloseButton,
                 closeIcon: components.CloseIcon
             }, slots),
-            slotProps: _extends$1({}, componentsProps, slotProps)
+            slotProps: _extends$2({}, componentsProps, slotProps)
         };
         const [CloseButtonSlot, closeButtonProps] = useSlot("closeButton", {
             elementType: IconButton,
@@ -16327,7 +16327,7 @@
             externalForwardedProps: externalForwardedProps,
             ownerState: ownerState
         });
-        return jsxRuntimeExports.jsxs(AlertRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(AlertRoot, _extends$2({
             role: role,
             elevation: 0,
             ownerState: ownerState,
@@ -16349,14 +16349,14 @@
             }) : null, action == null && onClose ? jsxRuntimeExports.jsx(AlertAction, {
                 ownerState: ownerState,
                 className: classes.action,
-                children: jsxRuntimeExports.jsx(CloseButtonSlot, _extends$1({
+                children: jsxRuntimeExports.jsx(CloseButtonSlot, _extends$2({
                     size: "small",
                     "aria-label": closeText,
                     title: closeText,
                     color: "inherit",
                     onClick: onClose
                 }, closeButtonProps, {
-                    children: jsxRuntimeExports.jsx(CloseIconSlot, _extends$1({
+                    children: jsxRuntimeExports.jsx(CloseIconSlot, _extends$2({
                         fontSize: "small"
                     }, closeIconProps))
                 }))
@@ -16391,7 +16391,7 @@
         const {className: className} = props, other = _objectWithoutPropertiesLoose(props, _excluded$5);
         const ownerState = props;
         const classes = useUtilityClasses$4(ownerState);
-        return jsxRuntimeExports.jsx(AlertTitleRoot, _extends$1({
+        return jsxRuntimeExports.jsx(AlertTitleRoot, _extends$2({
             gutterBottom: true,
             component: "div",
             ownerState: ownerState,
@@ -16489,8 +16489,8 @@
             }, {
                 mode: "enter"
             });
-            node.style.webkitTransition = theme.transitions.create("-webkit-transform", _extends$1({}, transitionProps));
-            node.style.transition = theme.transitions.create("transform", _extends$1({}, transitionProps));
+            node.style.webkitTransition = theme.transitions.create("-webkit-transform", _extends$2({}, transitionProps));
+            node.style.transition = theme.transitions.create("transform", _extends$2({}, transitionProps));
             node.style.webkitTransform = "none";
             node.style.transform = "none";
             if (onEntering) {
@@ -16552,7 +16552,7 @@
                 updatePosition();
             }
         }), [ inProp, updatePosition ]);
-        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$2({
             nodeRef: childrenRef,
             onEnter: handleEnter,
             onEntered: handleEntered,
@@ -16565,16 +16565,16 @@
             in: inProp,
             timeout: timeout
         }, other, {
-            children: (state, childProps) => reactExports.cloneElement(children, _extends$1({
+            children: (state, childProps) => reactExports.cloneElement(children, _extends$2({
                 ref: handleRef,
-                style: _extends$1({
+                style: _extends$2({
                     visibility: state === "exited" && !inProp ? "hidden" : undefined
                 }, style, children.props.style)
             }, childProps))
         }));
     }));
     function SlideTransition(props) {
-        return React.createElement(Slide, _extends$2({}, props, {
+        return React.createElement(Slide, _extends$3({}, props, {
             direction: "up"
         }));
     }
@@ -16928,7 +16928,7 @@
                         };
                     }
                 }
-                styles = _extends$1({
+                styles = _extends$2({
                     flexBasis: width,
                     flexGrow: 0,
                     maxWidth: width
@@ -17093,7 +17093,7 @@
             }));
             return [ styles.root, container && styles.container, item && styles.item, zeroMinWidth && styles.zeroMinWidth, ...spacingStyles, direction !== "row" && styles[`direction-xs-${String(direction)}`], wrap !== "wrap" && styles[`wrap-xs-${String(wrap)}`], ...breakpointsStyles ];
         }
-    })((({ownerState: ownerState}) => _extends$1({
+    })((({ownerState: ownerState}) => _extends$2({
         boxSizing: "border-box"
     }, ownerState.container && {
         display: "flex",
@@ -17154,14 +17154,14 @@
         const columnsContext = reactExports.useContext(GridContext);
         const columns = container ? columnsProp || 12 : columnsContext;
         const breakpointsValues = {};
-        const otherFiltered = _extends$1({}, other);
+        const otherFiltered = _extends$2({}, other);
         breakpoints.keys.forEach((breakpoint => {
             if (other[breakpoint] != null) {
                 breakpointsValues[breakpoint] = other[breakpoint];
                 delete otherFiltered[breakpoint];
             }
         }));
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             columns: columns,
             container: container,
             direction: direction,
@@ -17177,7 +17177,7 @@
         const classes = useUtilityClasses$3(ownerState);
         return jsxRuntimeExports.jsx(GridContext.Provider, {
             value: columns,
-            children: jsxRuntimeExports.jsx(GridRoot, _extends$1({
+            children: jsxRuntimeExports.jsx(GridRoot, _extends$2({
                 ownerState: ownerState,
                 className: clsx(classes.root, className),
                 as: component,
@@ -17266,7 +17266,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.root, styles[`color${capitalize$1(ownerState.color)}`], styles[ownerState.variant] ];
         }
-    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+    })((({ownerState: ownerState, theme: theme}) => _extends$2({
         position: "relative",
         overflow: "hidden",
         display: "block",
@@ -17302,7 +17302,7 @@
         }
     })((({ownerState: ownerState, theme: theme}) => {
         const backgroundColor = getColorShade(theme, ownerState.color);
-        return _extends$1({
+        return _extends$2({
             position: "absolute",
             marginTop: 0,
             height: "100%",
@@ -17324,7 +17324,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.bar, styles[`barColor${capitalize$1(ownerState.color)}`], (ownerState.variant === "indeterminate" || ownerState.variant === "query") && styles.bar1Indeterminate, ownerState.variant === "determinate" && styles.bar1Determinate, ownerState.variant === "buffer" && styles.bar1Buffer ];
         }
-    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+    })((({ownerState: ownerState, theme: theme}) => _extends$2({
         width: "100%",
         position: "absolute",
         left: 0,
@@ -17349,7 +17349,7 @@
             const {ownerState: ownerState} = props;
             return [ styles.bar, styles[`barColor${capitalize$1(ownerState.color)}`], (ownerState.variant === "indeterminate" || ownerState.variant === "query") && styles.bar2Indeterminate, ownerState.variant === "buffer" && styles.bar2Buffer ];
         }
-    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+    })((({ownerState: ownerState, theme: theme}) => _extends$2({
         width: "100%",
         position: "absolute",
         left: 0,
@@ -17374,7 +17374,7 @@
             name: "MuiLinearProgress"
         });
         const {className: className, color: color = "primary", value: value, valueBuffer: valueBuffer, variant: variant = "indeterminate"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$2);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             color: color,
             variant: variant
         });
@@ -17406,7 +17406,7 @@
                 inlineStyles.bar2.transform = `translateX(${transform}%)`;
             }
         }
-        return jsxRuntimeExports.jsxs(LinearProgressRoot, _extends$1({
+        return jsxRuntimeExports.jsxs(LinearProgressRoot, _extends$2({
             className: clsx(classes.root, className),
             ownerState: ownerState,
             role: "progressbar"
@@ -17452,11 +17452,11 @@
             name: "MuiCard"
         });
         const {className: className, raised: raised = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$1);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             raised: raised
         });
         const classes = useUtilityClasses$1(ownerState);
-        return jsxRuntimeExports.jsx(CardRoot, _extends$1({
+        return jsxRuntimeExports.jsx(CardRoot, _extends$2({
             className: clsx(classes.root, className),
             elevation: raised ? 8 : undefined,
             ref: ref,
@@ -17491,11 +17491,11 @@
             name: "MuiCardContent"
         });
         const {className: className, component: component = "div"} = props, other = _objectWithoutPropertiesLoose(props, _excluded);
-        const ownerState = _extends$1({}, props, {
+        const ownerState = _extends$2({}, props, {
             component: component
         });
         const classes = useUtilityClasses(ownerState);
-        return jsxRuntimeExports.jsx(CardContentRoot, _extends$1({
+        return jsxRuntimeExports.jsx(CardContentRoot, _extends$2({
             as: component,
             className: clsx(classes.root, className),
             ownerState: ownerState,
@@ -17619,7 +17619,50 @@
             className: "text-green-700 font-medium"
         }, success))));
     }
-    function ButtonDialogApp() {
+    var _style, _path, _path2, _path3, _path4, _path5;
+    function _extends() {
+        return _extends = Object.assign ? Object.assign.bind() : function(n) {
+            for (var e = 1; e < arguments.length; e++) {
+                var t = arguments[e];
+                for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+            }
+            return n;
+        }, _extends.apply(null, arguments);
+    }
+    var SvgServiceiconAnime = function SvgServiceiconAnime(props) {
+        return reactExports.createElement("svg", _extends({
+            xmlns: "http://www.w3.org/2000/svg",
+            viewBox: "0 0 24 24"
+        }, props), reactExports.createElement("defs", null, reactExports.createElement("clipPath", {
+            id: "serviceicon_anime_svg__clippath"
+        }, reactExports.createElement("path", {
+            d: "M0 0h23.9v23.9H0z",
+            style: {
+                fill: "none"
+            }
+        })), _style || (_style = reactExports.createElement("style", null, ".serviceicon_anime_svg__cls-2{fill:#464646}"))), reactExports.createElement("g", {
+            id: "serviceicon_anime_svg___\\u5716\\u5C64_1",
+            style: {
+                clipPath: "url(#serviceicon_anime_svg__clippath)"
+            }
+        }, _path || (_path = reactExports.createElement("path", {
+            d: "M12.9 7.6c-.2 0-.4-.1-.5-.3L8.9 2c-.2-.3-.1-.7.2-.9s.7-.1.9.2l3.5 5.3c.2.3.1.7-.2.9-.1 0-.2.1-.4.1",
+            className: "serviceicon_anime_svg__cls-2"
+        })), _path2 || (_path2 = reactExports.createElement("path", {
+            d: "M12.9 7.6c-.1 0-.3 0-.4-.1-.3-.2-.3-.6-.1-.9l3.3-4.2c.2-.3.6-.3.9-.1s.3.6.1.9l-3.3 4.2c-.1.2-.3.2-.5.2M11.5 15.1c-.4 0-.6-.3-.6-.6V11c0-.4.3-.6.6-.6s.6.3.6.6v3.5c0 .4-.3.6-.6.6M18.3 15.1c-.4 0-.6-.3-.6-.6v-3.1c0-.4.3-.6.6-.6s.6.3.6.6v3.1c0 .4-.3.6-.6.6M15 19.3c-1 0-1.8-.4-2.4-1.1-.2-.3-.2-.7.1-.9s.7-.2.9.1c.3.4.8.6 1.4.6s1.1-.2 1.3-.6c.2-.3.6-.4.9-.1.3.2.4.6.1.9-.5.7-1.4 1.1-2.3 1.1",
+            className: "serviceicon_anime_svg__cls-2"
+        })), _path3 || (_path3 = reactExports.createElement("path", {
+            d: "M10.6 6.8c0-1.2 1-2.1 2.2-2 1.1.1 2 1.2 2 2.3",
+            className: "serviceicon_anime_svg__cls-2"
+        })), _path4 || (_path4 = reactExports.createElement("path", {
+            d: "M7.4 23c-.4 0-.8-.2-1.1-.4-.3-.3-.5-.7-.5-1.1V7.6c0-.4.2-.9.5-1.2s.8-.5 1.2-.4l13.7 1.4c.8 0 1.4.8 1.4 1.6v11.7c0 .8-.7 1.5-1.5 1.6zm0-15.7h-.2s-.1.1-.1.2v14h.2l13.7-.7q.3 0 .3-.3V8.8q0-.3-.3-.3L7.3 7.1Z",
+            className: "serviceicon_anime_svg__cls-2"
+        })), _path5 || (_path5 = reactExports.createElement("path", {
+            d: "M7.2 22.9h-.1l-4.5-1.1c-.8-.2-1.3-.9-1.3-1.7v-9.8c0-.6.3-1.2.8-1.5L3.5 8c.3-.2.7 0 .9.2s0 .7-.2.9l-1.3.8c-.1 0-.2.2-.2.4v9.8c0 .2.1.4.3.5l4.4 1.1c.3 0 .6.4.5.8 0 .3-.3.5-.6.5Z",
+            className: "serviceicon_anime_svg__cls-2"
+        }))));
+    };
+    function ButtonDialogApp(mode) {
         var _this = this;
         var gamerAPI = new GamerAPI;
         var _useState = reactExports.useState({
@@ -17802,12 +17845,29 @@
             maxWidth: "md",
             fullWidth: true,
             useScopedCssBaseline: false,
-            customButtonRender: function customButtonRender() {
-                return React.createElement("a", {
+            CustomButtonRender: function CustomButtonRender(_ref) {
+                var _onClick = _ref.onClick;
+                return React.createElement(React.Fragment, null, mode === "forum" ? React.createElement("a", {
+                    href: "javascript:void(0)",
+                    className: "topb5",
+                    style: {
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center"
+                    },
+                    onClick: function onClick(e) {
+                        e.preventDefault();
+                        _onClick();
+                    },
+                    "data-tooltiptext": "動畫瘋答題"
+                }, React.createElement(SvgServiceiconAnime, null), React.createElement("span", {
+                    className: "text-tooltip"
+                }, "動畫瘋答題")) : React.createElement("a", {
                     href: "#",
                     className: "sidenav-section__link hover:bg-gray-50 transition-colors duration-200 rounded-lg",
                     onClick: function onClick(e) {
-                        return e.preventDefault();
+                        e.preventDefault();
+                        _onClick();
                     },
                     style: {
                         textDecoration: "none"
@@ -17816,34 +17876,100 @@
                     className: "sidenav__icon service__icon icon-ani"
                 }), React.createElement("p", {
                     className: "sidenav-section__title"
-                }, "動畫瘋答題"));
+                }, "動畫瘋答題")));
             }
         });
     }
-    var parentElement = document.createElement("li");
-    parentElement.className = "sidenav-section__item";
-    var insertBtnInterval = setInterval((function() {
+    function detectSiteType() {
+        var hostname = window.location.hostname;
+        if (hostname === "www.gamer.com.tw") return "main";
+        if (hostname === "forum.gamer.com.tw") return "forum";
+        return "unknown";
+    }
+    function mountToMainSite() {
+        var parentElement = document.createElement("li");
+        parentElement.className = "sidenav-section__item";
         var aniGamerLink = document.querySelector('a[href="https://ani.gamer.com.tw"]');
         var aniGamerItem = aniGamerLink === null || aniGamerLink === void 0 ? void 0 : aniGamerLink.closest("li");
         if (aniGamerItem && aniGamerItem.parentNode) {
-            var success = insertItemAfterElement(ButtonDialogApp, parentElement, aniGamerItem);
+            var success = insertItemAfterElement((function() {
+                return ButtonDialogApp("gamer");
+            }), parentElement, aniGamerItem);
             if (success) {
-                clearInterval(insertBtnInterval);
-                console.log("動畫瘋答題按鈕已成功掛載到動畫瘋項目後");
+                console.log("[動畫瘋答題] 主站：已成功掛載到動畫瘋項目後");
                 notify.success("動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。", "功能載入成功");
-                return;
+                return true;
             }
         }
         var serviceList = document.querySelector(".sidenav-section__row");
         if (serviceList) {
-            var _success = appendComponentToElement(ButtonDialogApp, ".sidenav-section__row");
+            var _success = appendComponentToElement((function() {
+                return ButtonDialogApp("gamer");
+            }), ".sidenav-section__row");
             if (_success) {
-                clearInterval(insertBtnInterval);
-                console.log("動畫瘋答題按鈕已成功掛載到服務列表末尾");
+                console.log("[動畫瘋答題] 主站：已成功掛載到服務列表末尾");
                 notify.success("動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。", "功能載入成功");
-                return;
+                return true;
             }
         }
-        console.log("正在尋找合適的掛載點...");
+        return false;
+    }
+    function mountToForumSite() {
+        var topBtnArea = document.querySelector(".TOP-btn");
+        if (!topBtnArea) {
+            console.log("[動畫瘋答題] 論壇站：找不到 TOP-btn 區域");
+            return false;
+        }
+        var success = appendComponentToElement((function() {
+            return ButtonDialogApp("forum");
+        }), ".TOP-btn");
+        if (success) {
+            console.log("[動畫瘋答題] 論壇站：已成功掛載到頂部導航欄");
+            notify.success("動畫瘋答題功能已成功載入！點擊頂部導航欄中的動畫瘋答題按鈕開始答題。", "功能載入成功");
+            return true;
+        }
+        return false;
+    }
+    function mountToGenericFallback() {
+        var fallbackSelectors = [ "body", "#main", ".container", "header" ];
+        for (var _i = 0, _fallbackSelectors = fallbackSelectors; _i < _fallbackSelectors.length; _i++) {
+            var selector = _fallbackSelectors[_i];
+            var element = document.querySelector(selector);
+            if (element) {
+                var success = appendComponentToElement((function() {
+                    return ButtonDialogApp("gamer");
+                }), selector);
+                if (success) {
+                    console.log("[動畫瘋答題] 通用回退：已成功掛載到 ".concat(selector));
+                    notify.success("動畫瘋答題功能已成功載入！", "功能載入成功");
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+    var siteType = detectSiteType();
+    console.log("[動畫瘋答題] 檢測到網站類型: ".concat(siteType));
+    var insertBtnInterval = setInterval((function() {
+        var success = false;
+        switch (siteType) {
+          case "main":
+            success = mountToMainSite();
+            break;
+
+          case "forum":
+            success = mountToForumSite();
+            break;
+
+          default:
+            console.log("[動畫瘋答題] 未知網站類型，嘗試通用掛載方式");
+            success = mountToGenericFallback();
+            break;
+        }
+        if (success) {
+            clearInterval(insertBtnInterval);
+            return;
+        }
+        console.log("[動畫瘋答題] 正在尋找 ".concat(siteType, " 網站的合適掛載點..."));
     }), 3e3);
 })();

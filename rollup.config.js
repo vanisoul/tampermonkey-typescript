@@ -8,6 +8,7 @@ import resolve from "@rollup/plugin-node-resolve";
 import babel from "@rollup/plugin-babel";
 import typescript from "@rollup/plugin-typescript";
 import { terser } from "rollup-plugin-terser";
+import svgr from '@svgr/rollup';
 
 // 檢查文件是否包含 export 語句
 function containsExport(filePath) {
@@ -144,6 +145,7 @@ async function buildFile(filePath) {
     const bundle = await rollup({
         input: filePath,
         plugins: [
+            svgr(),
             postcss({
                 plugins: [
                     createPostCssPrefixSelectorPlugin(".tailwind"),
