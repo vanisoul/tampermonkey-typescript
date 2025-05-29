@@ -11,9 +11,11 @@ interface ButtonDialogInput {
   renderDialog: () => React.ReactNode;
   onOpenDialog?: () => void;
   onCloseDialog?: () => void;
+  customButtonRender?: () => React.ReactNode;
+  useScopedCssBaseline?: boolean;
 }
 
-export function ButtonDialog({ buttonLabel, renderDialog, onOpenDialog, onCloseDialog }: ButtonDialogInput) {
+export function ButtonDialog({ buttonLabel, renderDialog, onOpenDialog, onCloseDialog, customButtonRender, useScopedCssBaseline = true }: ButtonDialogInput) {
   const [showDialog, setShowDialog] = useState(false);
 
   const handleOpenDialog = () => {
@@ -30,13 +32,28 @@ export function ButtonDialog({ buttonLabel, renderDialog, onOpenDialog, onCloseD
     }
   };
 
+  // 如果有自定義按鈕渲染，則使用它，否則使用默認按鈕
+  const ButtonContent = () => (
+    customButtonRender ? (
+      <div onClick={handleOpenDialog}>
+        {customButtonRender()}
+      </div>
+    ) : (
+      <Button onClick={handleOpenDialog}>
+        {buttonLabel}
+      </Button>
+    )
+  );
+
   return (
     <div>
-      <ScopedCssBaseline>
-        <Button onClick={handleOpenDialog}>
-          {buttonLabel}
-        </Button>
-      </ScopedCssBaseline>
+      {useScopedCssBaseline ? (
+        <ScopedCssBaseline>
+          <ButtonContent />
+        </ScopedCssBaseline>
+      ) : (
+        <ButtonContent />
+      )}
 
       {showDialog && (
         <Dialog

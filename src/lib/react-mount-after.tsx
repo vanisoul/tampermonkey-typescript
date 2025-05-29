@@ -46,3 +46,35 @@ export function renderComponentNextToSelector(ReactComponent: () => React.JSX.El
         return false;
     }
 }
+
+export function insertItemAfterElement(ReactComponent: () => React.JSX.Element, parentElement: HTMLElement, targetElement: Element): boolean {
+    try {
+        if (!targetElement || !targetElement.parentNode) {
+            console.error('Target element or its parent not found.');
+            return false;
+        }
+
+        // 在目標元素後插入容器
+        targetElement.parentNode.insertBefore(parentElement, targetElement.nextSibling);
+
+        // 使用 React Portal 渲染組件到容器中
+        function fragmentApp() {
+            return (
+                <>
+                    {createPortal(
+                        <ReactComponent />,
+                        parentElement
+                    )}
+                </>
+            );
+        }
+
+        const fragmentElement = document.createDocumentFragment();
+        parentElement.appendChild(fragmentElement);
+        createRoot(fragmentElement).render(fragmentApp());
+        return true;
+    } catch (error) {
+        console.error('Error inserting component after element:', error);
+        return false;
+    }
+}
