@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           ani-gamer-question
-// @version        1.2.0
+// @version        1.2.1
 // @description    巴哈頁面新增動畫瘋答題按鈕，點擊後會跳出動畫瘋答題視窗
 // @author         Vanisoul
 // @match          https://www.gamer.com.tw/*
@@ -10,6 +10,7 @@
 // @updateHistory  1.0.1 (2024-01-04) 封裝 API, 邏輯未改變
 // @updateHistory  1.1.0 (2024-01-12) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory  1.2.0 (2025-05-30) 適配巴哈姆特新版網站，更新掛載點到左側選單動畫瘋項目附近
+// @updateHistory  1.2.1 (2025-05-30) 優化 UX
 // @connect        ani.gamer.com.tw
 // @grant          GM_xmlhttpRequest
 // ==/UserScript==
@@ -40,6 +41,36 @@
     function _arrayWithHoles(r) {
         if (Array.isArray(r)) return r;
     }
+    function _arrayWithoutHoles(r) {
+        if (Array.isArray(r)) return _arrayLikeToArray(r);
+    }
+    function _classCallCheck(a, n) {
+        if (!(a instanceof n)) throw new TypeError("Cannot call a class as a function");
+    }
+    function _defineProperties(e, r) {
+        for (var t = 0; t < r.length; t++) {
+            var o = r[t];
+            o.enumerable = o.enumerable || false, o.configurable = true, "value" in o && (o.writable = true), 
+            Object.defineProperty(e, _toPropertyKey(o.key), o);
+        }
+    }
+    function _createClass(e, r, t) {
+        return r && _defineProperties(e.prototype, r), t && _defineProperties(e, t), Object.defineProperty(e, "prototype", {
+            writable: false
+        }), e;
+    }
+    function _extends$2() {
+        return _extends$2 = Object.assign ? Object.assign.bind() : function(n) {
+            for (var e = 1; e < arguments.length; e++) {
+                var t = arguments[e];
+                for (var r in t) ({}).hasOwnProperty.call(t, r) && (n[r] = t[r]);
+            }
+            return n;
+        }, _extends$2.apply(null, arguments);
+    }
+    function _iterableToArray(r) {
+        if ("undefined" != typeof Symbol && null != r[Symbol.iterator] || null != r["@@iterator"]) return Array.from(r);
+    }
     function _iterableToArrayLimit(r, l) {
         var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
         if (null != t) {
@@ -61,6 +92,9 @@
     }
     function _nonIterableRest() {
         throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+    }
+    function _nonIterableSpread() {
+        throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
     }
     function _regeneratorRuntime() {
         _regeneratorRuntime = function() {
@@ -328,6 +362,23 @@
     }
     function _slicedToArray(r, e) {
         return _arrayWithHoles(r) || _iterableToArrayLimit(r, e) || _unsupportedIterableToArray(r, e) || _nonIterableRest();
+    }
+    function _toConsumableArray(r) {
+        return _arrayWithoutHoles(r) || _iterableToArray(r) || _unsupportedIterableToArray(r) || _nonIterableSpread();
+    }
+    function _toPrimitive(t, r) {
+        if ("object" != typeof t || !t) return t;
+        var e = t[Symbol.toPrimitive];
+        if (void 0 !== e) {
+            var i = e.call(t, r);
+            if ("object" != typeof i) return i;
+            throw new TypeError("@@toPrimitive must return a primitive value.");
+        }
+        return String(t);
+    }
+    function _toPropertyKey(t) {
+        var i = _toPrimitive(t, "string");
+        return "symbol" == typeof i ? i : i + "";
     }
     function _unsupportedIterableToArray(r, a) {
         if (r) {
@@ -745,6 +796,7 @@
         __proto__: null,
         default: React
     }, [ reactExports ]);
+    var client$1 = {};
     var reactDom = {
         exports: {}
     };
@@ -8266,9 +8318,16 @@
     var createRoot;
     var m = reactDomExports;
     {
-        createRoot = m.createRoot;
-        m.hydrateRoot;
+        createRoot = client$1.createRoot = m.createRoot;
+        client$1.hydrateRoot = m.hydrateRoot;
     }
+    var client = _mergeNamespaces({
+        __proto__: null,
+        get createRoot() {
+            return createRoot;
+        },
+        default: client$1
+    }, [ client$1 ]);
     function appendComponentToElement(ReactComponent, selector) {
         var myElement = document.querySelector(selector);
         if (!myElement) {
@@ -8424,7 +8483,7 @@
     }
     var jsxRuntimeExports = jsxRuntime.exports;
     const PropsContext = reactExports.createContext(undefined);
-    function getThemeProps(params) {
+    function getThemeProps$1(params) {
         const {theme: theme, name: name, props: props} = params;
         if (!theme || !theme.components || !theme.components[name]) {
             return props;
@@ -8440,7 +8499,7 @@
     }
     function useDefaultProps$1({props: props, name: name}) {
         const ctx = reactExports.useContext(PropsContext);
-        return getThemeProps({
+        return getThemeProps$1({
             props: props,
             name: name,
             theme: {
@@ -10332,7 +10391,7 @@
         getFunctionName: getFunctionName
     });
     var require$$6 = getAugmentedNamespace(getDisplayName);
-    const _excluded$i = [ "values", "unit", "step" ];
+    const _excluded$z = [ "values", "unit", "step" ];
     const sortBreakpointsValues = values => {
         const breakpointsAsArray = Object.keys(values).map((key => ({
             key: key,
@@ -10350,7 +10409,7 @@
             md: 900,
             lg: 1200,
             xl: 1536
-        }, unit: unit = "px", step: step = 5} = breakpoints, other = _objectWithoutPropertiesLoose(breakpoints, _excluded$i);
+        }, unit: unit = "px", step: step = 5} = breakpoints, other = _objectWithoutPropertiesLoose(breakpoints, _excluded$z);
         const sortedValues = sortBreakpointsValues(values);
         const keys = Object.keys(sortedValues);
         function up(key) {
@@ -11279,9 +11338,9 @@
         }
         return {};
     }
-    const _excluded$h = [ "breakpoints", "palette", "spacing", "shape" ];
+    const _excluded$y = [ "breakpoints", "palette", "spacing", "shape" ];
     function createTheme$2(options = {}, ...args) {
-        const {breakpoints: breakpointsInput = {}, palette: paletteInput = {}, spacing: spacingInput, shape: shapeInput = {}} = options, other = _objectWithoutPropertiesLoose(options, _excluded$h);
+        const {breakpoints: breakpointsInput = {}, palette: paletteInput = {}, spacing: spacingInput, shape: shapeInput = {}} = options, other = _objectWithoutPropertiesLoose(options, _excluded$y);
         const breakpoints = createBreakpoints(breakpointsInput);
         const spacing = createSpacing(spacingInput);
         let muiTheme = deepmerge$1({
@@ -11312,7 +11371,7 @@
         unstable_applyStyles: applyStyles
     });
     var require$$7 = getAugmentedNamespace(createTheme$1);
-    const _excluded$g = [ "sx" ];
+    const _excluded$x = [ "sx" ];
     const splitProps = props => {
         var _props$theme$unstable, _props$theme;
         const result = {
@@ -11330,7 +11389,7 @@
         return result;
     };
     function extendSxProp(props) {
-        const {sx: inSx} = props, other = _objectWithoutPropertiesLoose(props, _excluded$g);
+        const {sx: inSx} = props, other = _objectWithoutPropertiesLoose(props, _excluded$x);
         const {systemProps: systemProps, otherProps: otherProps} = splitProps(other);
         let finalSx;
         if (Array.isArray(inSx)) {
@@ -11373,7 +11432,7 @@
     _interopRequireDefault$1(require$$6);
     var _createTheme = _interopRequireDefault$1(require$$7);
     var _styleFunctionSx = _interopRequireDefault$1(require$$8);
-    const _excluded$f = [ "ownerState" ], _excluded2 = [ "variants" ], _excluded3 = [ "name", "slot", "skipVariantsResolver", "skipSx", "overridesResolver" ];
+    const _excluded$w = [ "ownerState" ], _excluded2$2 = [ "variants" ], _excluded3$1 = [ "name", "slot", "skipVariantsResolver", "skipSx", "overridesResolver" ];
     function _getRequireWildcardCache(e) {
         if ("function" != typeof WeakMap) return null;
         var r = new WeakMap, t = new WeakMap;
@@ -11423,7 +11482,7 @@
         return (props, styles) => styles[slot];
     }
     function processStyleArg(callableStyle, _ref) {
-        let {ownerState: ownerState} = _ref, props = (0, _objectWithoutPropertiesLoose2.default)(_ref, _excluded$f);
+        let {ownerState: ownerState} = _ref, props = (0, _objectWithoutPropertiesLoose2.default)(_ref, _excluded$w);
         const resolvedStylesArg = typeof callableStyle === "function" ? callableStyle((0, 
         _extends2.default)({
             ownerState: ownerState
@@ -11435,7 +11494,7 @@
             }, props))));
         }
         if (!!resolvedStylesArg && typeof resolvedStylesArg === "object" && Array.isArray(resolvedStylesArg.variants)) {
-            const {variants: variants = []} = resolvedStylesArg, otherStyles = (0, _objectWithoutPropertiesLoose2.default)(resolvedStylesArg, _excluded2);
+            const {variants: variants = []} = resolvedStylesArg, otherStyles = (0, _objectWithoutPropertiesLoose2.default)(resolvedStylesArg, _excluded2$2);
             let result = otherStyles;
             variants.forEach((variant => {
                 let isMatch = true;
@@ -11475,7 +11534,7 @@
         return (tag, inputOptions = {}) => {
             (0, _styledEngine.internal_processStyles)(tag, (styles => styles.filter((style => !(style != null && style.__mui_systemSx)))));
             const {name: componentName, slot: componentSlot, skipVariantsResolver: inputSkipVariantsResolver, skipSx: inputSkipSx, overridesResolver: overridesResolver = defaultOverridesResolver(lowercaseFirstLetter(componentSlot))} = inputOptions, options = (0, 
-            _objectWithoutPropertiesLoose2.default)(inputOptions, _excluded3);
+            _objectWithoutPropertiesLoose2.default)(inputOptions, _excluded3$1);
             const skipVariantsResolver = inputSkipVariantsResolver !== undefined ? inputSkipVariantsResolver : componentSlot && componentSlot !== "Root" && componentSlot !== "root" || false;
             const skipSx = inputSkipSx || false;
             let label;
@@ -11630,7 +11689,7 @@
     colorManipulator.colorChannel = void 0;
     var darken_1 = colorManipulator.darken = darken;
     colorManipulator.decomposeColor = decomposeColor;
-    colorManipulator.emphasize = emphasize;
+    var emphasize_1 = colorManipulator.emphasize = emphasize;
     var getContrastRatio_1 = colorManipulator.getContrastRatio = getContrastRatio;
     colorManipulator.getLuminance = getLuminance;
     colorManipulator.hexToRgb = hexToRgb;
@@ -11911,7 +11970,7 @@
         800: "#2e7d32",
         900: "#1b5e20"
     };
-    const _excluded$e = [ "mode", "contrastThreshold", "tonalOffset" ];
+    const _excluded$v = [ "mode", "contrastThreshold", "tonalOffset" ];
     const light = {
         text: {
             primary: "rgba(0, 0, 0, 0.87)",
@@ -12061,7 +12120,7 @@
         };
     }
     function createPalette(palette) {
-        const {mode: mode = "light", contrastThreshold: contrastThreshold = 3, tonalOffset: tonalOffset = .2} = palette, other = _objectWithoutPropertiesLoose(palette, _excluded$e);
+        const {mode: mode = "light", contrastThreshold: contrastThreshold = 3, tonalOffset: tonalOffset = .2} = palette, other = _objectWithoutPropertiesLoose(palette, _excluded$v);
         const primary = palette.primary || getDefaultPrimary(mode);
         const secondary = palette.secondary || getDefaultSecondary(mode);
         const error = palette.error || getDefaultError(mode);
@@ -12132,7 +12191,7 @@
         }, modes[mode]), other);
         return paletteOutput;
     }
-    const _excluded$d = [ "fontFamily", "fontSize", "fontWeightLight", "fontWeightRegular", "fontWeightMedium", "fontWeightBold", "htmlFontSize", "allVariants", "pxToRem" ];
+    const _excluded$u = [ "fontFamily", "fontSize", "fontWeightLight", "fontWeightRegular", "fontWeightMedium", "fontWeightBold", "htmlFontSize", "allVariants", "pxToRem" ];
     function round(value) {
         return Math.round(value * 1e5) / 1e5;
     }
@@ -12141,7 +12200,7 @@
     };
     const defaultFontFamily = '"Roboto", "Helvetica", "Arial", sans-serif';
     function createTypography(palette, typography) {
-        const _ref = typeof typography === "function" ? typography(palette) : typography, {fontFamily: fontFamily = defaultFontFamily, fontSize: fontSize = 14, fontWeightLight: fontWeightLight = 300, fontWeightRegular: fontWeightRegular = 400, fontWeightMedium: fontWeightMedium = 500, fontWeightBold: fontWeightBold = 700, htmlFontSize: htmlFontSize = 16, allVariants: allVariants, pxToRem: pxToRem2} = _ref, other = _objectWithoutPropertiesLoose(_ref, _excluded$d);
+        const _ref = typeof typography === "function" ? typography(palette) : typography, {fontFamily: fontFamily = defaultFontFamily, fontSize: fontSize = 14, fontWeightLight: fontWeightLight = 300, fontWeightRegular: fontWeightRegular = 400, fontWeightMedium: fontWeightMedium = 500, fontWeightBold: fontWeightBold = 700, htmlFontSize: htmlFontSize = 16, allVariants: allVariants, pxToRem: pxToRem2} = _ref, other = _objectWithoutPropertiesLoose(_ref, _excluded$u);
         const coef = fontSize / 14;
         const pxToRem = pxToRem2 || (size => `${size / htmlFontSize * coef}rem`);
         const buildVariant = (fontWeight, size, lineHeight, letterSpacing, casing) => _extends$1({
@@ -12194,7 +12253,7 @@
         return [ `${px[0]}px ${px[1]}px ${px[2]}px ${px[3]}px rgba(0,0,0,${shadowKeyUmbraOpacity})`, `${px[4]}px ${px[5]}px ${px[6]}px ${px[7]}px rgba(0,0,0,${shadowKeyPenumbraOpacity})`, `${px[8]}px ${px[9]}px ${px[10]}px ${px[11]}px rgba(0,0,0,${shadowAmbientShadowOpacity})` ].join(",");
     }
     const shadows = [ "none", createShadow(0, 2, 1, -1, 0, 1, 1, 0, 0, 1, 3, 0), createShadow(0, 3, 1, -2, 0, 2, 2, 0, 0, 1, 5, 0), createShadow(0, 3, 3, -2, 0, 3, 4, 0, 0, 1, 8, 0), createShadow(0, 2, 4, -1, 0, 4, 5, 0, 0, 1, 10, 0), createShadow(0, 3, 5, -1, 0, 5, 8, 0, 0, 1, 14, 0), createShadow(0, 3, 5, -1, 0, 6, 10, 0, 0, 1, 18, 0), createShadow(0, 4, 5, -2, 0, 7, 10, 1, 0, 2, 16, 1), createShadow(0, 5, 5, -3, 0, 8, 10, 1, 0, 3, 14, 2), createShadow(0, 5, 6, -3, 0, 9, 12, 1, 0, 3, 16, 2), createShadow(0, 6, 6, -3, 0, 10, 14, 1, 0, 4, 18, 3), createShadow(0, 6, 7, -4, 0, 11, 15, 1, 0, 4, 20, 3), createShadow(0, 7, 8, -4, 0, 12, 17, 2, 0, 5, 22, 4), createShadow(0, 7, 8, -4, 0, 13, 19, 2, 0, 5, 24, 4), createShadow(0, 7, 9, -4, 0, 14, 21, 2, 0, 5, 26, 4), createShadow(0, 8, 9, -5, 0, 15, 22, 2, 0, 6, 28, 5), createShadow(0, 8, 10, -5, 0, 16, 24, 2, 0, 6, 30, 5), createShadow(0, 8, 11, -5, 0, 17, 26, 2, 0, 6, 32, 5), createShadow(0, 9, 11, -5, 0, 18, 28, 2, 0, 7, 34, 6), createShadow(0, 9, 12, -6, 0, 19, 29, 2, 0, 7, 36, 6), createShadow(0, 10, 13, -6, 0, 20, 31, 3, 0, 8, 38, 7), createShadow(0, 10, 13, -6, 0, 21, 33, 3, 0, 8, 40, 7), createShadow(0, 10, 14, -6, 0, 22, 35, 3, 0, 8, 42, 7), createShadow(0, 11, 14, -7, 0, 23, 36, 3, 0, 9, 44, 8), createShadow(0, 11, 15, -7, 0, 24, 38, 3, 0, 9, 46, 8) ];
-    const _excluded$c = [ "duration", "easing", "delay" ];
+    const _excluded$t = [ "duration", "easing", "delay" ];
     const easing = {
         easeInOut: "cubic-bezier(0.4, 0, 0.2, 1)",
         easeOut: "cubic-bezier(0.0, 0, 0.2, 1)",
@@ -12225,7 +12284,7 @@
         const mergedDuration = _extends$1({}, duration, inputTransitions.duration);
         const create = (props = [ "all" ], options = {}) => {
             const {duration: durationOption = mergedDuration.standard, easing: easingOption = mergedEasing.easeInOut, delay: delay = 0} = options;
-            _objectWithoutPropertiesLoose(options, _excluded$c);
+            _objectWithoutPropertiesLoose(options, _excluded$t);
             return (Array.isArray(props) ? props : [ props ]).map((animatedProp => `${animatedProp} ${typeof durationOption === "string" ? durationOption : formatMs(durationOption)} ${easingOption} ${typeof delay === "string" ? delay : formatMs(delay)}`)).join(",");
         };
         return _extends$1({
@@ -12246,9 +12305,9 @@
         snackbar: 1400,
         tooltip: 1500
     };
-    const _excluded$b = [ "breakpoints", "mixins", "spacing", "palette", "transitions", "typography", "shape" ];
+    const _excluded$s = [ "breakpoints", "mixins", "spacing", "palette", "transitions", "typography", "shape" ];
     function createTheme(options = {}, ...args) {
-        const {mixins: mixinsInput = {}, palette: paletteInput = {}, transitions: transitionsInput = {}, typography: typographyInput = {}} = options, other = _objectWithoutPropertiesLoose(options, _excluded$b);
+        const {mixins: mixinsInput = {}, palette: paletteInput = {}, transitions: transitionsInput = {}, typography: typographyInput = {}} = options, other = _objectWithoutPropertiesLoose(options, _excluded$s);
         if (options.vars && options.generateCssVars === undefined) {
             throw new Error(formatMuiErrorMessage$1(18));
         }
@@ -12273,7 +12332,7 @@
         };
         return muiTheme;
     }
-    const defaultTheme = createTheme();
+    const defaultTheme$1 = createTheme();
     var THEME_ID = "$$material";
     function slotShouldForwardProp(prop) {
         return prop !== "ownerState" && prop !== "theme" && prop !== "sx" && prop !== "as";
@@ -12281,7 +12340,7 @@
     const rootShouldForwardProp = prop => slotShouldForwardProp(prop) && prop !== "classes";
     const styled = _default({
         themeId: THEME_ID,
-        defaultTheme: defaultTheme,
+        defaultTheme: defaultTheme$1,
         rootShouldForwardProp: rootShouldForwardProp
     });
     function isObjectEmpty(obj) {
@@ -12295,6 +12354,24 @@
     function useTheme$1(defaultTheme = systemDefaultTheme) {
         return useTheme$2(defaultTheme);
     }
+    const _excluded$r = [ "className", "component" ];
+    function createBox(options = {}) {
+        const {themeId: themeId, defaultTheme: defaultTheme, defaultClassName: defaultClassName = "MuiBox-root", generateClassName: generateClassName} = options;
+        const BoxRoot = styled$1("div", {
+            shouldForwardProp: prop => prop !== "theme" && prop !== "sx" && prop !== "as"
+        })(styleFunctionSx$1);
+        const Box = reactExports.forwardRef((function Box(inProps, ref) {
+            const theme = useTheme$1(defaultTheme);
+            const _extendSxProp = extendSxProp(inProps), {className: className, component: component = "div"} = _extendSxProp, other = _objectWithoutPropertiesLoose(_extendSxProp, _excluded$r);
+            return jsxRuntimeExports.jsx(BoxRoot, _extends$1({
+                as: component,
+                ref: ref,
+                className: clsx(className, generateClassName ? generateClassName(defaultClassName) : defaultClassName),
+                theme: themeId ? theme[themeId] || theme : theme
+            }, other));
+        }));
+        return Box;
+    }
     function generateUtilityClasses(componentName, slots, globalStatePrefix = "Mui") {
         const result = {};
         slots.forEach((slot => {
@@ -12302,7 +12379,86 @@
         }));
         return result;
     }
+    function getThemeProps(params) {
+        const {theme: theme, name: name, props: props} = params;
+        if (!theme || !theme.components || !theme.components[name] || !theme.components[name].defaultProps) {
+            return props;
+        }
+        return resolveProps(theme.components[name].defaultProps, props);
+    }
     const useEnhancedEffect = typeof window !== "undefined" ? reactExports.useLayoutEffect : reactExports.useEffect;
+    function useMediaQueryOld(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr) {
+        const [match, setMatch] = reactExports.useState((() => {
+            if (noSsr && matchMedia) {
+                return matchMedia(query).matches;
+            }
+            if (ssrMatchMedia) {
+                return ssrMatchMedia(query).matches;
+            }
+            return defaultMatches;
+        }));
+        useEnhancedEffect((() => {
+            let active = true;
+            if (!matchMedia) {
+                return undefined;
+            }
+            const queryList = matchMedia(query);
+            const updateMatch = () => {
+                if (active) {
+                    setMatch(queryList.matches);
+                }
+            };
+            updateMatch();
+            queryList.addListener(updateMatch);
+            return () => {
+                active = false;
+                queryList.removeListener(updateMatch);
+            };
+        }), [ query, matchMedia ]);
+        return match;
+    }
+    const maybeReactUseSyncExternalStore = React$1["useSyncExternalStore" + ""];
+    function useMediaQueryNew(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr) {
+        const getDefaultSnapshot = reactExports.useCallback((() => defaultMatches), [ defaultMatches ]);
+        const getServerSnapshot = reactExports.useMemo((() => {
+            if (noSsr && matchMedia) {
+                return () => matchMedia(query).matches;
+            }
+            if (ssrMatchMedia !== null) {
+                const {matches: matches} = ssrMatchMedia(query);
+                return () => matches;
+            }
+            return getDefaultSnapshot;
+        }), [ getDefaultSnapshot, query, ssrMatchMedia, noSsr, matchMedia ]);
+        const [getSnapshot, subscribe] = reactExports.useMemo((() => {
+            if (matchMedia === null) {
+                return [ getDefaultSnapshot, () => () => {} ];
+            }
+            const mediaQueryList = matchMedia(query);
+            return [ () => mediaQueryList.matches, notify => {
+                mediaQueryList.addListener(notify);
+                return () => {
+                    mediaQueryList.removeListener(notify);
+                };
+            } ];
+        }), [ getDefaultSnapshot, matchMedia, query ]);
+        const match = maybeReactUseSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
+        return match;
+    }
+    function useMediaQuery(queryInput, options = {}) {
+        const theme = useTheme$2();
+        const supportMatchMedia = typeof window !== "undefined" && typeof window.matchMedia !== "undefined";
+        const {defaultMatches: defaultMatches = false, matchMedia: matchMedia = (supportMatchMedia ? window.matchMedia : null), ssrMatchMedia: ssrMatchMedia = null, noSsr: noSsr = false} = getThemeProps({
+            name: "MuiUseMediaQuery",
+            props: options,
+            theme: theme
+        });
+        let query = typeof queryInput === "function" ? queryInput(theme) : queryInput;
+        query = query.replace(/^@media( ?)/m, "");
+        const useMediaQueryImplementation = maybeReactUseSyncExternalStore !== undefined ? useMediaQueryNew : useMediaQueryOld;
+        const match = useMediaQueryImplementation(query, defaultMatches, matchMedia, ssrMatchMedia, noSsr);
+        return match;
+    }
     function createChainedFunction(...funcs) {
         return funcs.reduce(((acc, func) => {
             if (func == null) {
@@ -12313,6 +12469,20 @@
                 func.apply(this, args);
             };
         }), (() => {}));
+    }
+    function debounce(func, wait = 166) {
+        let timeout;
+        function debounced(...args) {
+            const later = () => {
+                func.apply(this, args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        }
+        debounced.clear = () => {
+            clearTimeout(timeout);
+        };
+        return debounced;
     }
     function ownerDocument(node) {
         return node && node.ownerDocument || document;
@@ -12575,10 +12745,10 @@
         }
         return componentProps;
     }
-    const _excluded$a = [ "elementType", "externalSlotProps", "ownerState", "skipResolvingSlotProps" ];
+    const _excluded$q = [ "elementType", "externalSlotProps", "ownerState", "skipResolvingSlotProps" ];
     function useSlotProps(parameters) {
         var _parameters$additiona;
-        const {elementType: elementType, externalSlotProps: externalSlotProps, ownerState: ownerState, skipResolvingSlotProps: skipResolvingSlotProps = false} = parameters, rest = _objectWithoutPropertiesLoose(parameters, _excluded$a);
+        const {elementType: elementType, externalSlotProps: externalSlotProps, ownerState: ownerState, skipResolvingSlotProps: skipResolvingSlotProps = false} = parameters, rest = _objectWithoutPropertiesLoose(parameters, _excluded$q);
         const resolvedComponentsProps = skipResolvingSlotProps ? {} : resolveComponentProps(externalSlotProps, ownerState);
         const {props: mergedProps, internalRef: internalRef} = mergeSlotProps(_extends$1({}, rest, {
             externalSlotProps: resolvedComponentsProps
@@ -12596,6 +12766,11 @@
         }
         return (element == null ? void 0 : element.ref) || null;
     }
+    const RtlContext = reactExports.createContext();
+    const useRtl = () => {
+        const value = reactExports.useContext(RtlContext);
+        return value != null ? value : false;
+    };
     const html = (theme, enableColorScheme) => _extends$1({
         WebkitFontSmoothing: "antialiased",
         MozOsxFontSmoothing: "grayscale",
@@ -12616,8 +12791,8 @@
         return generateUtilityClass("MuiScopedCssBaseline", slot);
     }
     generateUtilityClasses("MuiScopedCssBaseline", [ "root" ]);
-    const _excluded$9 = [ "className", "component", "enableColorScheme" ];
-    const useUtilityClasses$7 = ownerState => {
+    const _excluded$p = [ "className", "component", "enableColorScheme" ];
+    const useUtilityClasses$k = ownerState => {
         const {classes: classes} = ownerState;
         const slots = {
             root: [ "root" ]
@@ -12652,11 +12827,11 @@
             props: inProps,
             name: "MuiScopedCssBaseline"
         });
-        const {className: className, component: component = "div"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$9);
+        const {className: className, component: component = "div"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$p);
         const ownerState = _extends$1({}, props, {
             component: component
         });
-        const classes = useUtilityClasses$7(ownerState);
+        const classes = useUtilityClasses$k(ownerState);
         return jsxRuntimeExports.jsx(ScopedCssBaselineRoot, _extends$1({
             as: component,
             className: clsx(classes.root, className),
@@ -13521,7 +13696,7 @@
     TransitionGroup.propTypes = {};
     TransitionGroup.defaultProps = defaultProps;
     function useTheme() {
-        const theme = useTheme$1(defaultTheme);
+        const theme = useTheme$1(defaultTheme$1);
         return theme[THEME_ID] || theme;
     }
     const reflow = node => node.scrollTop;
@@ -13534,8 +13709,8 @@
             delay: style.transitionDelay
         };
     }
-    const _excluded$8 = [ "addEndListener", "appear", "children", "easing", "in", "onEnter", "onEntered", "onEntering", "onExit", "onExited", "onExiting", "style", "timeout", "TransitionComponent" ];
-    const styles = {
+    const _excluded$o = [ "addEndListener", "appear", "children", "easing", "in", "onEnter", "onEntered", "onEntering", "onExit", "onExited", "onExiting", "style", "timeout", "TransitionComponent" ];
+    const styles$1 = {
         entering: {
             opacity: 1
         },
@@ -13549,7 +13724,7 @@
             enter: theme.transitions.duration.enteringScreen,
             exit: theme.transitions.duration.leavingScreen
         };
-        const {addEndListener: addEndListener, appear: appear = true, children: children, easing: easing, in: inProp, onEnter: onEnter, onEntered: onEntered, onEntering: onEntering, onExit: onExit, onExited: onExited, onExiting: onExiting, style: style, timeout: timeout = defaultTimeout, TransitionComponent: TransitionComponent = Transition} = props, other = _objectWithoutPropertiesLoose(props, _excluded$8);
+        const {addEndListener: addEndListener, appear: appear = true, children: children, easing: easing, in: inProp, onEnter: onEnter, onEntered: onEntered, onEntering: onEntering, onExit: onExit, onExited: onExited, onExiting: onExiting, style: style, timeout: timeout = defaultTimeout, TransitionComponent: TransitionComponent = Transition} = props, other = _objectWithoutPropertiesLoose(props, _excluded$o);
         const nodeRef = reactExports.useRef(null);
         const handleRef = useForkRef(nodeRef, getReactElementRef(children), ref);
         const normalizedTransitionCallback = callback => maybeIsAppearing => {
@@ -13617,7 +13792,7 @@
                 style: _extends$1({
                     opacity: 0,
                     visibility: state === "exited" && !inProp ? "hidden" : undefined
-                }, styles[state], style, children.props.style),
+                }, styles$1[state], style, children.props.style),
                 ref: handleRef
             }, childProps))
         }));
@@ -13626,8 +13801,8 @@
         return generateUtilityClass("MuiBackdrop", slot);
     }
     generateUtilityClasses("MuiBackdrop", [ "root", "invisible" ]);
-    const _excluded$7 = [ "children", "className", "component", "components", "componentsProps", "invisible", "open", "slotProps", "slots", "TransitionComponent", "transitionDuration" ];
-    const useUtilityClasses$6 = ownerState => {
+    const _excluded$n = [ "children", "className", "component", "components", "componentsProps", "invisible", "open", "slotProps", "slots", "TransitionComponent", "transitionDuration" ];
+    const useUtilityClasses$j = ownerState => {
         const {classes: classes, invisible: invisible} = ownerState;
         const slots = {
             root: [ "root", invisible && "invisible" ]
@@ -13661,12 +13836,12 @@
             props: inProps,
             name: "MuiBackdrop"
         });
-        const {children: children, className: className, component: component = "div", components: components = {}, componentsProps: componentsProps = {}, invisible: invisible = false, open: open, slotProps: slotProps = {}, slots: slots = {}, TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration} = props, other = _objectWithoutPropertiesLoose(props, _excluded$7);
+        const {children: children, className: className, component: component = "div", components: components = {}, componentsProps: componentsProps = {}, invisible: invisible = false, open: open, slotProps: slotProps = {}, slots: slots = {}, TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration} = props, other = _objectWithoutPropertiesLoose(props, _excluded$n);
         const ownerState = _extends$1({}, props, {
             component: component,
             invisible: invisible
         });
-        const classes = useUtilityClasses$6(ownerState);
+        const classes = useUtilityClasses$j(ownerState);
         const rootSlotProps = (_slotProps$root = slotProps.root) != null ? _slotProps$root : componentsProps.root;
         return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
             in: open,
@@ -13829,8 +14004,8 @@
         return generateUtilityClass("MuiModal", slot);
     }
     generateUtilityClasses("MuiModal", [ "root", "hidden", "backdrop" ]);
-    const _excluded$6 = [ "BackdropComponent", "BackdropProps", "classes", "className", "closeAfterTransition", "children", "container", "component", "components", "componentsProps", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "onBackdropClick", "onClose", "onTransitionEnter", "onTransitionExited", "open", "slotProps", "slots", "theme" ];
-    const useUtilityClasses$5 = ownerState => {
+    const _excluded$m = [ "BackdropComponent", "BackdropProps", "classes", "className", "closeAfterTransition", "children", "container", "component", "components", "componentsProps", "disableAutoFocus", "disableEnforceFocus", "disableEscapeKeyDown", "disablePortal", "disableRestoreFocus", "disableScrollLock", "hideBackdrop", "keepMounted", "onBackdropClick", "onClose", "onTransitionEnter", "onTransitionExited", "open", "slotProps", "slots", "theme" ];
+    const useUtilityClasses$i = ownerState => {
         const {open: open, exited: exited, classes: classes} = ownerState;
         const slots = {
             root: [ "root", !open && exited && "hidden" ],
@@ -13868,7 +14043,7 @@
             name: "MuiModal",
             props: inProps
         });
-        const {BackdropComponent: BackdropComponent = ModalBackdrop, BackdropProps: BackdropProps, className: className, closeAfterTransition: closeAfterTransition = false, children: children, container: container, component: component, components: components = {}, componentsProps: componentsProps = {}, disableAutoFocus: disableAutoFocus = false, disableEnforceFocus: disableEnforceFocus = false, disableEscapeKeyDown: disableEscapeKeyDown = false, disablePortal: disablePortal = false, disableRestoreFocus: disableRestoreFocus = false, disableScrollLock: disableScrollLock = false, hideBackdrop: hideBackdrop = false, keepMounted: keepMounted = false, onBackdropClick: onBackdropClick, open: open, slotProps: slotProps, slots: slots} = props, other = _objectWithoutPropertiesLoose(props, _excluded$6);
+        const {BackdropComponent: BackdropComponent = ModalBackdrop, BackdropProps: BackdropProps, className: className, closeAfterTransition: closeAfterTransition = false, children: children, container: container, component: component, components: components = {}, componentsProps: componentsProps = {}, disableAutoFocus: disableAutoFocus = false, disableEnforceFocus: disableEnforceFocus = false, disableEscapeKeyDown: disableEscapeKeyDown = false, disablePortal: disablePortal = false, disableRestoreFocus: disableRestoreFocus = false, disableScrollLock: disableScrollLock = false, hideBackdrop: hideBackdrop = false, keepMounted: keepMounted = false, onBackdropClick: onBackdropClick, open: open, slotProps: slotProps, slots: slots} = props, other = _objectWithoutPropertiesLoose(props, _excluded$m);
         const propsWithDefaults = _extends$1({}, props, {
             closeAfterTransition: closeAfterTransition,
             disableAutoFocus: disableAutoFocus,
@@ -13886,7 +14061,7 @@
         const ownerState = _extends$1({}, propsWithDefaults, {
             exited: exited
         });
-        const classes = useUtilityClasses$5(ownerState);
+        const classes = useUtilityClasses$i(ownerState);
         const childProps = {};
         if (children.props.tabIndex === undefined) {
             childProps.tabIndex = "-1";
@@ -13961,8 +14136,8 @@
         return generateUtilityClass("MuiPaper", slot);
     }
     generateUtilityClasses("MuiPaper", [ "root", "rounded", "outlined", "elevation", "elevation0", "elevation1", "elevation2", "elevation3", "elevation4", "elevation5", "elevation6", "elevation7", "elevation8", "elevation9", "elevation10", "elevation11", "elevation12", "elevation13", "elevation14", "elevation15", "elevation16", "elevation17", "elevation18", "elevation19", "elevation20", "elevation21", "elevation22", "elevation23", "elevation24" ]);
-    const _excluded$5 = [ "className", "component", "elevation", "square", "variant" ];
-    const useUtilityClasses$4 = ownerState => {
+    const _excluded$l = [ "className", "component", "elevation", "square", "variant" ];
+    const useUtilityClasses$h = ownerState => {
         const {square: square, elevation: elevation, variant: variant, classes: classes} = ownerState;
         const slots = {
             root: [ "root", variant, !square && "rounded", variant === "elevation" && `elevation${elevation}` ]
@@ -13999,14 +14174,14 @@
             props: inProps,
             name: "MuiPaper"
         });
-        const {className: className, component: component = "div", elevation: elevation = 1, square: square = false, variant: variant = "elevation"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$5);
+        const {className: className, component: component = "div", elevation: elevation = 1, square: square = false, variant: variant = "elevation"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$l);
         const ownerState = _extends$1({}, props, {
             component: component,
             elevation: elevation,
             square: square,
             variant: variant
         });
-        const classes = useUtilityClasses$4(ownerState);
+        const classes = useUtilityClasses$h(ownerState);
         return jsxRuntimeExports.jsx(PaperRoot, _extends$1({
             as: component,
             ownerState: ownerState,
@@ -14019,7 +14194,7 @@
     }
     const dialogClasses = generateUtilityClasses("MuiDialog", [ "root", "scrollPaper", "scrollBody", "container", "paper", "paperScrollPaper", "paperScrollBody", "paperWidthFalse", "paperWidthXs", "paperWidthSm", "paperWidthMd", "paperWidthLg", "paperWidthXl", "paperFullWidth", "paperFullScreen" ]);
     const DialogContext = reactExports.createContext({});
-    const _excluded$4 = [ "aria-describedby", "aria-labelledby", "BackdropComponent", "BackdropProps", "children", "className", "disableEscapeKeyDown", "fullScreen", "fullWidth", "maxWidth", "onBackdropClick", "onClick", "onClose", "open", "PaperComponent", "PaperProps", "scroll", "TransitionComponent", "transitionDuration", "TransitionProps" ];
+    const _excluded$k = [ "aria-describedby", "aria-labelledby", "BackdropComponent", "BackdropProps", "children", "className", "disableEscapeKeyDown", "fullScreen", "fullWidth", "maxWidth", "onBackdropClick", "onClick", "onClose", "open", "PaperComponent", "PaperProps", "scroll", "TransitionComponent", "transitionDuration", "TransitionProps" ];
     const DialogBackdrop = styled(Backdrop, {
         name: "MuiDialog",
         slot: "Backdrop",
@@ -14027,7 +14202,7 @@
     })({
         zIndex: -1
     });
-    const useUtilityClasses$3 = ownerState => {
+    const useUtilityClasses$g = ownerState => {
         const {classes: classes, scroll: scroll, maxWidth: maxWidth, fullWidth: fullWidth, fullScreen: fullScreen} = ownerState;
         const slots = {
             root: [ "root" ],
@@ -14137,7 +14312,7 @@
             enter: theme.transitions.duration.enteringScreen,
             exit: theme.transitions.duration.leavingScreen
         };
-        const {"aria-describedby": ariaDescribedby, "aria-labelledby": ariaLabelledbyProp, BackdropComponent: BackdropComponent, BackdropProps: BackdropProps, children: children, className: className, disableEscapeKeyDown: disableEscapeKeyDown = false, fullScreen: fullScreen = false, fullWidth: fullWidth = false, maxWidth: maxWidth = "sm", onBackdropClick: onBackdropClick, onClick: onClick, onClose: onClose, open: open, PaperComponent: PaperComponent = Paper, PaperProps: PaperProps = {}, scroll: scroll = "paper", TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration = defaultTransitionDuration, TransitionProps: TransitionProps} = props, other = _objectWithoutPropertiesLoose(props, _excluded$4);
+        const {"aria-describedby": ariaDescribedby, "aria-labelledby": ariaLabelledbyProp, BackdropComponent: BackdropComponent, BackdropProps: BackdropProps, children: children, className: className, disableEscapeKeyDown: disableEscapeKeyDown = false, fullScreen: fullScreen = false, fullWidth: fullWidth = false, maxWidth: maxWidth = "sm", onBackdropClick: onBackdropClick, onClick: onClick, onClose: onClose, open: open, PaperComponent: PaperComponent = Paper, PaperProps: PaperProps = {}, scroll: scroll = "paper", TransitionComponent: TransitionComponent = Fade, transitionDuration: transitionDuration = defaultTransitionDuration, TransitionProps: TransitionProps} = props, other = _objectWithoutPropertiesLoose(props, _excluded$k);
         const ownerState = _extends$1({}, props, {
             disableEscapeKeyDown: disableEscapeKeyDown,
             fullScreen: fullScreen,
@@ -14145,7 +14320,7 @@
             maxWidth: maxWidth,
             scroll: scroll
         });
-        const classes = useUtilityClasses$3(ownerState);
+        const classes = useUtilityClasses$g(ownerState);
         const backdropClick = reactExports.useRef();
         const handleMouseDown = event => {
             backdropClick.current = event.target === event.currentTarget;
@@ -14216,6 +14391,224 @@
             }))
         }));
     }));
+    function getTypographyUtilityClass(slot) {
+        return generateUtilityClass("MuiTypography", slot);
+    }
+    generateUtilityClasses("MuiTypography", [ "root", "h1", "h2", "h3", "h4", "h5", "h6", "subtitle1", "subtitle2", "body1", "body2", "inherit", "button", "caption", "overline", "alignLeft", "alignRight", "alignCenter", "alignJustify", "noWrap", "gutterBottom", "paragraph" ]);
+    const _excluded$j = [ "align", "className", "component", "gutterBottom", "noWrap", "paragraph", "variant", "variantMapping" ];
+    const useUtilityClasses$f = ownerState => {
+        const {align: align, gutterBottom: gutterBottom, noWrap: noWrap, paragraph: paragraph, variant: variant, classes: classes} = ownerState;
+        const slots = {
+            root: [ "root", variant, ownerState.align !== "inherit" && `align${capitalize$1(align)}`, gutterBottom && "gutterBottom", noWrap && "noWrap", paragraph && "paragraph" ]
+        };
+        return composeClasses(slots, getTypographyUtilityClass, classes);
+    };
+    const TypographyRoot = styled("span", {
+        name: "MuiTypography",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, ownerState.variant && styles[ownerState.variant], ownerState.align !== "inherit" && styles[`align${capitalize$1(ownerState.align)}`], ownerState.noWrap && styles.noWrap, ownerState.gutterBottom && styles.gutterBottom, ownerState.paragraph && styles.paragraph ];
+        }
+    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+        margin: 0
+    }, ownerState.variant === "inherit" && {
+        font: "inherit"
+    }, ownerState.variant !== "inherit" && theme.typography[ownerState.variant], ownerState.align !== "inherit" && {
+        textAlign: ownerState.align
+    }, ownerState.noWrap && {
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap"
+    }, ownerState.gutterBottom && {
+        marginBottom: "0.35em"
+    }, ownerState.paragraph && {
+        marginBottom: 16
+    })));
+    const defaultVariantMapping = {
+        h1: "h1",
+        h2: "h2",
+        h3: "h3",
+        h4: "h4",
+        h5: "h5",
+        h6: "h6",
+        subtitle1: "h6",
+        subtitle2: "h6",
+        body1: "p",
+        body2: "p",
+        inherit: "p"
+    };
+    const colorTransformations = {
+        primary: "primary.main",
+        textPrimary: "text.primary",
+        secondary: "secondary.main",
+        textSecondary: "text.secondary",
+        error: "error.main"
+    };
+    const transformDeprecatedColors = color => colorTransformations[color] || color;
+    const Typography = reactExports.forwardRef((function Typography(inProps, ref) {
+        const themeProps = useDefaultProps({
+            props: inProps,
+            name: "MuiTypography"
+        });
+        const color = transformDeprecatedColors(themeProps.color);
+        const props = extendSxProp(_extends$1({}, themeProps, {
+            color: color
+        }));
+        const {align: align = "inherit", className: className, component: component, gutterBottom: gutterBottom = false, noWrap: noWrap = false, paragraph: paragraph = false, variant: variant = "body1", variantMapping: variantMapping = defaultVariantMapping} = props, other = _objectWithoutPropertiesLoose(props, _excluded$j);
+        const ownerState = _extends$1({}, props, {
+            align: align,
+            color: color,
+            className: className,
+            component: component,
+            gutterBottom: gutterBottom,
+            noWrap: noWrap,
+            paragraph: paragraph,
+            variant: variant,
+            variantMapping: variantMapping
+        });
+        const Component = component || (paragraph ? "p" : variantMapping[variant] || defaultVariantMapping[variant]) || "span";
+        const classes = useUtilityClasses$f(ownerState);
+        return jsxRuntimeExports.jsx(TypographyRoot, _extends$1({
+            as: Component,
+            ref: ref,
+            ownerState: ownerState,
+            className: clsx(classes.root, className)
+        }, other));
+    }));
+    function getDialogTitleUtilityClass(slot) {
+        return generateUtilityClass("MuiDialogTitle", slot);
+    }
+    const dialogTitleClasses = generateUtilityClasses("MuiDialogTitle", [ "root" ]);
+    const _excluded$i = [ "className", "id" ];
+    const useUtilityClasses$e = ownerState => {
+        const {classes: classes} = ownerState;
+        const slots = {
+            root: [ "root" ]
+        };
+        return composeClasses(slots, getDialogTitleUtilityClass, classes);
+    };
+    const DialogTitleRoot = styled(Typography, {
+        name: "MuiDialogTitle",
+        slot: "Root",
+        overridesResolver: (props, styles) => styles.root
+    })({
+        padding: "16px 24px",
+        flex: "0 0 auto"
+    });
+    const DialogTitle = reactExports.forwardRef((function DialogTitle(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiDialogTitle"
+        });
+        const {className: className, id: idProp} = props, other = _objectWithoutPropertiesLoose(props, _excluded$i);
+        const ownerState = props;
+        const classes = useUtilityClasses$e(ownerState);
+        const {titleId: titleId = idProp} = reactExports.useContext(DialogContext);
+        return jsxRuntimeExports.jsx(DialogTitleRoot, _extends$1({
+            component: "h2",
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            ref: ref,
+            variant: "h6",
+            id: idProp != null ? idProp : titleId
+        }, other));
+    }));
+    function getDialogContentUtilityClass(slot) {
+        return generateUtilityClass("MuiDialogContent", slot);
+    }
+    generateUtilityClasses("MuiDialogContent", [ "root", "dividers" ]);
+    const _excluded$h = [ "className", "dividers" ];
+    const useUtilityClasses$d = ownerState => {
+        const {classes: classes, dividers: dividers} = ownerState;
+        const slots = {
+            root: [ "root", dividers && "dividers" ]
+        };
+        return composeClasses(slots, getDialogContentUtilityClass, classes);
+    };
+    const DialogContentRoot = styled("div", {
+        name: "MuiDialogContent",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, ownerState.dividers && styles.dividers ];
+        }
+    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+        flex: "1 1 auto",
+        WebkitOverflowScrolling: "touch",
+        overflowY: "auto",
+        padding: "20px 24px"
+    }, ownerState.dividers ? {
+        padding: "16px 24px",
+        borderTop: `1px solid ${(theme.vars || theme).palette.divider}`,
+        borderBottom: `1px solid ${(theme.vars || theme).palette.divider}`
+    } : {
+        [`.${dialogTitleClasses.root} + &`]: {
+            paddingTop: 0
+        }
+    })));
+    const DialogContent = reactExports.forwardRef((function DialogContent(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiDialogContent"
+        });
+        const {className: className, dividers: dividers = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$h);
+        const ownerState = _extends$1({}, props, {
+            dividers: dividers
+        });
+        const classes = useUtilityClasses$d(ownerState);
+        return jsxRuntimeExports.jsx(DialogContentRoot, _extends$1({
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            ref: ref
+        }, other));
+    }));
+    function getDialogActionsUtilityClass(slot) {
+        return generateUtilityClass("MuiDialogActions", slot);
+    }
+    generateUtilityClasses("MuiDialogActions", [ "root", "spacing" ]);
+    const _excluded$g = [ "className", "disableSpacing" ];
+    const useUtilityClasses$c = ownerState => {
+        const {classes: classes, disableSpacing: disableSpacing} = ownerState;
+        const slots = {
+            root: [ "root", !disableSpacing && "spacing" ]
+        };
+        return composeClasses(slots, getDialogActionsUtilityClass, classes);
+    };
+    const DialogActionsRoot = styled("div", {
+        name: "MuiDialogActions",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, !ownerState.disableSpacing && styles.spacing ];
+        }
+    })((({ownerState: ownerState}) => _extends$1({
+        display: "flex",
+        alignItems: "center",
+        padding: 8,
+        justifyContent: "flex-end",
+        flex: "0 0 auto"
+    }, !ownerState.disableSpacing && {
+        "& > :not(style) ~ :not(style)": {
+            marginLeft: 8
+        }
+    })));
+    const DialogActions = reactExports.forwardRef((function DialogActions(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiDialogActions"
+        });
+        const {className: className, disableSpacing: disableSpacing = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$g);
+        const ownerState = _extends$1({}, props, {
+            disableSpacing: disableSpacing
+        });
+        const classes = useUtilityClasses$c(ownerState);
+        return jsxRuntimeExports.jsx(DialogActionsRoot, _extends$1({
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            ref: ref
+        }, other));
+    }));
     function Ripple(props) {
         const {className: className, classes: classes, pulsate: pulsate = false, rippleX: rippleX, rippleY: rippleY, rippleSize: rippleSize, in: inProp, onExited: onExited, timeout: timeout} = props;
         const [leaving, setLeaving] = reactExports.useState(false);
@@ -14248,11 +14641,11 @@
         });
     }
     const touchRippleClasses = generateUtilityClasses("MuiTouchRipple", [ "root", "ripple", "rippleVisible", "ripplePulsate", "child", "childLeaving", "childPulsate" ]);
-    const _excluded$3 = [ "center", "classes", "className" ];
-    let _ = t => t, _t, _t2, _t3, _t4;
+    const _excluded$f = [ "center", "classes", "className" ];
+    let _$1 = t => t, _t$1, _t2$1, _t3$1, _t4$1;
     const DURATION = 550;
     const DELAY_RIPPLE = 80;
-    const enterKeyframe = keyframes(_t || (_t = _`
+    const enterKeyframe = keyframes(_t$1 || (_t$1 = _$1`
   0% {
     transform: scale(0);
     opacity: 0.1;
@@ -14263,7 +14656,7 @@
     opacity: 0.3;
   }
 `));
-    const exitKeyframe = keyframes(_t2 || (_t2 = _`
+    const exitKeyframe = keyframes(_t2$1 || (_t2$1 = _$1`
   0% {
     opacity: 1;
   }
@@ -14272,7 +14665,7 @@
     opacity: 0;
   }
 `));
-    const pulsateKeyframe = keyframes(_t3 || (_t3 = _`
+    const pulsateKeyframe = keyframes(_t3$1 || (_t3$1 = _$1`
   0% {
     transform: scale(1);
   }
@@ -14302,7 +14695,7 @@
     const TouchRippleRipple = styled(Ripple, {
         name: "MuiTouchRipple",
         slot: "Ripple"
-    })(_t4 || (_t4 = _`
+    })(_t4$1 || (_t4$1 = _$1`
   opacity: 0;
   position: absolute;
 
@@ -14351,7 +14744,7 @@
             props: inProps,
             name: "MuiTouchRipple"
         });
-        const {center: centerProp = false, classes: classes = {}, className: className} = props, other = _objectWithoutPropertiesLoose(props, _excluded$3);
+        const {center: centerProp = false, classes: classes = {}, className: className} = props, other = _objectWithoutPropertiesLoose(props, _excluded$f);
         const [ripples, setRipples] = reactExports.useState([]);
         const nextKey = reactExports.useRef(0);
         const rippleCallback = reactExports.useRef(null);
@@ -14494,8 +14887,8 @@
         return generateUtilityClass("MuiButtonBase", slot);
     }
     const buttonBaseClasses = generateUtilityClasses("MuiButtonBase", [ "root", "disabled", "focusVisible" ]);
-    const _excluded$2 = [ "action", "centerRipple", "children", "className", "component", "disabled", "disableRipple", "disableTouchRipple", "focusRipple", "focusVisibleClassName", "LinkComponent", "onBlur", "onClick", "onContextMenu", "onDragLeave", "onFocus", "onFocusVisible", "onKeyDown", "onKeyUp", "onMouseDown", "onMouseLeave", "onMouseUp", "onTouchEnd", "onTouchMove", "onTouchStart", "tabIndex", "TouchRippleProps", "touchRippleRef", "type" ];
-    const useUtilityClasses$2 = ownerState => {
+    const _excluded$e = [ "action", "centerRipple", "children", "className", "component", "disabled", "disableRipple", "disableTouchRipple", "focusRipple", "focusVisibleClassName", "LinkComponent", "onBlur", "onClick", "onContextMenu", "onDragLeave", "onFocus", "onFocusVisible", "onKeyDown", "onKeyUp", "onMouseDown", "onMouseLeave", "onMouseUp", "onTouchEnd", "onTouchMove", "onTouchStart", "tabIndex", "TouchRippleProps", "touchRippleRef", "type" ];
+    const useUtilityClasses$b = ownerState => {
         const {disabled: disabled, focusVisible: focusVisible, focusVisibleClassName: focusVisibleClassName, classes: classes} = ownerState;
         const slots = {
             root: [ "root", disabled && "disabled", focusVisible && "focusVisible" ]
@@ -14546,7 +14939,7 @@
             props: inProps,
             name: "MuiButtonBase"
         });
-        const {action: action, centerRipple: centerRipple = false, children: children, className: className, component: component = "button", disabled: disabled = false, disableRipple: disableRipple = false, disableTouchRipple: disableTouchRipple = false, focusRipple: focusRipple = false, LinkComponent: LinkComponent = "a", onBlur: onBlur, onClick: onClick, onContextMenu: onContextMenu, onDragLeave: onDragLeave, onFocus: onFocus, onFocusVisible: onFocusVisible, onKeyDown: onKeyDown, onKeyUp: onKeyUp, onMouseDown: onMouseDown, onMouseLeave: onMouseLeave, onMouseUp: onMouseUp, onTouchEnd: onTouchEnd, onTouchMove: onTouchMove, onTouchStart: onTouchStart, tabIndex: tabIndex = 0, TouchRippleProps: TouchRippleProps, touchRippleRef: touchRippleRef, type: type} = props, other = _objectWithoutPropertiesLoose(props, _excluded$2);
+        const {action: action, centerRipple: centerRipple = false, children: children, className: className, component: component = "button", disabled: disabled = false, disableRipple: disableRipple = false, disableTouchRipple: disableTouchRipple = false, focusRipple: focusRipple = false, LinkComponent: LinkComponent = "a", onBlur: onBlur, onClick: onClick, onContextMenu: onContextMenu, onDragLeave: onDragLeave, onFocus: onFocus, onFocusVisible: onFocusVisible, onKeyDown: onKeyDown, onKeyUp: onKeyUp, onMouseDown: onMouseDown, onMouseLeave: onMouseLeave, onMouseUp: onMouseUp, onTouchEnd: onTouchEnd, onTouchMove: onTouchMove, onTouchStart: onTouchStart, tabIndex: tabIndex = 0, TouchRippleProps: TouchRippleProps, touchRippleRef: touchRippleRef, type: type} = props, other = _objectWithoutPropertiesLoose(props, _excluded$e);
         const buttonRef = reactExports.useRef(null);
         const rippleRef = reactExports.useRef(null);
         const handleRippleRef = useForkRef(rippleRef, touchRippleRef);
@@ -14688,7 +15081,7 @@
             tabIndex: tabIndex,
             focusVisible: focusVisible
         });
-        const classes = useUtilityClasses$2(ownerState);
+        const classes = useUtilityClasses$b(ownerState);
         return jsxRuntimeExports.jsxs(ButtonBaseRoot, _extends$1({
             as: ComponentProp,
             className: clsx(classes.root, className),
@@ -14722,8 +15115,8 @@
     const buttonClasses = generateUtilityClasses("MuiButton", [ "root", "text", "textInherit", "textPrimary", "textSecondary", "textSuccess", "textError", "textInfo", "textWarning", "outlined", "outlinedInherit", "outlinedPrimary", "outlinedSecondary", "outlinedSuccess", "outlinedError", "outlinedInfo", "outlinedWarning", "contained", "containedInherit", "containedPrimary", "containedSecondary", "containedSuccess", "containedError", "containedInfo", "containedWarning", "disableElevation", "focusVisible", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorSuccess", "colorError", "colorInfo", "colorWarning", "textSizeSmall", "textSizeMedium", "textSizeLarge", "outlinedSizeSmall", "outlinedSizeMedium", "outlinedSizeLarge", "containedSizeSmall", "containedSizeMedium", "containedSizeLarge", "sizeMedium", "sizeSmall", "sizeLarge", "fullWidth", "startIcon", "endIcon", "icon", "iconSizeSmall", "iconSizeMedium", "iconSizeLarge" ]);
     const ButtonGroupContext = reactExports.createContext({});
     const ButtonGroupButtonContext = reactExports.createContext(undefined);
-    const _excluded$1 = [ "children", "color", "component", "className", "disabled", "disableElevation", "disableFocusRipple", "endIcon", "focusVisibleClassName", "fullWidth", "size", "startIcon", "type", "variant" ];
-    const useUtilityClasses$1 = ownerState => {
+    const _excluded$d = [ "children", "color", "component", "className", "disabled", "disableElevation", "disableFocusRipple", "endIcon", "focusVisibleClassName", "fullWidth", "size", "startIcon", "type", "variant" ];
+    const useUtilityClasses$a = ownerState => {
         const {color: color, disableElevation: disableElevation, fullWidth: fullWidth, size: size, variant: variant, classes: classes} = ownerState;
         const slots = {
             root: [ "root", variant, `${variant}${capitalize$1(color)}`, `size${capitalize$1(size)}`, `${variant}Size${capitalize$1(size)}`, `color${capitalize$1(color)}`, disableElevation && "disableElevation", fullWidth && "fullWidth" ],
@@ -14903,7 +15296,7 @@
             props: resolvedProps,
             name: "MuiButton"
         });
-        const {children: children, color: color = "primary", component: component = "button", className: className, disabled: disabled = false, disableElevation: disableElevation = false, disableFocusRipple: disableFocusRipple = false, endIcon: endIconProp, focusVisibleClassName: focusVisibleClassName, fullWidth: fullWidth = false, size: size = "medium", startIcon: startIconProp, type: type, variant: variant = "text"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$1);
+        const {children: children, color: color = "primary", component: component = "button", className: className, disabled: disabled = false, disableElevation: disableElevation = false, disableFocusRipple: disableFocusRipple = false, endIcon: endIconProp, focusVisibleClassName: focusVisibleClassName, fullWidth: fullWidth = false, size: size = "medium", startIcon: startIconProp, type: type, variant: variant = "text"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$d);
         const ownerState = _extends$1({}, props, {
             color: color,
             component: component,
@@ -14915,7 +15308,7 @@
             type: type,
             variant: variant
         });
-        const classes = useUtilityClasses$1(ownerState);
+        const classes = useUtilityClasses$a(ownerState);
         const startIcon = startIconProp && jsxRuntimeExports.jsx(ButtonStartIcon, {
             className: classes.startIcon,
             ownerState: ownerState,
@@ -14939,6 +15332,100 @@
         }, other, {
             classes: classes,
             children: [ startIcon, children, endIcon ]
+        }));
+    }));
+    function getIconButtonUtilityClass(slot) {
+        return generateUtilityClass("MuiIconButton", slot);
+    }
+    const iconButtonClasses = generateUtilityClasses("MuiIconButton", [ "root", "disabled", "colorInherit", "colorPrimary", "colorSecondary", "colorError", "colorInfo", "colorSuccess", "colorWarning", "edgeStart", "edgeEnd", "sizeSmall", "sizeMedium", "sizeLarge" ]);
+    const _excluded$c = [ "edge", "children", "className", "color", "disabled", "disableFocusRipple", "size" ];
+    const useUtilityClasses$9 = ownerState => {
+        const {classes: classes, disabled: disabled, color: color, edge: edge, size: size} = ownerState;
+        const slots = {
+            root: [ "root", disabled && "disabled", color !== "default" && `color${capitalize$1(color)}`, edge && `edge${capitalize$1(edge)}`, `size${capitalize$1(size)}` ]
+        };
+        return composeClasses(slots, getIconButtonUtilityClass, classes);
+    };
+    const IconButtonRoot = styled(ButtonBase, {
+        name: "MuiIconButton",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, ownerState.color !== "default" && styles[`color${capitalize$1(ownerState.color)}`], ownerState.edge && styles[`edge${capitalize$1(ownerState.edge)}`], styles[`size${capitalize$1(ownerState.size)}`] ];
+        }
+    })((({theme: theme, ownerState: ownerState}) => _extends$1({
+        textAlign: "center",
+        flex: "0 0 auto",
+        fontSize: theme.typography.pxToRem(24),
+        padding: 8,
+        borderRadius: "50%",
+        overflow: "visible",
+        color: (theme.vars || theme).palette.action.active,
+        transition: theme.transitions.create("background-color", {
+            duration: theme.transitions.duration.shortest
+        })
+    }, !ownerState.disableRipple && {
+        "&:hover": {
+            backgroundColor: theme.vars ? `rgba(${theme.vars.palette.action.activeChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha_1(theme.palette.action.active, theme.palette.action.hoverOpacity),
+            "@media (hover: none)": {
+                backgroundColor: "transparent"
+            }
+        }
+    }, ownerState.edge === "start" && {
+        marginLeft: ownerState.size === "small" ? -3 : -12
+    }, ownerState.edge === "end" && {
+        marginRight: ownerState.size === "small" ? -3 : -12
+    })), (({theme: theme, ownerState: ownerState}) => {
+        var _palette;
+        const palette = (_palette = (theme.vars || theme).palette) == null ? void 0 : _palette[ownerState.color];
+        return _extends$1({}, ownerState.color === "inherit" && {
+            color: "inherit"
+        }, ownerState.color !== "inherit" && ownerState.color !== "default" && _extends$1({
+            color: palette == null ? void 0 : palette.main
+        }, !ownerState.disableRipple && {
+            "&:hover": _extends$1({}, palette && {
+                backgroundColor: theme.vars ? `rgba(${palette.mainChannel} / ${theme.vars.palette.action.hoverOpacity})` : alpha_1(palette.main, theme.palette.action.hoverOpacity)
+            }, {
+                "@media (hover: none)": {
+                    backgroundColor: "transparent"
+                }
+            })
+        }), ownerState.size === "small" && {
+            padding: 5,
+            fontSize: theme.typography.pxToRem(18)
+        }, ownerState.size === "large" && {
+            padding: 12,
+            fontSize: theme.typography.pxToRem(28)
+        }, {
+            [`&.${iconButtonClasses.disabled}`]: {
+                backgroundColor: "transparent",
+                color: (theme.vars || theme).palette.action.disabled
+            }
+        });
+    }));
+    const IconButton = reactExports.forwardRef((function IconButton(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiIconButton"
+        });
+        const {edge: edge = false, children: children, className: className, color: color = "default", disabled: disabled = false, disableFocusRipple: disableFocusRipple = false, size: size = "medium"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$c);
+        const ownerState = _extends$1({}, props, {
+            edge: edge,
+            color: color,
+            disabled: disabled,
+            disableFocusRipple: disableFocusRipple,
+            size: size
+        });
+        const classes = useUtilityClasses$9(ownerState);
+        return jsxRuntimeExports.jsx(IconButtonRoot, _extends$1({
+            className: clsx(classes.root, className),
+            centerRipple: true,
+            focusRipple: !disableFocusRipple,
+            disabled: disabled,
+            ref: ref
+        }, other, {
+            ownerState: ownerState,
+            children: children
         }));
     }));
     function styleInject(css, ref) {
@@ -14965,11 +15452,13 @@
             style.appendChild(document.createTextNode(css));
         }
     }
-    var css_248z = "*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n.tailwind .container {\n  width: 100%\n}\n\n@media (min-width: 640px) {\n  .tailwind .container {\n    max-width: 640px\n  }\n}\n\n@media (min-width: 768px) {\n  .tailwind .container {\n    max-width: 768px\n  }\n}\n\n@media (min-width: 1024px) {\n  .tailwind .container {\n    max-width: 1024px\n  }\n}\n\n@media (min-width: 1280px) {\n  .tailwind .container {\n    max-width: 1280px\n  }\n}\n\n@media (min-width: 1536px) {\n  .tailwind .container {\n    max-width: 1536px\n  }\n}\n\n.tailwind .block {\n  display: block\n}\n\n.tailwind .inline-block {\n  display: inline-block\n}\n\n.tailwind .flex {\n  display: flex\n}\n\n.tailwind .table {\n  display: table\n}\n\n.tailwind .h-2 {\n  height: 0.5rem\n}\n\n.tailwind .w-full {\n  width: 100%\n}\n\n.tailwind .min-w-full {\n  min-width: 100%\n}\n\n.tailwind .max-w-4xl {\n  max-width: 56rem\n}\n\n.tailwind .divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse))\n}\n\n.tailwind .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-divide-opacity, 1))\n}\n\n.tailwind .overflow-auto {\n  overflow: auto\n}\n\n.tailwind .whitespace-nowrap {\n  white-space: nowrap\n}\n\n.tailwind .break-all {\n  word-break: break-all\n}\n\n.tailwind .rounded-md {\n  border-radius: 0.375rem\n}\n\n.tailwind .border {\n  border-width: 1px\n}\n\n.tailwind .bg-gray-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-white {\n  --tw-bg-opacity: 1;\n  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .p-4 {\n  padding: 1rem\n}\n\n.tailwind .px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem\n}\n\n.tailwind .px-6 {\n  padding-left: 1.5rem;\n  padding-right: 1.5rem\n}\n\n.tailwind .py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem\n}\n\n.tailwind .py-3 {\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem\n}\n\n.tailwind .py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem\n}\n\n.tailwind .text-left {\n  text-align: left\n}\n\n.tailwind .text-right {\n  text-align: right\n}\n\n.tailwind .text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem\n}\n\n.tailwind .text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem\n}\n\n.tailwind .font-medium {\n  font-weight: 500\n}\n\n.tailwind .uppercase {\n  text-transform: uppercase\n}\n\n.tailwind .tracking-wider {\n  letter-spacing: 0.05em\n}\n\n.tailwind .text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-indigo-600 {\n  --tw-text-opacity: 1;\n  color: rgb(79 70 229 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-600 {\n  --tw-text-opacity: 1;\n  color: rgb(220 38 38 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)\n}\n\n.tailwind .hover\\:bg-gray-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:text-indigo-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(49 46 129 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-red-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(127 29 29 / var(--tw-text-opacity, 1))\n}";
+    var css_248z = "*, ::before, ::after {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n::backdrop {\n  --tw-border-spacing-x: 0;\n  --tw-border-spacing-y: 0;\n  --tw-translate-x: 0;\n  --tw-translate-y: 0;\n  --tw-rotate: 0;\n  --tw-skew-x: 0;\n  --tw-skew-y: 0;\n  --tw-scale-x: 1;\n  --tw-scale-y: 1;\n  --tw-pan-x:  ;\n  --tw-pan-y:  ;\n  --tw-pinch-zoom:  ;\n  --tw-scroll-snap-strictness: proximity;\n  --tw-gradient-from-position:  ;\n  --tw-gradient-via-position:  ;\n  --tw-gradient-to-position:  ;\n  --tw-ordinal:  ;\n  --tw-slashed-zero:  ;\n  --tw-numeric-figure:  ;\n  --tw-numeric-spacing:  ;\n  --tw-numeric-fraction:  ;\n  --tw-ring-inset:  ;\n  --tw-ring-offset-width: 0px;\n  --tw-ring-offset-color: #fff;\n  --tw-ring-color: rgb(59 130 246 / 0.5);\n  --tw-ring-offset-shadow: 0 0 #0000;\n  --tw-ring-shadow: 0 0 #0000;\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  --tw-blur:  ;\n  --tw-brightness:  ;\n  --tw-contrast:  ;\n  --tw-grayscale:  ;\n  --tw-hue-rotate:  ;\n  --tw-invert:  ;\n  --tw-saturate:  ;\n  --tw-sepia:  ;\n  --tw-drop-shadow:  ;\n  --tw-backdrop-blur:  ;\n  --tw-backdrop-brightness:  ;\n  --tw-backdrop-contrast:  ;\n  --tw-backdrop-grayscale:  ;\n  --tw-backdrop-hue-rotate:  ;\n  --tw-backdrop-invert:  ;\n  --tw-backdrop-opacity:  ;\n  --tw-backdrop-saturate:  ;\n  --tw-backdrop-sepia:  ;\n  --tw-contain-size:  ;\n  --tw-contain-layout:  ;\n  --tw-contain-paint:  ;\n  --tw-contain-style:  \n}\n\n.tailwind .container {\n  width: 100%\n}\n\n@media (min-width: 640px) {\n  .tailwind .container {\n    max-width: 640px\n  }\n}\n\n@media (min-width: 768px) {\n  .tailwind .container {\n    max-width: 768px\n  }\n}\n\n@media (min-width: 1024px) {\n  .tailwind .container {\n    max-width: 1024px\n  }\n}\n\n@media (min-width: 1280px) {\n  .tailwind .container {\n    max-width: 1280px\n  }\n}\n\n@media (min-width: 1536px) {\n  .tailwind .container {\n    max-width: 1536px\n  }\n}\n\n.tailwind .static {\n  position: static\n}\n\n.tailwind .fixed {\n  position: fixed\n}\n\n.tailwind .absolute {\n  position: absolute\n}\n\n.tailwind .relative {\n  position: relative\n}\n\n.tailwind .right-2 {\n  right: 0.5rem\n}\n\n.tailwind .top-2 {\n  top: 0.5rem\n}\n\n.tailwind .m-0 {\n  margin: 0px\n}\n\n.tailwind .m-4 {\n  margin: 1rem\n}\n\n.tailwind .mb-2 {\n  margin-bottom: 0.5rem\n}\n\n.tailwind .ml-2 {\n  margin-left: 0.5rem\n}\n\n.tailwind .mr-2 {\n  margin-right: 0.5rem\n}\n\n.tailwind .mr-3 {\n  margin-right: 0.75rem\n}\n\n.tailwind .mt-1 {\n  margin-top: 0.25rem\n}\n\n.tailwind .mt-2 {\n  margin-top: 0.5rem\n}\n\n.tailwind .mt-4 {\n  margin-top: 1rem\n}\n\n.tailwind .block {\n  display: block\n}\n\n.tailwind .inline-block {\n  display: inline-block\n}\n\n.tailwind .flex {\n  display: flex\n}\n\n.tailwind .table {\n  display: table\n}\n\n.tailwind .grid {\n  display: grid\n}\n\n.tailwind .h-12 {\n  height: 3rem\n}\n\n.tailwind .h-2 {\n  height: 0.5rem\n}\n\n.tailwind .h-4 {\n  height: 1rem\n}\n\n.tailwind .h-5 {\n  height: 1.25rem\n}\n\n.tailwind .h-6 {\n  height: 1.5rem\n}\n\n.tailwind .h-full {\n  height: 100%\n}\n\n.tailwind .min-h-\\[200px\\] {\n  min-height: 200px\n}\n\n.tailwind .w-1\\/2 {\n  width: 50%\n}\n\n.tailwind .w-3\\/4 {\n  width: 75%\n}\n\n.tailwind .w-5 {\n  width: 1.25rem\n}\n\n.tailwind .w-6 {\n  width: 1.5rem\n}\n\n.tailwind .w-full {\n  width: 100%\n}\n\n.tailwind .min-w-\\[300px\\] {\n  min-width: 300px\n}\n\n.tailwind .min-w-full {\n  min-width: 100%\n}\n\n.tailwind .max-w-2xl {\n  max-width: 42rem\n}\n\n.tailwind .max-w-4xl {\n  max-width: 56rem\n}\n\n.tailwind .max-w-\\[400px\\] {\n  max-width: 400px\n}\n\n.tailwind .max-w-none {\n  max-width: none\n}\n\n.tailwind .flex-1 {\n  flex: 1 1 0%\n}\n\n@keyframes pulse {\n  50% {\n    opacity: .5\n  }\n}\n\n.tailwind .animate-pulse {\n  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite\n}\n\n.tailwind .cursor-not-allowed {\n  cursor: not-allowed\n}\n\n.tailwind .cursor-pointer {\n  cursor: pointer\n}\n\n.tailwind .grid-cols-1 {\n  grid-template-columns: repeat(1, minmax(0, 1fr))\n}\n\n.tailwind .items-center {\n  align-items: center\n}\n\n.tailwind .justify-start {\n  justify-content: flex-start\n}\n\n.tailwind .justify-end {\n  justify-content: flex-end\n}\n\n.tailwind .justify-center {\n  justify-content: center\n}\n\n.tailwind .gap-3 {\n  gap: 0.75rem\n}\n\n.tailwind .space-y-4 > :not([hidden]) ~ :not([hidden]) {\n  --tw-space-y-reverse: 0;\n  margin-top: calc(1rem * calc(1 - var(--tw-space-y-reverse)));\n  margin-bottom: calc(1rem * var(--tw-space-y-reverse))\n}\n\n.tailwind .divide-y > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-y-reverse: 0;\n  border-top-width: calc(1px * calc(1 - var(--tw-divide-y-reverse)));\n  border-bottom-width: calc(1px * var(--tw-divide-y-reverse))\n}\n\n.tailwind .divide-gray-200 > :not([hidden]) ~ :not([hidden]) {\n  --tw-divide-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-divide-opacity, 1))\n}\n\n.tailwind .overflow-auto {\n  overflow: auto\n}\n\n.tailwind .overflow-y-auto {\n  overflow-y: auto\n}\n\n.tailwind .truncate {\n  overflow: hidden;\n  text-overflow: ellipsis;\n  white-space: nowrap\n}\n\n.tailwind .whitespace-nowrap {\n  white-space: nowrap\n}\n\n.tailwind .break-all {\n  word-break: break-all\n}\n\n.tailwind .rounded {\n  border-radius: 0.25rem\n}\n\n.tailwind .rounded-full {\n  border-radius: 9999px\n}\n\n.tailwind .rounded-lg {\n  border-radius: 0.5rem\n}\n\n.tailwind .rounded-md {\n  border-radius: 0.375rem\n}\n\n.tailwind .rounded-none {\n  border-radius: 0px\n}\n\n.tailwind .rounded-xl {\n  border-radius: 0.75rem\n}\n\n.tailwind .border {\n  border-width: 1px\n}\n\n.tailwind .border-b {\n  border-bottom-width: 1px\n}\n\n.tailwind .border-t {\n  border-top-width: 1px\n}\n\n.tailwind .border-blue-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(191 219 254 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-100 {\n  --tw-border-opacity: 1;\n  border-color: rgb(243 244 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(229 231 235 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-gray-300 {\n  --tw-border-opacity: 1;\n  border-color: rgb(209 213 219 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-green-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(187 247 208 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-red-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 202 202 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .border-yellow-200 {\n  --tw-border-opacity: 1;\n  border-color: rgb(254 240 138 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .bg-blue-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-blue-600 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-100 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-200 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gray-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-green-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(240 253 244 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-red-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 242 242 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-white {\n  --tw-bg-opacity: 1;\n  background-color: rgb(255 255 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-yellow-50 {\n  --tw-bg-opacity: 1;\n  background-color: rgb(254 252 232 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .bg-gradient-to-r {\n  background-image: linear-gradient(to right, var(--tw-gradient-stops))\n}\n\n.tailwind .from-blue-50 {\n  --tw-gradient-from: #eff6ff var(--tw-gradient-from-position);\n  --tw-gradient-to: rgb(239 246 255 / 0) var(--tw-gradient-to-position);\n  --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)\n}\n\n.tailwind .to-indigo-50 {\n  --tw-gradient-to: #eef2ff var(--tw-gradient-to-position)\n}\n\n.tailwind .p-4 {\n  padding: 1rem\n}\n\n.tailwind .p-6 {\n  padding: 1.5rem\n}\n\n.tailwind .px-4 {\n  padding-left: 1rem;\n  padding-right: 1rem\n}\n\n.tailwind .px-6 {\n  padding-left: 1.5rem;\n  padding-right: 1.5rem\n}\n\n.tailwind .py-2 {\n  padding-top: 0.5rem;\n  padding-bottom: 0.5rem\n}\n\n.tailwind .py-3 {\n  padding-top: 0.75rem;\n  padding-bottom: 0.75rem\n}\n\n.tailwind .py-4 {\n  padding-top: 1rem;\n  padding-bottom: 1rem\n}\n\n.tailwind .pr-8 {\n  padding-right: 2rem\n}\n\n.tailwind .text-left {\n  text-align: left\n}\n\n.tailwind .text-center {\n  text-align: center\n}\n\n.tailwind .text-right {\n  text-align: right\n}\n\n.tailwind .text-lg {\n  font-size: 1.125rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-sm {\n  font-size: 0.875rem;\n  line-height: 1.25rem\n}\n\n.tailwind .text-xl {\n  font-size: 1.25rem;\n  line-height: 1.75rem\n}\n\n.tailwind .text-xs {\n  font-size: 0.75rem;\n  line-height: 1rem\n}\n\n.tailwind .font-medium {\n  font-weight: 500\n}\n\n.tailwind .font-normal {\n  font-weight: 400\n}\n\n.tailwind .font-semibold {\n  font-weight: 600\n}\n\n.tailwind .uppercase {\n  text-transform: uppercase\n}\n\n.tailwind .normal-case {\n  text-transform: none\n}\n\n.tailwind .leading-relaxed {\n  line-height: 1.625\n}\n\n.tailwind .tracking-wider {\n  letter-spacing: 0.05em\n}\n\n.tailwind .text-blue-800 {\n  --tw-text-opacity: 1;\n  color: rgb(30 64 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-400 {\n  --tw-text-opacity: 1;\n  color: rgb(156 163 175 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-500 {\n  --tw-text-opacity: 1;\n  color: rgb(107 114 128 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-600 {\n  --tw-text-opacity: 1;\n  color: rgb(75 85 99 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-700 {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-gray-800 {\n  --tw-text-opacity: 1;\n  color: rgb(31 41 55 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-700 {\n  --tw-text-opacity: 1;\n  color: rgb(21 128 61 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-green-800 {\n  --tw-text-opacity: 1;\n  color: rgb(22 101 52 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-indigo-600 {\n  --tw-text-opacity: 1;\n  color: rgb(79 70 229 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-600 {\n  --tw-text-opacity: 1;\n  color: rgb(220 38 38 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-700 {\n  --tw-text-opacity: 1;\n  color: rgb(185 28 28 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-red-800 {\n  --tw-text-opacity: 1;\n  color: rgb(153 27 27 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-white {\n  --tw-text-opacity: 1;\n  color: rgb(255 255 255 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .text-yellow-800 {\n  --tw-text-opacity: 1;\n  color: rgb(133 77 14 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .opacity-50 {\n  opacity: 0.5\n}\n\n.tailwind .shadow-2xl {\n  --tw-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);\n  --tw-shadow-colored: 0 25px 50px -12px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-lg {\n  --tw-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);\n  --tw-shadow-colored: 0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-none {\n  --tw-shadow: 0 0 #0000;\n  --tw-shadow-colored: 0 0 #0000;\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .shadow-sm {\n  --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);\n  --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);\n  box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)\n}\n\n.tailwind .filter {\n  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)\n}\n\n.tailwind .transition-all {\n  transition-property: all;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-colors {\n  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .transition-shadow {\n  transition-property: box-shadow;\n  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);\n  transition-duration: 150ms\n}\n\n.tailwind .duration-200 {\n  transition-duration: 200ms\n}\n\n.tailwind .hover\\:border-blue-500:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(59 130 246 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:border-gray-400:hover {\n  --tw-border-opacity: 1;\n  border-color: rgb(156 163 175 / var(--tw-border-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(239 246 255 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-blue-700:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-100:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-200:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(229 231 235 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:bg-gray-50:hover {\n  --tw-bg-opacity: 1;\n  background-color: rgb(249 250 251 / var(--tw-bg-opacity, 1))\n}\n\n.tailwind .hover\\:text-gray-700:hover {\n  --tw-text-opacity: 1;\n  color: rgb(55 65 81 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-indigo-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(49 46 129 / var(--tw-text-opacity, 1))\n}\n\n.tailwind .hover\\:text-red-900:hover {\n  --tw-text-opacity: 1;\n  color: rgb(127 29 29 / var(--tw-text-opacity, 1))\n}\n\n@media (min-width: 640px) {\n  .tailwind .sm\\:grid-cols-2 {\n    grid-template-columns: repeat(2, minmax(0, 1fr))\n  }\n}";
     styleInject(css_248z);
     function ButtonDialog(_ref) {
-        var buttonLabel = _ref.buttonLabel, renderDialog = _ref.renderDialog, onOpenDialog = _ref.onOpenDialog, onCloseDialog = _ref.onCloseDialog, customButtonRender = _ref.customButtonRender, _ref$useScopedCssBase = _ref.useScopedCssBaseline, useScopedCssBaseline = _ref$useScopedCssBase === void 0 ? true : _ref$useScopedCssBase;
+        var buttonLabel = _ref.buttonLabel, renderDialog = _ref.renderDialog, onOpenDialog = _ref.onOpenDialog, onCloseDialog = _ref.onCloseDialog, customButtonRender = _ref.customButtonRender, _ref$useScopedCssBase = _ref.useScopedCssBaseline, useScopedCssBaseline = _ref$useScopedCssBase === void 0 ? true : _ref$useScopedCssBase, _ref$title = _ref.title, title = _ref$title === void 0 ? "" : _ref$title, _ref$maxWidth = _ref.maxWidth, maxWidth = _ref$maxWidth === void 0 ? "md" : _ref$maxWidth, _ref$fullWidth = _ref.fullWidth, fullWidth = _ref$fullWidth === void 0 ? true : _ref$fullWidth;
         var _useState = reactExports.useState(false), _useState2 = _slicedToArray(_useState, 2), showDialog = _useState2[0], setShowDialog = _useState2[1];
+        var theme = useTheme();
+        var isMobile = useMediaQuery(theme.breakpoints.down("sm"));
         var handleOpenDialog = function handleOpenDialog() {
             setShowDialog(true);
             if (onOpenDialog) {
@@ -14984,20 +15473,1318 @@
         };
         var ButtonContent = function ButtonContent() {
             return customButtonRender ? React.createElement("div", {
-                onClick: handleOpenDialog
+                onClick: handleOpenDialog,
+                className: "cursor-pointer"
             }, customButtonRender()) : React.createElement(Button, {
-                onClick: handleOpenDialog
+                onClick: handleOpenDialog,
+                variant: "contained",
+                className: "bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors duration-200"
             }, buttonLabel);
         };
-        return React.createElement("div", null, useScopedCssBaseline ? React.createElement(ScopedCssBaseline, null, React.createElement(ButtonContent, null)) : React.createElement(ButtonContent, null), showDialog && React.createElement(Dialog, {
+        return React.createElement("div", null, useScopedCssBaseline ? React.createElement(ScopedCssBaseline, null, React.createElement(ButtonContent, null)) : React.createElement(ButtonContent, null), React.createElement(Dialog, {
             className: "tailwind",
-            PaperProps: {
-                className: "p-4"
-            },
             open: showDialog,
-            onClose: handleCloseDialog
-        }, renderDialog()));
+            onClose: handleCloseDialog,
+            maxWidth: maxWidth,
+            fullWidth: fullWidth,
+            fullScreen: isMobile,
+            PaperProps: {
+                className: isMobile ? "m-0 max-w-none w-full h-full rounded-none shadow-none" : "m-4 max-w-2xl w-full rounded-xl shadow-2xl border border-gray-100"
+            },
+            "aria-labelledby": "dialog-title",
+            "aria-describedby": "dialog-content"
+        }, React.createElement(DialogTitle, {
+            id: "dialog-title",
+            className: "px-6 py-4 border-b border-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 relative"
+        }, React.createElement(Typography, {
+            variant: "h6",
+            component: "h2",
+            className: "text-xl font-semibold text-gray-800 pr-8"
+        }, title), React.createElement(IconButton, {
+            "aria-label": "關閉對話框",
+            onClick: handleCloseDialog,
+            className: "absolute right-2 top-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors duration-200",
+            size: "small"
+        }, React.createElement("svg", {
+            className: "w-5 h-5",
+            fill: "none",
+            stroke: "currentColor",
+            viewBox: "0 0 24 24"
+        }, React.createElement("path", {
+            strokeLinecap: "round",
+            strokeLinejoin: "round",
+            strokeWidth: 2,
+            d: "M6 18L18 6M6 6l12 12"
+        })))), React.createElement(DialogContent, {
+            id: "dialog-content",
+            className: "p-6 bg-white min-h-[200px] overflow-y-auto"
+        }, renderDialog()), React.createElement(DialogActions, {
+            className: "px-6 py-4 border-t border-gray-100 bg-gray-50 justify-end"
+        }, React.createElement(Button, {
+            onClick: handleCloseDialog,
+            variant: "outlined",
+            className: "text-gray-600 border-gray-300 hover:border-gray-400 hover:bg-gray-50 font-medium py-2 px-4 rounded-lg transition-colors duration-200"
+        }, "關閉"))));
     }
+    function useSnackbar(parameters = {}) {
+        const {autoHideDuration: autoHideDuration = null, disableWindowBlurListener: disableWindowBlurListener = false, onClose: onClose, open: open, resumeHideDuration: resumeHideDuration} = parameters;
+        const timerAutoHide = useTimeout();
+        reactExports.useEffect((() => {
+            if (!open) {
+                return undefined;
+            }
+            function handleKeyDown(nativeEvent) {
+                if (!nativeEvent.defaultPrevented) {
+                    if (nativeEvent.key === "Escape" || nativeEvent.key === "Esc") {
+                        onClose == null || onClose(nativeEvent, "escapeKeyDown");
+                    }
+                }
+            }
+            document.addEventListener("keydown", handleKeyDown);
+            return () => {
+                document.removeEventListener("keydown", handleKeyDown);
+            };
+        }), [ open, onClose ]);
+        const handleClose = useEventCallback(((event, reason) => {
+            onClose == null || onClose(event, reason);
+        }));
+        const setAutoHideTimer = useEventCallback((autoHideDurationParam => {
+            if (!onClose || autoHideDurationParam == null) {
+                return;
+            }
+            timerAutoHide.start(autoHideDurationParam, (() => {
+                handleClose(null, "timeout");
+            }));
+        }));
+        reactExports.useEffect((() => {
+            if (open) {
+                setAutoHideTimer(autoHideDuration);
+            }
+            return timerAutoHide.clear;
+        }), [ open, autoHideDuration, setAutoHideTimer, timerAutoHide ]);
+        const handleClickAway = event => {
+            onClose == null || onClose(event, "clickaway");
+        };
+        const handlePause = timerAutoHide.clear;
+        const handleResume = reactExports.useCallback((() => {
+            if (autoHideDuration != null) {
+                setAutoHideTimer(resumeHideDuration != null ? resumeHideDuration : autoHideDuration * .5);
+            }
+        }), [ autoHideDuration, resumeHideDuration, setAutoHideTimer ]);
+        const createHandleBlur = otherHandlers => event => {
+            const onBlurCallback = otherHandlers.onBlur;
+            onBlurCallback == null || onBlurCallback(event);
+            handleResume();
+        };
+        const createHandleFocus = otherHandlers => event => {
+            const onFocusCallback = otherHandlers.onFocus;
+            onFocusCallback == null || onFocusCallback(event);
+            handlePause();
+        };
+        const createMouseEnter = otherHandlers => event => {
+            const onMouseEnterCallback = otherHandlers.onMouseEnter;
+            onMouseEnterCallback == null || onMouseEnterCallback(event);
+            handlePause();
+        };
+        const createMouseLeave = otherHandlers => event => {
+            const onMouseLeaveCallback = otherHandlers.onMouseLeave;
+            onMouseLeaveCallback == null || onMouseLeaveCallback(event);
+            handleResume();
+        };
+        reactExports.useEffect((() => {
+            if (!disableWindowBlurListener && open) {
+                window.addEventListener("focus", handleResume);
+                window.addEventListener("blur", handlePause);
+                return () => {
+                    window.removeEventListener("focus", handleResume);
+                    window.removeEventListener("blur", handlePause);
+                };
+            }
+            return undefined;
+        }), [ disableWindowBlurListener, open, handleResume, handlePause ]);
+        const getRootProps = (externalProps = {}) => {
+            const externalEventHandlers = _extends$1({}, extractEventHandlers(parameters), extractEventHandlers(externalProps));
+            return _extends$1({
+                role: "presentation"
+            }, externalProps, externalEventHandlers, {
+                onBlur: createHandleBlur(externalEventHandlers),
+                onFocus: createHandleFocus(externalEventHandlers),
+                onMouseEnter: createMouseEnter(externalEventHandlers),
+                onMouseLeave: createMouseLeave(externalEventHandlers)
+            });
+        };
+        return {
+            getRootProps: getRootProps,
+            onClickAway: handleClickAway
+        };
+    }
+    function mapEventPropToEvent(eventProp) {
+        return eventProp.substring(2).toLowerCase();
+    }
+    function clickedRootScrollbar(event, doc) {
+        return doc.documentElement.clientWidth < event.clientX || doc.documentElement.clientHeight < event.clientY;
+    }
+    function ClickAwayListener(props) {
+        const {children: children, disableReactTree: disableReactTree = false, mouseEvent: mouseEvent = "onClick", onClickAway: onClickAway, touchEvent: touchEvent = "onTouchEnd"} = props;
+        const movedRef = reactExports.useRef(false);
+        const nodeRef = reactExports.useRef(null);
+        const activatedRef = reactExports.useRef(false);
+        const syntheticEventRef = reactExports.useRef(false);
+        reactExports.useEffect((() => {
+            setTimeout((() => {
+                activatedRef.current = true;
+            }), 0);
+            return () => {
+                activatedRef.current = false;
+            };
+        }), []);
+        const handleRef = useForkRef(getReactElementRef(children), nodeRef);
+        const handleClickAway = useEventCallback((event => {
+            const insideReactTree = syntheticEventRef.current;
+            syntheticEventRef.current = false;
+            const doc = ownerDocument(nodeRef.current);
+            if (!activatedRef.current || !nodeRef.current || "clientX" in event && clickedRootScrollbar(event, doc)) {
+                return;
+            }
+            if (movedRef.current) {
+                movedRef.current = false;
+                return;
+            }
+            let insideDOM;
+            if (event.composedPath) {
+                insideDOM = event.composedPath().indexOf(nodeRef.current) > -1;
+            } else {
+                insideDOM = !doc.documentElement.contains(event.target) || nodeRef.current.contains(event.target);
+            }
+            if (!insideDOM && (disableReactTree || !insideReactTree)) {
+                onClickAway(event);
+            }
+        }));
+        const createHandleSynthetic = handlerName => event => {
+            syntheticEventRef.current = true;
+            const childrenPropsHandler = children.props[handlerName];
+            if (childrenPropsHandler) {
+                childrenPropsHandler(event);
+            }
+        };
+        const childrenProps = {
+            ref: handleRef
+        };
+        if (touchEvent !== false) {
+            childrenProps[touchEvent] = createHandleSynthetic(touchEvent);
+        }
+        reactExports.useEffect((() => {
+            if (touchEvent !== false) {
+                const mappedTouchEvent = mapEventPropToEvent(touchEvent);
+                const doc = ownerDocument(nodeRef.current);
+                const handleTouchMove = () => {
+                    movedRef.current = true;
+                };
+                doc.addEventListener(mappedTouchEvent, handleClickAway);
+                doc.addEventListener("touchmove", handleTouchMove);
+                return () => {
+                    doc.removeEventListener(mappedTouchEvent, handleClickAway);
+                    doc.removeEventListener("touchmove", handleTouchMove);
+                };
+            }
+            return undefined;
+        }), [ handleClickAway, touchEvent ]);
+        if (mouseEvent !== false) {
+            childrenProps[mouseEvent] = createHandleSynthetic(mouseEvent);
+        }
+        reactExports.useEffect((() => {
+            if (mouseEvent !== false) {
+                const mappedMouseEvent = mapEventPropToEvent(mouseEvent);
+                const doc = ownerDocument(nodeRef.current);
+                doc.addEventListener(mappedMouseEvent, handleClickAway);
+                return () => {
+                    doc.removeEventListener(mappedMouseEvent, handleClickAway);
+                };
+            }
+            return undefined;
+        }), [ handleClickAway, mouseEvent ]);
+        return jsxRuntimeExports.jsx(reactExports.Fragment, {
+            children: reactExports.cloneElement(children, childrenProps)
+        });
+    }
+    const _excluded$b = [ "addEndListener", "appear", "children", "easing", "in", "onEnter", "onEntered", "onEntering", "onExit", "onExited", "onExiting", "style", "timeout", "TransitionComponent" ];
+    function getScale(value) {
+        return `scale(${value}, ${value ** 2})`;
+    }
+    const styles = {
+        entering: {
+            opacity: 1,
+            transform: getScale(1)
+        },
+        entered: {
+            opacity: 1,
+            transform: "none"
+        }
+    };
+    const isWebKit154 = typeof navigator !== "undefined" && /^((?!chrome|android).)*(safari|mobile)/i.test(navigator.userAgent) && /(os |version\/)15(.|_)4/i.test(navigator.userAgent);
+    const Grow = reactExports.forwardRef((function Grow(props, ref) {
+        const {addEndListener: addEndListener, appear: appear = true, children: children, easing: easing, in: inProp, onEnter: onEnter, onEntered: onEntered, onEntering: onEntering, onExit: onExit, onExited: onExited, onExiting: onExiting, style: style, timeout: timeout = "auto", TransitionComponent: TransitionComponent = Transition} = props, other = _objectWithoutPropertiesLoose(props, _excluded$b);
+        const timer = useTimeout();
+        const autoTimeout = reactExports.useRef();
+        const theme = useTheme();
+        const nodeRef = reactExports.useRef(null);
+        const handleRef = useForkRef(nodeRef, getReactElementRef(children), ref);
+        const normalizedTransitionCallback = callback => maybeIsAppearing => {
+            if (callback) {
+                const node = nodeRef.current;
+                if (maybeIsAppearing === undefined) {
+                    callback(node);
+                } else {
+                    callback(node, maybeIsAppearing);
+                }
+            }
+        };
+        const handleEntering = normalizedTransitionCallback(onEntering);
+        const handleEnter = normalizedTransitionCallback(((node, isAppearing) => {
+            reflow(node);
+            const {duration: transitionDuration, delay: delay, easing: transitionTimingFunction} = getTransitionProps({
+                style: style,
+                timeout: timeout,
+                easing: easing
+            }, {
+                mode: "enter"
+            });
+            let duration;
+            if (timeout === "auto") {
+                duration = theme.transitions.getAutoHeightDuration(node.clientHeight);
+                autoTimeout.current = duration;
+            } else {
+                duration = transitionDuration;
+            }
+            node.style.transition = [ theme.transitions.create("opacity", {
+                duration: duration,
+                delay: delay
+            }), theme.transitions.create("transform", {
+                duration: isWebKit154 ? duration : duration * .666,
+                delay: delay,
+                easing: transitionTimingFunction
+            }) ].join(",");
+            if (onEnter) {
+                onEnter(node, isAppearing);
+            }
+        }));
+        const handleEntered = normalizedTransitionCallback(onEntered);
+        const handleExiting = normalizedTransitionCallback(onExiting);
+        const handleExit = normalizedTransitionCallback((node => {
+            const {duration: transitionDuration, delay: delay, easing: transitionTimingFunction} = getTransitionProps({
+                style: style,
+                timeout: timeout,
+                easing: easing
+            }, {
+                mode: "exit"
+            });
+            let duration;
+            if (timeout === "auto") {
+                duration = theme.transitions.getAutoHeightDuration(node.clientHeight);
+                autoTimeout.current = duration;
+            } else {
+                duration = transitionDuration;
+            }
+            node.style.transition = [ theme.transitions.create("opacity", {
+                duration: duration,
+                delay: delay
+            }), theme.transitions.create("transform", {
+                duration: isWebKit154 ? duration : duration * .666,
+                delay: isWebKit154 ? delay : delay || duration * .333,
+                easing: transitionTimingFunction
+            }) ].join(",");
+            node.style.opacity = 0;
+            node.style.transform = getScale(.75);
+            if (onExit) {
+                onExit(node);
+            }
+        }));
+        const handleExited = normalizedTransitionCallback(onExited);
+        const handleAddEndListener = next => {
+            if (timeout === "auto") {
+                timer.start(autoTimeout.current || 0, next);
+            }
+            if (addEndListener) {
+                addEndListener(nodeRef.current, next);
+            }
+        };
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+            appear: appear,
+            in: inProp,
+            nodeRef: nodeRef,
+            onEnter: handleEnter,
+            onEntered: handleEntered,
+            onEntering: handleEntering,
+            onExit: handleExit,
+            onExited: handleExited,
+            onExiting: handleExiting,
+            addEndListener: handleAddEndListener,
+            timeout: timeout === "auto" ? null : timeout
+        }, other, {
+            children: (state, childProps) => reactExports.cloneElement(children, _extends$1({
+                style: _extends$1({
+                    opacity: 0,
+                    transform: getScale(.75),
+                    visibility: state === "exited" && !inProp ? "hidden" : undefined
+                }, styles[state], style, children.props.style),
+                ref: handleRef
+            }, childProps))
+        }));
+    }));
+    Grow.muiSupportAuto = true;
+    function getSnackbarContentUtilityClass(slot) {
+        return generateUtilityClass("MuiSnackbarContent", slot);
+    }
+    generateUtilityClasses("MuiSnackbarContent", [ "root", "message", "action" ]);
+    const _excluded$a = [ "action", "className", "message", "role" ];
+    const useUtilityClasses$8 = ownerState => {
+        const {classes: classes} = ownerState;
+        const slots = {
+            root: [ "root" ],
+            action: [ "action" ],
+            message: [ "message" ]
+        };
+        return composeClasses(slots, getSnackbarContentUtilityClass, classes);
+    };
+    const SnackbarContentRoot = styled(Paper, {
+        name: "MuiSnackbarContent",
+        slot: "Root",
+        overridesResolver: (props, styles) => styles.root
+    })((({theme: theme}) => {
+        const emphasis = theme.palette.mode === "light" ? .8 : .98;
+        const backgroundColor = emphasize_1(theme.palette.background.default, emphasis);
+        return _extends$1({}, theme.typography.body2, {
+            color: theme.vars ? theme.vars.palette.SnackbarContent.color : theme.palette.getContrastText(backgroundColor),
+            backgroundColor: theme.vars ? theme.vars.palette.SnackbarContent.bg : backgroundColor,
+            display: "flex",
+            alignItems: "center",
+            flexWrap: "wrap",
+            padding: "6px 16px",
+            borderRadius: (theme.vars || theme).shape.borderRadius,
+            flexGrow: 1,
+            [theme.breakpoints.up("sm")]: {
+                flexGrow: "initial",
+                minWidth: 288
+            }
+        });
+    }));
+    const SnackbarContentMessage = styled("div", {
+        name: "MuiSnackbarContent",
+        slot: "Message",
+        overridesResolver: (props, styles) => styles.message
+    })({
+        padding: "8px 0"
+    });
+    const SnackbarContentAction = styled("div", {
+        name: "MuiSnackbarContent",
+        slot: "Action",
+        overridesResolver: (props, styles) => styles.action
+    })({
+        display: "flex",
+        alignItems: "center",
+        marginLeft: "auto",
+        paddingLeft: 16,
+        marginRight: -8
+    });
+    const SnackbarContent = reactExports.forwardRef((function SnackbarContent(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiSnackbarContent"
+        });
+        const {action: action, className: className, message: message, role: role = "alert"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$a);
+        const ownerState = props;
+        const classes = useUtilityClasses$8(ownerState);
+        return jsxRuntimeExports.jsxs(SnackbarContentRoot, _extends$1({
+            role: role,
+            square: true,
+            elevation: 6,
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            ref: ref
+        }, other, {
+            children: [ jsxRuntimeExports.jsx(SnackbarContentMessage, {
+                className: classes.message,
+                ownerState: ownerState,
+                children: message
+            }), action ? jsxRuntimeExports.jsx(SnackbarContentAction, {
+                className: classes.action,
+                ownerState: ownerState,
+                children: action
+            }) : null ]
+        }));
+    }));
+    function getSnackbarUtilityClass(slot) {
+        return generateUtilityClass("MuiSnackbar", slot);
+    }
+    generateUtilityClasses("MuiSnackbar", [ "root", "anchorOriginTopCenter", "anchorOriginBottomCenter", "anchorOriginTopRight", "anchorOriginBottomRight", "anchorOriginTopLeft", "anchorOriginBottomLeft" ]);
+    const _excluded$9 = [ "onEnter", "onExited" ], _excluded2$1 = [ "action", "anchorOrigin", "autoHideDuration", "children", "className", "ClickAwayListenerProps", "ContentProps", "disableWindowBlurListener", "message", "onBlur", "onClose", "onFocus", "onMouseEnter", "onMouseLeave", "open", "resumeHideDuration", "TransitionComponent", "transitionDuration", "TransitionProps" ];
+    const useUtilityClasses$7 = ownerState => {
+        const {classes: classes, anchorOrigin: anchorOrigin} = ownerState;
+        const slots = {
+            root: [ "root", `anchorOrigin${capitalize$1(anchorOrigin.vertical)}${capitalize$1(anchorOrigin.horizontal)}` ]
+        };
+        return composeClasses(slots, getSnackbarUtilityClass, classes);
+    };
+    const SnackbarRoot = styled("div", {
+        name: "MuiSnackbar",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, styles[`anchorOrigin${capitalize$1(ownerState.anchorOrigin.vertical)}${capitalize$1(ownerState.anchorOrigin.horizontal)}`] ];
+        }
+    })((({theme: theme, ownerState: ownerState}) => {
+        const center = {
+            left: "50%",
+            right: "auto",
+            transform: "translateX(-50%)"
+        };
+        return _extends$1({
+            zIndex: (theme.vars || theme).zIndex.snackbar,
+            position: "fixed",
+            display: "flex",
+            left: 8,
+            right: 8,
+            justifyContent: "center",
+            alignItems: "center"
+        }, ownerState.anchorOrigin.vertical === "top" ? {
+            top: 8
+        } : {
+            bottom: 8
+        }, ownerState.anchorOrigin.horizontal === "left" && {
+            justifyContent: "flex-start"
+        }, ownerState.anchorOrigin.horizontal === "right" && {
+            justifyContent: "flex-end"
+        }, {
+            [theme.breakpoints.up("sm")]: _extends$1({}, ownerState.anchorOrigin.vertical === "top" ? {
+                top: 24
+            } : {
+                bottom: 24
+            }, ownerState.anchorOrigin.horizontal === "center" && center, ownerState.anchorOrigin.horizontal === "left" && {
+                left: 24,
+                right: "auto"
+            }, ownerState.anchorOrigin.horizontal === "right" && {
+                right: 24,
+                left: "auto"
+            })
+        });
+    }));
+    const Snackbar = reactExports.forwardRef((function Snackbar(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiSnackbar"
+        });
+        const theme = useTheme();
+        const defaultTransitionDuration = {
+            enter: theme.transitions.duration.enteringScreen,
+            exit: theme.transitions.duration.leavingScreen
+        };
+        const {action: action, anchorOrigin: {vertical: vertical, horizontal: horizontal} = {
+            vertical: "bottom",
+            horizontal: "left"
+        }, autoHideDuration: autoHideDuration = null, children: children, className: className, ClickAwayListenerProps: ClickAwayListenerProps, ContentProps: ContentProps, disableWindowBlurListener: disableWindowBlurListener = false, message: message, open: open, TransitionComponent: TransitionComponent = Grow, transitionDuration: transitionDuration = defaultTransitionDuration, TransitionProps: {onEnter: onEnter, onExited: onExited} = {}} = props, TransitionProps = _objectWithoutPropertiesLoose(props.TransitionProps, _excluded$9), other = _objectWithoutPropertiesLoose(props, _excluded2$1);
+        const ownerState = _extends$1({}, props, {
+            anchorOrigin: {
+                vertical: vertical,
+                horizontal: horizontal
+            },
+            autoHideDuration: autoHideDuration,
+            disableWindowBlurListener: disableWindowBlurListener,
+            TransitionComponent: TransitionComponent,
+            transitionDuration: transitionDuration
+        });
+        const classes = useUtilityClasses$7(ownerState);
+        const {getRootProps: getRootProps, onClickAway: onClickAway} = useSnackbar(_extends$1({}, ownerState));
+        const [exited, setExited] = reactExports.useState(true);
+        const rootProps = useSlotProps({
+            elementType: SnackbarRoot,
+            getSlotProps: getRootProps,
+            externalForwardedProps: other,
+            ownerState: ownerState,
+            additionalProps: {
+                ref: ref
+            },
+            className: [ classes.root, className ]
+        });
+        const handleExited = node => {
+            setExited(true);
+            if (onExited) {
+                onExited(node);
+            }
+        };
+        const handleEnter = (node, isAppearing) => {
+            setExited(false);
+            if (onEnter) {
+                onEnter(node, isAppearing);
+            }
+        };
+        if (!open && exited) {
+            return null;
+        }
+        return jsxRuntimeExports.jsx(ClickAwayListener, _extends$1({
+            onClickAway: onClickAway
+        }, ClickAwayListenerProps, {
+            children: jsxRuntimeExports.jsx(SnackbarRoot, _extends$1({}, rootProps, {
+                children: jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+                    appear: true,
+                    in: open,
+                    timeout: transitionDuration,
+                    direction: vertical === "top" ? "down" : "up",
+                    onEnter: handleEnter,
+                    onExited: handleExited
+                }, TransitionProps, {
+                    children: children || jsxRuntimeExports.jsx(SnackbarContent, _extends$1({
+                        message: message,
+                        action: action
+                    }, ContentProps))
+                }))
+            }))
+        }));
+    }));
+    const _excluded$8 = [ "className", "elementType", "ownerState", "externalForwardedProps", "getSlotOwnerState", "internalForwardedProps" ], _excluded2 = [ "component", "slots", "slotProps" ], _excluded3 = [ "component" ];
+    function useSlot(name, parameters) {
+        const {className: className, elementType: initialElementType, ownerState: ownerState, externalForwardedProps: externalForwardedProps, getSlotOwnerState: getSlotOwnerState, internalForwardedProps: internalForwardedProps} = parameters, useSlotPropsParams = _objectWithoutPropertiesLoose(parameters, _excluded$8);
+        const {component: rootComponent, slots: slots = {
+            [name]: undefined
+        }, slotProps: slotProps = {
+            [name]: undefined
+        }} = externalForwardedProps, other = _objectWithoutPropertiesLoose(externalForwardedProps, _excluded2);
+        const elementType = slots[name] || initialElementType;
+        const resolvedComponentsProps = resolveComponentProps(slotProps[name], ownerState);
+        const _mergeSlotProps = mergeSlotProps(_extends$1({
+            className: className
+        }, useSlotPropsParams, {
+            externalForwardedProps: name === "root" ? other : undefined,
+            externalSlotProps: resolvedComponentsProps
+        })), {props: {component: slotComponent}, internalRef: internalRef} = _mergeSlotProps, mergedProps = _objectWithoutPropertiesLoose(_mergeSlotProps.props, _excluded3);
+        const ref = useForkRef(internalRef, resolvedComponentsProps == null ? void 0 : resolvedComponentsProps.ref, parameters.ref);
+        const slotOwnerState = getSlotOwnerState ? getSlotOwnerState(mergedProps) : {};
+        const finalOwnerState = _extends$1({}, ownerState, slotOwnerState);
+        const LeafComponent = name === "root" ? slotComponent || rootComponent : slotComponent;
+        const props = appendOwnerState(elementType, _extends$1({}, name === "root" && !rootComponent && !slots[name] && internalForwardedProps, name !== "root" && !slots[name] && internalForwardedProps, mergedProps, LeafComponent && {
+            as: LeafComponent
+        }, {
+            ref: ref
+        }), finalOwnerState);
+        Object.keys(slotOwnerState).forEach((propName => {
+            delete props[propName];
+        }));
+        return [ elementType, props ];
+    }
+    function getAlertUtilityClass(slot) {
+        return generateUtilityClass("MuiAlert", slot);
+    }
+    const alertClasses = generateUtilityClasses("MuiAlert", [ "root", "action", "icon", "message", "filled", "colorSuccess", "colorInfo", "colorWarning", "colorError", "filledSuccess", "filledInfo", "filledWarning", "filledError", "outlined", "outlinedSuccess", "outlinedInfo", "outlinedWarning", "outlinedError", "standard", "standardSuccess", "standardInfo", "standardWarning", "standardError" ]);
+    function getSvgIconUtilityClass(slot) {
+        return generateUtilityClass("MuiSvgIcon", slot);
+    }
+    generateUtilityClasses("MuiSvgIcon", [ "root", "colorPrimary", "colorSecondary", "colorAction", "colorError", "colorDisabled", "fontSizeInherit", "fontSizeSmall", "fontSizeMedium", "fontSizeLarge" ]);
+    const _excluded$7 = [ "children", "className", "color", "component", "fontSize", "htmlColor", "inheritViewBox", "titleAccess", "viewBox" ];
+    const useUtilityClasses$6 = ownerState => {
+        const {color: color, fontSize: fontSize, classes: classes} = ownerState;
+        const slots = {
+            root: [ "root", color !== "inherit" && `color${capitalize$1(color)}`, `fontSize${capitalize$1(fontSize)}` ]
+        };
+        return composeClasses(slots, getSvgIconUtilityClass, classes);
+    };
+    const SvgIconRoot = styled("svg", {
+        name: "MuiSvgIcon",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, ownerState.color !== "inherit" && styles[`color${capitalize$1(ownerState.color)}`], styles[`fontSize${capitalize$1(ownerState.fontSize)}`] ];
+        }
+    })((({theme: theme, ownerState: ownerState}) => {
+        var _theme$transitions, _theme$transitions$cr, _theme$transitions2, _theme$typography, _theme$typography$pxT, _theme$typography2, _theme$typography2$px, _theme$typography3, _theme$typography3$px, _palette$ownerState$c, _palette, _palette2, _palette3;
+        return {
+            userSelect: "none",
+            width: "1em",
+            height: "1em",
+            display: "inline-block",
+            fill: ownerState.hasSvgAsChild ? undefined : "currentColor",
+            flexShrink: 0,
+            transition: (_theme$transitions = theme.transitions) == null || (_theme$transitions$cr = _theme$transitions.create) == null ? void 0 : _theme$transitions$cr.call(_theme$transitions, "fill", {
+                duration: (_theme$transitions2 = theme.transitions) == null || (_theme$transitions2 = _theme$transitions2.duration) == null ? void 0 : _theme$transitions2.shorter
+            }),
+            fontSize: {
+                inherit: "inherit",
+                small: ((_theme$typography = theme.typography) == null || (_theme$typography$pxT = _theme$typography.pxToRem) == null ? void 0 : _theme$typography$pxT.call(_theme$typography, 20)) || "1.25rem",
+                medium: ((_theme$typography2 = theme.typography) == null || (_theme$typography2$px = _theme$typography2.pxToRem) == null ? void 0 : _theme$typography2$px.call(_theme$typography2, 24)) || "1.5rem",
+                large: ((_theme$typography3 = theme.typography) == null || (_theme$typography3$px = _theme$typography3.pxToRem) == null ? void 0 : _theme$typography3$px.call(_theme$typography3, 35)) || "2.1875rem"
+            }[ownerState.fontSize],
+            color: (_palette$ownerState$c = (_palette = (theme.vars || theme).palette) == null || (_palette = _palette[ownerState.color]) == null ? void 0 : _palette.main) != null ? _palette$ownerState$c : {
+                action: (_palette2 = (theme.vars || theme).palette) == null || (_palette2 = _palette2.action) == null ? void 0 : _palette2.active,
+                disabled: (_palette3 = (theme.vars || theme).palette) == null || (_palette3 = _palette3.action) == null ? void 0 : _palette3.disabled,
+                inherit: undefined
+            }[ownerState.color]
+        };
+    }));
+    const SvgIcon = reactExports.forwardRef((function SvgIcon(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiSvgIcon"
+        });
+        const {children: children, className: className, color: color = "inherit", component: component = "svg", fontSize: fontSize = "medium", htmlColor: htmlColor, inheritViewBox: inheritViewBox = false, titleAccess: titleAccess, viewBox: viewBox = "0 0 24 24"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$7);
+        const hasSvgAsChild = reactExports.isValidElement(children) && children.type === "svg";
+        const ownerState = _extends$1({}, props, {
+            color: color,
+            component: component,
+            fontSize: fontSize,
+            instanceFontSize: inProps.fontSize,
+            inheritViewBox: inheritViewBox,
+            viewBox: viewBox,
+            hasSvgAsChild: hasSvgAsChild
+        });
+        const more = {};
+        if (!inheritViewBox) {
+            more.viewBox = viewBox;
+        }
+        const classes = useUtilityClasses$6(ownerState);
+        return jsxRuntimeExports.jsxs(SvgIconRoot, _extends$1({
+            as: component,
+            className: clsx(classes.root, className),
+            focusable: "false",
+            color: htmlColor,
+            "aria-hidden": titleAccess ? undefined : true,
+            role: titleAccess ? "img" : undefined,
+            ref: ref
+        }, more, other, hasSvgAsChild && children.props, {
+            ownerState: ownerState,
+            children: [ hasSvgAsChild ? children.props.children : children, titleAccess ? jsxRuntimeExports.jsx("title", {
+                children: titleAccess
+            }) : null ]
+        }));
+    }));
+    SvgIcon.muiName = "SvgIcon";
+    function createSvgIcon(path, displayName) {
+        function Component(props, ref) {
+            return jsxRuntimeExports.jsx(SvgIcon, _extends$1({
+                "data-testid": `${displayName}Icon`,
+                ref: ref
+            }, props, {
+                children: path
+            }));
+        }
+        Component.muiName = SvgIcon.muiName;
+        return reactExports.memo(reactExports.forwardRef(Component));
+    }
+    var SuccessOutlinedIcon = createSvgIcon(jsxRuntimeExports.jsx("path", {
+        d: "M20,12A8,8 0 0,1 12,20A8,8 0 0,1 4,12A8,8 0 0,1 12,4C12.76,4 13.5,4.11 14.2, 4.31L15.77,2.74C14.61,2.26 13.34,2 12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0, 0 22,12M7.91,10.08L6.5,11.5L11,16L21,6L19.59,4.58L11,13.17L7.91,10.08Z"
+    }), "SuccessOutlined");
+    var ReportProblemOutlinedIcon = createSvgIcon(jsxRuntimeExports.jsx("path", {
+        d: "M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
+    }), "ReportProblemOutlined");
+    var ErrorOutlineIcon = createSvgIcon(jsxRuntimeExports.jsx("path", {
+        d: "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+    }), "ErrorOutline");
+    var InfoOutlinedIcon = createSvgIcon(jsxRuntimeExports.jsx("path", {
+        d: "M11,9H13V7H11M12,20C7.59,20 4,16.41 4,12C4,7.59 7.59,4 12,4C16.41,4 20,7.59 20, 12C20,16.41 16.41,20 12,20M12,2A10,10 0 0,0 2,12A10,10 0 0,0 12,22A10,10 0 0,0 22,12A10, 10 0 0,0 12,2M11,17H13V11H11V17Z"
+    }), "InfoOutlined");
+    var CloseIcon = createSvgIcon(jsxRuntimeExports.jsx("path", {
+        d: "M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
+    }), "Close");
+    const _excluded$6 = [ "action", "children", "className", "closeText", "color", "components", "componentsProps", "icon", "iconMapping", "onClose", "role", "severity", "slotProps", "slots", "variant" ];
+    const useUtilityClasses$5 = ownerState => {
+        const {variant: variant, color: color, severity: severity, classes: classes} = ownerState;
+        const slots = {
+            root: [ "root", `color${capitalize$1(color || severity)}`, `${variant}${capitalize$1(color || severity)}`, `${variant}` ],
+            icon: [ "icon" ],
+            message: [ "message" ],
+            action: [ "action" ]
+        };
+        return composeClasses(slots, getAlertUtilityClass, classes);
+    };
+    const AlertRoot = styled(Paper, {
+        name: "MuiAlert",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, styles[ownerState.variant], styles[`${ownerState.variant}${capitalize$1(ownerState.color || ownerState.severity)}`] ];
+        }
+    })((({theme: theme}) => {
+        const getColor = theme.palette.mode === "light" ? darken_1 : lighten_1;
+        const getBackgroundColor = theme.palette.mode === "light" ? lighten_1 : darken_1;
+        return _extends$1({}, theme.typography.body2, {
+            backgroundColor: "transparent",
+            display: "flex",
+            padding: "6px 16px",
+            variants: [ ...Object.entries(theme.palette).filter((([, value]) => value.main && value.light)).map((([color]) => ({
+                props: {
+                    colorSeverity: color,
+                    variant: "standard"
+                },
+                style: {
+                    color: theme.vars ? theme.vars.palette.Alert[`${color}Color`] : getColor(theme.palette[color].light, .6),
+                    backgroundColor: theme.vars ? theme.vars.palette.Alert[`${color}StandardBg`] : getBackgroundColor(theme.palette[color].light, .9),
+                    [`& .${alertClasses.icon}`]: theme.vars ? {
+                        color: theme.vars.palette.Alert[`${color}IconColor`]
+                    } : {
+                        color: theme.palette[color].main
+                    }
+                }
+            }))), ...Object.entries(theme.palette).filter((([, value]) => value.main && value.light)).map((([color]) => ({
+                props: {
+                    colorSeverity: color,
+                    variant: "outlined"
+                },
+                style: {
+                    color: theme.vars ? theme.vars.palette.Alert[`${color}Color`] : getColor(theme.palette[color].light, .6),
+                    border: `1px solid ${(theme.vars || theme).palette[color].light}`,
+                    [`& .${alertClasses.icon}`]: theme.vars ? {
+                        color: theme.vars.palette.Alert[`${color}IconColor`]
+                    } : {
+                        color: theme.palette[color].main
+                    }
+                }
+            }))), ...Object.entries(theme.palette).filter((([, value]) => value.main && value.dark)).map((([color]) => ({
+                props: {
+                    colorSeverity: color,
+                    variant: "filled"
+                },
+                style: _extends$1({
+                    fontWeight: theme.typography.fontWeightMedium
+                }, theme.vars ? {
+                    color: theme.vars.palette.Alert[`${color}FilledColor`],
+                    backgroundColor: theme.vars.palette.Alert[`${color}FilledBg`]
+                } : {
+                    backgroundColor: theme.palette.mode === "dark" ? theme.palette[color].dark : theme.palette[color].main,
+                    color: theme.palette.getContrastText(theme.palette[color].main)
+                })
+            }))) ]
+        });
+    }));
+    const AlertIcon = styled("div", {
+        name: "MuiAlert",
+        slot: "Icon",
+        overridesResolver: (props, styles) => styles.icon
+    })({
+        marginRight: 12,
+        padding: "7px 0",
+        display: "flex",
+        fontSize: 22,
+        opacity: .9
+    });
+    const AlertMessage = styled("div", {
+        name: "MuiAlert",
+        slot: "Message",
+        overridesResolver: (props, styles) => styles.message
+    })({
+        padding: "8px 0",
+        minWidth: 0,
+        overflow: "auto"
+    });
+    const AlertAction = styled("div", {
+        name: "MuiAlert",
+        slot: "Action",
+        overridesResolver: (props, styles) => styles.action
+    })({
+        display: "flex",
+        alignItems: "flex-start",
+        padding: "4px 0 0 16px",
+        marginLeft: "auto",
+        marginRight: -8
+    });
+    const defaultIconMapping = {
+        success: jsxRuntimeExports.jsx(SuccessOutlinedIcon, {
+            fontSize: "inherit"
+        }),
+        warning: jsxRuntimeExports.jsx(ReportProblemOutlinedIcon, {
+            fontSize: "inherit"
+        }),
+        error: jsxRuntimeExports.jsx(ErrorOutlineIcon, {
+            fontSize: "inherit"
+        }),
+        info: jsxRuntimeExports.jsx(InfoOutlinedIcon, {
+            fontSize: "inherit"
+        })
+    };
+    const Alert = reactExports.forwardRef((function Alert(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiAlert"
+        });
+        const {action: action, children: children, className: className, closeText: closeText = "Close", color: color, components: components = {}, componentsProps: componentsProps = {}, icon: icon, iconMapping: iconMapping = defaultIconMapping, onClose: onClose, role: role = "alert", severity: severity = "success", slotProps: slotProps = {}, slots: slots = {}, variant: variant = "standard"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$6);
+        const ownerState = _extends$1({}, props, {
+            color: color,
+            severity: severity,
+            variant: variant,
+            colorSeverity: color || severity
+        });
+        const classes = useUtilityClasses$5(ownerState);
+        const externalForwardedProps = {
+            slots: _extends$1({
+                closeButton: components.CloseButton,
+                closeIcon: components.CloseIcon
+            }, slots),
+            slotProps: _extends$1({}, componentsProps, slotProps)
+        };
+        const [CloseButtonSlot, closeButtonProps] = useSlot("closeButton", {
+            elementType: IconButton,
+            externalForwardedProps: externalForwardedProps,
+            ownerState: ownerState
+        });
+        const [CloseIconSlot, closeIconProps] = useSlot("closeIcon", {
+            elementType: CloseIcon,
+            externalForwardedProps: externalForwardedProps,
+            ownerState: ownerState
+        });
+        return jsxRuntimeExports.jsxs(AlertRoot, _extends$1({
+            role: role,
+            elevation: 0,
+            ownerState: ownerState,
+            className: clsx(classes.root, className),
+            ref: ref
+        }, other, {
+            children: [ icon !== false ? jsxRuntimeExports.jsx(AlertIcon, {
+                ownerState: ownerState,
+                className: classes.icon,
+                children: icon || iconMapping[severity] || defaultIconMapping[severity]
+            }) : null, jsxRuntimeExports.jsx(AlertMessage, {
+                ownerState: ownerState,
+                className: classes.message,
+                children: children
+            }), action != null ? jsxRuntimeExports.jsx(AlertAction, {
+                ownerState: ownerState,
+                className: classes.action,
+                children: action
+            }) : null, action == null && onClose ? jsxRuntimeExports.jsx(AlertAction, {
+                ownerState: ownerState,
+                className: classes.action,
+                children: jsxRuntimeExports.jsx(CloseButtonSlot, _extends$1({
+                    size: "small",
+                    "aria-label": closeText,
+                    title: closeText,
+                    color: "inherit",
+                    onClick: onClose
+                }, closeButtonProps, {
+                    children: jsxRuntimeExports.jsx(CloseIconSlot, _extends$1({
+                        fontSize: "small"
+                    }, closeIconProps))
+                }))
+            }) : null ]
+        }));
+    }));
+    function getAlertTitleUtilityClass(slot) {
+        return generateUtilityClass("MuiAlertTitle", slot);
+    }
+    generateUtilityClasses("MuiAlertTitle", [ "root" ]);
+    const _excluded$5 = [ "className" ];
+    const useUtilityClasses$4 = ownerState => {
+        const {classes: classes} = ownerState;
+        const slots = {
+            root: [ "root" ]
+        };
+        return composeClasses(slots, getAlertTitleUtilityClass, classes);
+    };
+    const AlertTitleRoot = styled(Typography, {
+        name: "MuiAlertTitle",
+        slot: "Root",
+        overridesResolver: (props, styles) => styles.root
+    })((({theme: theme}) => ({
+        fontWeight: theme.typography.fontWeightMedium,
+        marginTop: -2
+    })));
+    const AlertTitle = reactExports.forwardRef((function AlertTitle(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiAlertTitle"
+        });
+        const {className: className} = props, other = _objectWithoutPropertiesLoose(props, _excluded$5);
+        const ownerState = props;
+        const classes = useUtilityClasses$4(ownerState);
+        return jsxRuntimeExports.jsx(AlertTitleRoot, _extends$1({
+            gutterBottom: true,
+            component: "div",
+            ownerState: ownerState,
+            ref: ref,
+            className: clsx(classes.root, className)
+        }, other));
+    }));
+    const _excluded$4 = [ "addEndListener", "appear", "children", "container", "direction", "easing", "in", "onEnter", "onEntered", "onEntering", "onExit", "onExited", "onExiting", "style", "timeout", "TransitionComponent" ];
+    function getTranslateValue(direction, node, resolvedContainer) {
+        const rect = node.getBoundingClientRect();
+        const containerRect = resolvedContainer && resolvedContainer.getBoundingClientRect();
+        const containerWindow = ownerWindow(node);
+        let transform;
+        if (node.fakeTransform) {
+            transform = node.fakeTransform;
+        } else {
+            const computedStyle = containerWindow.getComputedStyle(node);
+            transform = computedStyle.getPropertyValue("-webkit-transform") || computedStyle.getPropertyValue("transform");
+        }
+        let offsetX = 0;
+        let offsetY = 0;
+        if (transform && transform !== "none" && typeof transform === "string") {
+            const transformValues = transform.split("(")[1].split(")")[0].split(",");
+            offsetX = parseInt(transformValues[4], 10);
+            offsetY = parseInt(transformValues[5], 10);
+        }
+        if (direction === "left") {
+            if (containerRect) {
+                return `translateX(${containerRect.right + offsetX - rect.left}px)`;
+            }
+            return `translateX(${containerWindow.innerWidth + offsetX - rect.left}px)`;
+        }
+        if (direction === "right") {
+            if (containerRect) {
+                return `translateX(-${rect.right - containerRect.left - offsetX}px)`;
+            }
+            return `translateX(-${rect.left + rect.width - offsetX}px)`;
+        }
+        if (direction === "up") {
+            if (containerRect) {
+                return `translateY(${containerRect.bottom + offsetY - rect.top}px)`;
+            }
+            return `translateY(${containerWindow.innerHeight + offsetY - rect.top}px)`;
+        }
+        if (containerRect) {
+            return `translateY(-${rect.top - containerRect.top + rect.height - offsetY}px)`;
+        }
+        return `translateY(-${rect.top + rect.height - offsetY}px)`;
+    }
+    function resolveContainer(containerPropProp) {
+        return typeof containerPropProp === "function" ? containerPropProp() : containerPropProp;
+    }
+    function setTranslateValue(direction, node, containerProp) {
+        const resolvedContainer = resolveContainer(containerProp);
+        const transform = getTranslateValue(direction, node, resolvedContainer);
+        if (transform) {
+            node.style.webkitTransform = transform;
+            node.style.transform = transform;
+        }
+    }
+    const Slide = reactExports.forwardRef((function Slide(props, ref) {
+        const theme = useTheme();
+        const defaultEasing = {
+            enter: theme.transitions.easing.easeOut,
+            exit: theme.transitions.easing.sharp
+        };
+        const defaultTimeout = {
+            enter: theme.transitions.duration.enteringScreen,
+            exit: theme.transitions.duration.leavingScreen
+        };
+        const {addEndListener: addEndListener, appear: appear = true, children: children, container: containerProp, direction: direction = "down", easing: easingProp = defaultEasing, in: inProp, onEnter: onEnter, onEntered: onEntered, onEntering: onEntering, onExit: onExit, onExited: onExited, onExiting: onExiting, style: style, timeout: timeout = defaultTimeout, TransitionComponent: TransitionComponent = Transition} = props, other = _objectWithoutPropertiesLoose(props, _excluded$4);
+        const childrenRef = reactExports.useRef(null);
+        const handleRef = useForkRef(getReactElementRef(children), childrenRef, ref);
+        const normalizedTransitionCallback = callback => isAppearing => {
+            if (callback) {
+                if (isAppearing === undefined) {
+                    callback(childrenRef.current);
+                } else {
+                    callback(childrenRef.current, isAppearing);
+                }
+            }
+        };
+        const handleEnter = normalizedTransitionCallback(((node, isAppearing) => {
+            setTranslateValue(direction, node, containerProp);
+            reflow(node);
+            if (onEnter) {
+                onEnter(node, isAppearing);
+            }
+        }));
+        const handleEntering = normalizedTransitionCallback(((node, isAppearing) => {
+            const transitionProps = getTransitionProps({
+                timeout: timeout,
+                style: style,
+                easing: easingProp
+            }, {
+                mode: "enter"
+            });
+            node.style.webkitTransition = theme.transitions.create("-webkit-transform", _extends$1({}, transitionProps));
+            node.style.transition = theme.transitions.create("transform", _extends$1({}, transitionProps));
+            node.style.webkitTransform = "none";
+            node.style.transform = "none";
+            if (onEntering) {
+                onEntering(node, isAppearing);
+            }
+        }));
+        const handleEntered = normalizedTransitionCallback(onEntered);
+        const handleExiting = normalizedTransitionCallback(onExiting);
+        const handleExit = normalizedTransitionCallback((node => {
+            const transitionProps = getTransitionProps({
+                timeout: timeout,
+                style: style,
+                easing: easingProp
+            }, {
+                mode: "exit"
+            });
+            node.style.webkitTransition = theme.transitions.create("-webkit-transform", transitionProps);
+            node.style.transition = theme.transitions.create("transform", transitionProps);
+            setTranslateValue(direction, node, containerProp);
+            if (onExit) {
+                onExit(node);
+            }
+        }));
+        const handleExited = normalizedTransitionCallback((node => {
+            node.style.webkitTransition = "";
+            node.style.transition = "";
+            if (onExited) {
+                onExited(node);
+            }
+        }));
+        const handleAddEndListener = next => {
+            if (addEndListener) {
+                addEndListener(childrenRef.current, next);
+            }
+        };
+        const updatePosition = reactExports.useCallback((() => {
+            if (childrenRef.current) {
+                setTranslateValue(direction, childrenRef.current, containerProp);
+            }
+        }), [ direction, containerProp ]);
+        reactExports.useEffect((() => {
+            if (inProp || direction === "down" || direction === "right") {
+                return undefined;
+            }
+            const handleResize = debounce((() => {
+                if (childrenRef.current) {
+                    setTranslateValue(direction, childrenRef.current, containerProp);
+                }
+            }));
+            const containerWindow = ownerWindow(childrenRef.current);
+            containerWindow.addEventListener("resize", handleResize);
+            return () => {
+                handleResize.clear();
+                containerWindow.removeEventListener("resize", handleResize);
+            };
+        }), [ direction, inProp, containerProp ]);
+        reactExports.useEffect((() => {
+            if (!inProp) {
+                updatePosition();
+            }
+        }), [ inProp, updatePosition ]);
+        return jsxRuntimeExports.jsx(TransitionComponent, _extends$1({
+            nodeRef: childrenRef,
+            onEnter: handleEnter,
+            onEntered: handleEntered,
+            onEntering: handleEntering,
+            onExit: handleExit,
+            onExited: handleExited,
+            onExiting: handleExiting,
+            addEndListener: handleAddEndListener,
+            appear: appear,
+            in: inProp,
+            timeout: timeout
+        }, other, {
+            children: (state, childProps) => reactExports.cloneElement(children, _extends$1({
+                ref: handleRef,
+                style: _extends$1({
+                    visibility: state === "exited" && !inProp ? "hidden" : undefined
+                }, style, children.props.style)
+            }, childProps))
+        }));
+    }));
+    function SlideTransition(props) {
+        return React.createElement(Slide, _extends$2({}, props, {
+            direction: "up"
+        }));
+    }
+    function Notification(_ref) {
+        var open = _ref.open, message = _ref.message, _ref$severity = _ref.severity, severity = _ref$severity === void 0 ? "success" : _ref$severity, title = _ref.title, _ref$duration = _ref.duration, duration = _ref$duration === void 0 ? 4e3 : _ref$duration, onClose = _ref.onClose;
+        var _useState = reactExports.useState(open), _useState2 = _slicedToArray(_useState, 2), isOpen = _useState2[0], setIsOpen = _useState2[1];
+        reactExports.useEffect((function() {
+            setIsOpen(open);
+        }), [ open ]);
+        var handleClose = function handleClose(event, reason) {
+            if (reason === "clickaway") {
+                return;
+            }
+            setIsOpen(false);
+            if (onClose) {
+                onClose();
+            }
+        };
+        var getSeverityConfig = function getSeverityConfig() {
+            switch (severity) {
+              case "success":
+                return {
+                    icon: "✅",
+                    bgColor: "bg-green-50",
+                    borderColor: "border-green-200",
+                    textColor: "text-green-800"
+                };
+
+              case "error":
+                return {
+                    icon: "❌",
+                    bgColor: "bg-red-50",
+                    borderColor: "border-red-200",
+                    textColor: "text-red-800"
+                };
+
+              case "warning":
+                return {
+                    icon: "⚠️",
+                    bgColor: "bg-yellow-50",
+                    borderColor: "border-yellow-200",
+                    textColor: "text-yellow-800"
+                };
+
+              case "info":
+                return {
+                    icon: "ℹ️",
+                    bgColor: "bg-blue-50",
+                    borderColor: "border-blue-200",
+                    textColor: "text-blue-800"
+                };
+
+              default:
+                return {
+                    icon: "ℹ️",
+                    bgColor: "bg-gray-50",
+                    borderColor: "border-gray-200",
+                    textColor: "text-gray-800"
+                };
+            }
+        };
+        var config = getSeverityConfig();
+        return React.createElement(Snackbar, {
+            open: isOpen,
+            autoHideDuration: duration,
+            onClose: handleClose,
+            TransitionComponent: SlideTransition,
+            anchorOrigin: {
+                vertical: "bottom",
+                horizontal: "right"
+            },
+            className: "tailwind",
+            sx: {
+                "& .MuiSnackbar-root": {
+                    position: "fixed",
+                    zIndex: 9999
+                }
+            }
+        }, React.createElement(Alert, {
+            onClose: handleClose,
+            severity: severity,
+            variant: "filled",
+            className: "\n          ".concat(config.bgColor, " ").concat(config.borderColor, " ").concat(config.textColor, "\n          rounded-lg shadow-lg border min-w-[300px] max-w-[400px]\n        "),
+            sx: {
+                "& .MuiAlert-icon": {
+                    fontSize: "1.25rem"
+                },
+                "& .MuiAlert-action": {
+                    paddingTop: 0
+                }
+            }
+        }, title && React.createElement(AlertTitle, {
+            className: "font-semibold ".concat(config.textColor, " flex items-center")
+        }, React.createElement("span", {
+            className: "mr-2"
+        }, config.icon), title), React.createElement("div", {
+            className: "".concat(config.textColor, " ").concat(title ? "mt-1" : "")
+        }, !title && React.createElement("span", {
+            className: "mr-2"
+        }, config.icon), message)));
+    }
+    var NotificationManager = function() {
+        function NotificationManager() {
+            _classCallCheck(this, NotificationManager);
+            this.notifications = [];
+        }
+        return _createClass(NotificationManager, [ {
+            key: "show",
+            value: function show(props) {
+                var _this = this;
+                var id = "notification-".concat(Date.now(), "-").concat(Math.random());
+                var container = document.createElement("div");
+                container.id = id;
+                container.style.position = "fixed";
+                container.style.top = "0";
+                container.style.left = "0";
+                container.style.width = "100%";
+                container.style.height = "100%";
+                container.style.pointerEvents = "none";
+                container.style.zIndex = "9999";
+                document.body.appendChild(container);
+                var handleClose = function handleClose() {
+                    _this.remove(id);
+                };
+                var notificationElement = React.createElement(Notification, Object.assign(Object.assign({}, props), {
+                    open: true,
+                    onClose: handleClose
+                }));
+                Promise.resolve().then((function() {
+                    return client;
+                })).then((function(_ref2) {
+                    var createRoot = _ref2.createRoot;
+                    var root = createRoot(container);
+                    root.render(notificationElement);
+                    setTimeout((function() {
+                        _this.remove(id);
+                    }), props.duration || 4e3);
+                }));
+                this.notifications.push({
+                    id: id,
+                    component: notificationElement,
+                    container: container
+                });
+                return id;
+            }
+        }, {
+            key: "remove",
+            value: function remove(id) {
+                var index = this.notifications.findIndex((function(n) {
+                    return n.id === id;
+                }));
+                if (index !== -1) {
+                    var notification = this.notifications[index];
+                    if (notification.container.parentNode) {
+                        notification.container.parentNode.removeChild(notification.container);
+                    }
+                    this.notifications.splice(index, 1);
+                }
+            }
+        }, {
+            key: "success",
+            value: function success(message, title) {
+                return this.show({
+                    message: message,
+                    title: title,
+                    severity: "success",
+                    duration: 4e3
+                });
+            }
+        }, {
+            key: "error",
+            value: function error(message, title) {
+                return this.show({
+                    message: message,
+                    title: title,
+                    severity: "error",
+                    duration: 6e3
+                });
+            }
+        }, {
+            key: "warning",
+            value: function warning(message, title) {
+                return this.show({
+                    message: message,
+                    title: title,
+                    severity: "warning",
+                    duration: 5e3
+                });
+            }
+        }, {
+            key: "info",
+            value: function info(message, title) {
+                return this.show({
+                    message: message,
+                    title: title,
+                    severity: "info",
+                    duration: 4e3
+                });
+            }
+        } ], [ {
+            key: "getInstance",
+            value: function getInstance() {
+                if (!NotificationManager.instance) {
+                    NotificationManager.instance = new NotificationManager;
+                }
+                return NotificationManager.instance;
+            }
+        } ]);
+    }();
+    var notify = NotificationManager.getInstance();
     class UseFetch {
         static get(url) {
             return __awaiter(this, void 0, void 0, (function*() {
@@ -15091,7 +16878,7 @@
     const WRAPS = [ "nowrap", "wrap-reverse", "wrap" ];
     const GRID_SIZES = [ "auto", true, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 ];
     const gridClasses = generateUtilityClasses("MuiGrid", [ "root", "container", "item", "zeroMinWidth", ...SPACINGS.map((spacing => `spacing-xs-${spacing}`)), ...DIRECTIONS.map((direction => `direction-xs-${direction}`)), ...WRAPS.map((wrap => `wrap-xs-${wrap}`)), ...GRID_SIZES.map((size => `grid-xs-${size}`)), ...GRID_SIZES.map((size => `grid-sm-${size}`)), ...GRID_SIZES.map((size => `grid-md-${size}`)), ...GRID_SIZES.map((size => `grid-lg-${size}`)), ...GRID_SIZES.map((size => `grid-xl-${size}`)) ]);
-    const _excluded = [ "className", "columns", "columnSpacing", "component", "container", "direction", "item", "rowSpacing", "spacing", "wrap", "zeroMinWidth" ];
+    const _excluded$3 = [ "className", "columns", "columnSpacing", "component", "container", "direction", "item", "rowSpacing", "spacing", "wrap", "zeroMinWidth" ];
     function getOffset(val) {
         const parse = parseFloat(val);
         return `${parse}${String(val).replace(String(parse), "") || "px"}`;
@@ -15336,7 +17123,7 @@
         }));
         return classes;
     }
-    const useUtilityClasses = ownerState => {
+    const useUtilityClasses$3 = ownerState => {
         const {classes: classes, container: container, direction: direction, item: item, spacing: spacing, wrap: wrap, zeroMinWidth: zeroMinWidth, breakpoints: breakpoints} = ownerState;
         let spacingClasses = [];
         if (container) {
@@ -15361,7 +17148,7 @@
         });
         const {breakpoints: breakpoints} = useTheme();
         const props = extendSxProp(themeProps);
-        const {className: className, columns: columnsProp, columnSpacing: columnSpacingProp, component: component = "div", container: container = false, direction: direction = "row", item: item = false, rowSpacing: rowSpacingProp, spacing: spacing = 0, wrap: wrap = "wrap", zeroMinWidth: zeroMinWidth = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded);
+        const {className: className, columns: columnsProp, columnSpacing: columnSpacingProp, component: component = "div", container: container = false, direction: direction = "row", item: item = false, rowSpacing: rowSpacingProp, spacing: spacing = 0, wrap: wrap = "wrap", zeroMinWidth: zeroMinWidth = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$3);
         const rowSpacing = rowSpacingProp || spacing;
         const columnSpacing = columnSpacingProp || spacing;
         const columnsContext = reactExports.useContext(GridContext);
@@ -15387,7 +17174,7 @@
         }, breakpointsValues, {
             breakpoints: breakpoints.keys
         });
-        const classes = useUtilityClasses(ownerState);
+        const classes = useUtilityClasses$3(ownerState);
         return jsxRuntimeExports.jsx(GridContext.Provider, {
             value: columns,
             children: jsxRuntimeExports.jsx(GridRoot, _extends$1({
@@ -15398,124 +17185,627 @@
             }, otherFiltered))
         });
     }));
+    function getLinearProgressUtilityClass(slot) {
+        return generateUtilityClass("MuiLinearProgress", slot);
+    }
+    generateUtilityClasses("MuiLinearProgress", [ "root", "colorPrimary", "colorSecondary", "determinate", "indeterminate", "buffer", "query", "dashed", "dashedColorPrimary", "dashedColorSecondary", "bar", "barColorPrimary", "barColorSecondary", "bar1Indeterminate", "bar1Determinate", "bar1Buffer", "bar2Indeterminate", "bar2Buffer" ]);
+    const _excluded$2 = [ "className", "color", "value", "valueBuffer", "variant" ];
+    let _ = t => t, _t, _t2, _t3, _t4, _t5, _t6;
+    const TRANSITION_DURATION = 4;
+    const indeterminate1Keyframe = keyframes(_t || (_t = _`
+  0% {
+    left: -35%;
+    right: 100%;
+  }
+
+  60% {
+    left: 100%;
+    right: -90%;
+  }
+
+  100% {
+    left: 100%;
+    right: -90%;
+  }
+`));
+    const indeterminate2Keyframe = keyframes(_t2 || (_t2 = _`
+  0% {
+    left: -200%;
+    right: 100%;
+  }
+
+  60% {
+    left: 107%;
+    right: -8%;
+  }
+
+  100% {
+    left: 107%;
+    right: -8%;
+  }
+`));
+    const bufferKeyframe = keyframes(_t3 || (_t3 = _`
+  0% {
+    opacity: 1;
+    background-position: 0 -23px;
+  }
+
+  60% {
+    opacity: 0;
+    background-position: 0 -23px;
+  }
+
+  100% {
+    opacity: 1;
+    background-position: -200px -23px;
+  }
+`));
+    const useUtilityClasses$2 = ownerState => {
+        const {classes: classes, variant: variant, color: color} = ownerState;
+        const slots = {
+            root: [ "root", `color${capitalize$1(color)}`, variant ],
+            dashed: [ "dashed", `dashedColor${capitalize$1(color)}` ],
+            bar1: [ "bar", `barColor${capitalize$1(color)}`, (variant === "indeterminate" || variant === "query") && "bar1Indeterminate", variant === "determinate" && "bar1Determinate", variant === "buffer" && "bar1Buffer" ],
+            bar2: [ "bar", variant !== "buffer" && `barColor${capitalize$1(color)}`, variant === "buffer" && `color${capitalize$1(color)}`, (variant === "indeterminate" || variant === "query") && "bar2Indeterminate", variant === "buffer" && "bar2Buffer" ]
+        };
+        return composeClasses(slots, getLinearProgressUtilityClass, classes);
+    };
+    const getColorShade = (theme, color) => {
+        if (color === "inherit") {
+            return "currentColor";
+        }
+        if (theme.vars) {
+            return theme.vars.palette.LinearProgress[`${color}Bg`];
+        }
+        return theme.palette.mode === "light" ? lighten_1(theme.palette[color].main, .62) : darken_1(theme.palette[color].main, .5);
+    };
+    const LinearProgressRoot = styled("span", {
+        name: "MuiLinearProgress",
+        slot: "Root",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.root, styles[`color${capitalize$1(ownerState.color)}`], styles[ownerState.variant] ];
+        }
+    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+        position: "relative",
+        overflow: "hidden",
+        display: "block",
+        height: 4,
+        zIndex: 0,
+        "@media print": {
+            colorAdjust: "exact"
+        },
+        backgroundColor: getColorShade(theme, ownerState.color)
+    }, ownerState.color === "inherit" && ownerState.variant !== "buffer" && {
+        backgroundColor: "none",
+        "&::before": {
+            content: '""',
+            position: "absolute",
+            left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            backgroundColor: "currentColor",
+            opacity: .3
+        }
+    }, ownerState.variant === "buffer" && {
+        backgroundColor: "transparent"
+    }, ownerState.variant === "query" && {
+        transform: "rotate(180deg)"
+    })));
+    const LinearProgressDashed = styled("span", {
+        name: "MuiLinearProgress",
+        slot: "Dashed",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.dashed, styles[`dashedColor${capitalize$1(ownerState.color)}`] ];
+        }
+    })((({ownerState: ownerState, theme: theme}) => {
+        const backgroundColor = getColorShade(theme, ownerState.color);
+        return _extends$1({
+            position: "absolute",
+            marginTop: 0,
+            height: "100%",
+            width: "100%"
+        }, ownerState.color === "inherit" && {
+            opacity: .3
+        }, {
+            backgroundImage: `radial-gradient(${backgroundColor} 0%, ${backgroundColor} 16%, transparent 42%)`,
+            backgroundSize: "10px 10px",
+            backgroundPosition: "0 -23px"
+        });
+    }), css(_t4 || (_t4 = _`
+    animation: ${0} 3s infinite linear;
+  `), bufferKeyframe));
+    const LinearProgressBar1 = styled("span", {
+        name: "MuiLinearProgress",
+        slot: "Bar1",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.bar, styles[`barColor${capitalize$1(ownerState.color)}`], (ownerState.variant === "indeterminate" || ownerState.variant === "query") && styles.bar1Indeterminate, ownerState.variant === "determinate" && styles.bar1Determinate, ownerState.variant === "buffer" && styles.bar1Buffer ];
+        }
+    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+        width: "100%",
+        position: "absolute",
+        left: 0,
+        bottom: 0,
+        top: 0,
+        transition: "transform 0.2s linear",
+        transformOrigin: "left",
+        backgroundColor: ownerState.color === "inherit" ? "currentColor" : (theme.vars || theme).palette[ownerState.color].main
+    }, ownerState.variant === "determinate" && {
+        transition: `transform .${TRANSITION_DURATION}s linear`
+    }, ownerState.variant === "buffer" && {
+        zIndex: 1,
+        transition: `transform .${TRANSITION_DURATION}s linear`
+    })), (({ownerState: ownerState}) => (ownerState.variant === "indeterminate" || ownerState.variant === "query") && css(_t5 || (_t5 = _`
+      width: auto;
+      animation: ${0} 2.1s cubic-bezier(0.65, 0.815, 0.735, 0.395) infinite;
+    `), indeterminate1Keyframe)));
+    const LinearProgressBar2 = styled("span", {
+        name: "MuiLinearProgress",
+        slot: "Bar2",
+        overridesResolver: (props, styles) => {
+            const {ownerState: ownerState} = props;
+            return [ styles.bar, styles[`barColor${capitalize$1(ownerState.color)}`], (ownerState.variant === "indeterminate" || ownerState.variant === "query") && styles.bar2Indeterminate, ownerState.variant === "buffer" && styles.bar2Buffer ];
+        }
+    })((({ownerState: ownerState, theme: theme}) => _extends$1({
+        width: "100%",
+        position: "absolute",
+        left: 0,
+        bottom: 0,
+        top: 0,
+        transition: "transform 0.2s linear",
+        transformOrigin: "left"
+    }, ownerState.variant !== "buffer" && {
+        backgroundColor: ownerState.color === "inherit" ? "currentColor" : (theme.vars || theme).palette[ownerState.color].main
+    }, ownerState.color === "inherit" && {
+        opacity: .3
+    }, ownerState.variant === "buffer" && {
+        backgroundColor: getColorShade(theme, ownerState.color),
+        transition: `transform .${TRANSITION_DURATION}s linear`
+    })), (({ownerState: ownerState}) => (ownerState.variant === "indeterminate" || ownerState.variant === "query") && css(_t6 || (_t6 = _`
+      width: auto;
+      animation: ${0} 2.1s cubic-bezier(0.165, 0.84, 0.44, 1) 1.15s infinite;
+    `), indeterminate2Keyframe)));
+    const LinearProgress = reactExports.forwardRef((function LinearProgress(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiLinearProgress"
+        });
+        const {className: className, color: color = "primary", value: value, valueBuffer: valueBuffer, variant: variant = "indeterminate"} = props, other = _objectWithoutPropertiesLoose(props, _excluded$2);
+        const ownerState = _extends$1({}, props, {
+            color: color,
+            variant: variant
+        });
+        const classes = useUtilityClasses$2(ownerState);
+        const isRtl = useRtl();
+        const rootProps = {};
+        const inlineStyles = {
+            bar1: {},
+            bar2: {}
+        };
+        if (variant === "determinate" || variant === "buffer") {
+            if (value !== undefined) {
+                rootProps["aria-valuenow"] = Math.round(value);
+                rootProps["aria-valuemin"] = 0;
+                rootProps["aria-valuemax"] = 100;
+                let transform = value - 100;
+                if (isRtl) {
+                    transform = -transform;
+                }
+                inlineStyles.bar1.transform = `translateX(${transform}%)`;
+            }
+        }
+        if (variant === "buffer") {
+            if (valueBuffer !== undefined) {
+                let transform = (valueBuffer || 0) - 100;
+                if (isRtl) {
+                    transform = -transform;
+                }
+                inlineStyles.bar2.transform = `translateX(${transform}%)`;
+            }
+        }
+        return jsxRuntimeExports.jsxs(LinearProgressRoot, _extends$1({
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            role: "progressbar"
+        }, rootProps, {
+            ref: ref
+        }, other, {
+            children: [ variant === "buffer" ? jsxRuntimeExports.jsx(LinearProgressDashed, {
+                className: classes.dashed,
+                ownerState: ownerState
+            }) : null, jsxRuntimeExports.jsx(LinearProgressBar1, {
+                className: classes.bar1,
+                ownerState: ownerState,
+                style: inlineStyles.bar1
+            }), variant === "determinate" ? null : jsxRuntimeExports.jsx(LinearProgressBar2, {
+                className: classes.bar2,
+                ownerState: ownerState,
+                style: inlineStyles.bar2
+            }) ]
+        }));
+    }));
+    function getCardUtilityClass(slot) {
+        return generateUtilityClass("MuiCard", slot);
+    }
+    generateUtilityClasses("MuiCard", [ "root" ]);
+    const _excluded$1 = [ "className", "raised" ];
+    const useUtilityClasses$1 = ownerState => {
+        const {classes: classes} = ownerState;
+        const slots = {
+            root: [ "root" ]
+        };
+        return composeClasses(slots, getCardUtilityClass, classes);
+    };
+    const CardRoot = styled(Paper, {
+        name: "MuiCard",
+        slot: "Root",
+        overridesResolver: (props, styles) => styles.root
+    })((() => ({
+        overflow: "hidden"
+    })));
+    const Card = reactExports.forwardRef((function Card(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiCard"
+        });
+        const {className: className, raised: raised = false} = props, other = _objectWithoutPropertiesLoose(props, _excluded$1);
+        const ownerState = _extends$1({}, props, {
+            raised: raised
+        });
+        const classes = useUtilityClasses$1(ownerState);
+        return jsxRuntimeExports.jsx(CardRoot, _extends$1({
+            className: clsx(classes.root, className),
+            elevation: raised ? 8 : undefined,
+            ref: ref,
+            ownerState: ownerState
+        }, other));
+    }));
+    function getCardContentUtilityClass(slot) {
+        return generateUtilityClass("MuiCardContent", slot);
+    }
+    generateUtilityClasses("MuiCardContent", [ "root" ]);
+    const _excluded = [ "className", "component" ];
+    const useUtilityClasses = ownerState => {
+        const {classes: classes} = ownerState;
+        const slots = {
+            root: [ "root" ]
+        };
+        return composeClasses(slots, getCardContentUtilityClass, classes);
+    };
+    const CardContentRoot = styled("div", {
+        name: "MuiCardContent",
+        slot: "Root",
+        overridesResolver: (props, styles) => styles.root
+    })((() => ({
+        padding: 16,
+        "&:last-child": {
+            paddingBottom: 24
+        }
+    })));
+    const CardContent = reactExports.forwardRef((function CardContent(inProps, ref) {
+        const props = useDefaultProps({
+            props: inProps,
+            name: "MuiCardContent"
+        });
+        const {className: className, component: component = "div"} = props, other = _objectWithoutPropertiesLoose(props, _excluded);
+        const ownerState = _extends$1({}, props, {
+            component: component
+        });
+        const classes = useUtilityClasses(ownerState);
+        return jsxRuntimeExports.jsx(CardContentRoot, _extends$1({
+            as: component,
+            className: clsx(classes.root, className),
+            ownerState: ownerState,
+            ref: ref
+        }, other));
+    }));
+    const boxClasses = generateUtilityClasses("MuiBox", [ "root" ]);
+    const defaultTheme = createTheme();
+    const Box = createBox({
+        themeId: THEME_ID,
+        defaultTheme: defaultTheme,
+        defaultClassName: boxClasses.root,
+        generateClassName: ClassNameGenerator.generate
+    });
     function SelectOptionComponent(_ref) {
-        var renderTitle = _ref.renderTitle, options = _ref.options, onSelectOption = _ref.onSelectOption;
+        var renderTitle = _ref.renderTitle, options = _ref.options, onSelectOption = _ref.onSelectOption, _ref$loading = _ref.loading, loading = _ref$loading === void 0 ? false : _ref$loading, _ref$error = _ref.error, error = _ref$error === void 0 ? null : _ref$error, _ref$success = _ref.success, success = _ref$success === void 0 ? null : _ref$success, _ref$questionTitle = _ref.questionTitle, questionTitle = _ref$questionTitle === void 0 ? "" : _ref$questionTitle, _ref$question = _ref.question, question = _ref$question === void 0 ? "" : _ref$question;
         function handleSelectOption(idx, option) {
+            if (loading) return;
             onSelectOption(idx, option);
         }
-        return React.createElement("div", null, React.createElement(ScopedCssBaseline, null, React.createElement(Grid, {
+        var LoadingSkeleton = function LoadingSkeleton() {
+            return React.createElement("div", {
+                className: "space-y-4 animate-pulse"
+            }, React.createElement("div", {
+                className: "bg-gray-200 h-4 w-3/4 rounded"
+            }), React.createElement("div", {
+                className: "bg-gray-200 h-4 w-1/2 rounded"
+            }), React.createElement("div", {
+                className: "grid grid-cols-1 sm:grid-cols-2 gap-3 mt-4"
+            }, _toConsumableArray(Array(4)).map((function(_, i) {
+                return React.createElement("div", {
+                    key: i,
+                    className: "bg-gray-200 h-12 rounded-lg"
+                });
+            }))));
+        };
+        return React.createElement("div", {
+            className: "space-y-4"
+        }, React.createElement(ScopedCssBaseline, null, (questionTitle || question) && React.createElement(Card, {
+            className: "shadow-sm border border-gray-200 transition-shadow"
+        }, React.createElement(CardContent, {
+            className: "p-4"
+        }, questionTitle && React.createElement(Typography, {
+            variant: "h6",
+            component: "h3",
+            className: "text-lg font-semibold text-gray-800 mb-2"
+        }, questionTitle), question && React.createElement(Typography, {
+            variant: "body1",
+            className: "text-gray-600 leading-relaxed"
+        }, question))), !questionTitle && !question && React.createElement(Card, {
+            className: "shadow-sm border border-gray-200"
+        }, React.createElement(CardContent, {
+            className: "p-4"
+        }, renderTitle())), loading && React.createElement(Box, {
+            className: "w-full"
+        }, React.createElement(LinearProgress, {
+            className: "rounded-full h-2 bg-gray-200",
+            sx: {
+                "& .MuiLinearProgress-bar": {
+                    backgroundColor: "#3b82f6"
+                }
+            }
+        }), React.createElement(Typography, {
+            variant: "body2",
+            className: "text-center text-gray-500 mt-2"
+        }, "載入中...")), loading && options.length === 0 ? React.createElement(LoadingSkeleton, null) : options.length > 0 && React.createElement(Grid, {
             container: true,
             spacing: 2
-        }, React.createElement(Grid, {
-            item: true,
-            xs: 12
-        }, renderTitle()), options.map((function(option, idx) {
+        }, options.map((function(option, idx) {
             return React.createElement(Grid, {
                 item: true,
-                key: option
+                xs: 12,
+                sm: 6,
+                key: "".concat(option, "-").concat(idx)
             }, React.createElement(Button, {
-                variant: "contained",
+                variant: "outlined",
+                fullWidth: true,
+                disabled: loading,
                 onClick: function onClick() {
                     return handleSelectOption(idx, option);
+                },
+                className: "\n                                            h-12 text-left justify-start normal-case font-normal\n                                            ".concat(loading ? "opacity-50 cursor-not-allowed" : "text-gray-700 border-gray-300 hover:border-blue-500 hover:bg-blue-50", "\n                                            transition-all duration-200 rounded-lg\n                                        "),
+                sx: {
+                    textTransform: "none",
+                    justifyContent: "flex-start",
+                    "&:hover": {
+                        borderColor: loading ? undefined : "#3b82f6",
+                        backgroundColor: loading ? undefined : "#eff6ff"
+                    }
                 }
-            }, option));
-        })))));
+            }, React.createElement("span", {
+                className: "\n                                            w-6 h-6 rounded-full text-sm flex items-center justify-center mr-3 font-medium\n                                            ".concat(loading ? "bg-gray-200 text-gray-400" : "bg-gray-200 text-gray-600", "\n                                        ")
+            }, String.fromCharCode(65 + idx)), React.createElement("span", {
+                className: "truncate flex-1 text-left"
+            }, option)));
+        }))), error && React.createElement(Alert, {
+            severity: "error",
+            className: "rounded-lg border-red-200 bg-red-50",
+            sx: {
+                "& .MuiAlert-icon": {
+                    color: "#dc2626"
+                }
+            }
+        }, React.createElement(AlertTitle, {
+            className: "font-medium text-red-800"
+        }, "答題失敗"), React.createElement(Typography, {
+            className: "text-red-700"
+        }, error)), success && React.createElement(Alert, {
+            severity: "success",
+            className: "rounded-lg border-green-200 bg-green-50 animate-pulse",
+            sx: {
+                "& .MuiAlert-icon": {
+                    color: "#16a34a"
+                }
+            }
+        }, React.createElement(AlertTitle, {
+            className: "font-medium text-green-800 flex items-center"
+        }, "恭喜答對！", React.createElement("span", {
+            className: "ml-2 text-lg"
+        }, "🎉")), React.createElement(Typography, {
+            className: "text-green-700 font-medium"
+        }, success))));
     }
     function ButtonDialogApp() {
         var _this = this;
         var gamerAPI = new GamerAPI;
-        var _useState = reactExports.useState("載入中............"), _useState2 = _slicedToArray(_useState, 2), questionTitle = _useState2[0], setQuestionTitle = _useState2[1];
-        var _useState3 = reactExports.useState(""), _useState4 = _slicedToArray(_useState3, 2), question = _useState4[0], setQuestion = _useState4[1];
-        var _useState5 = reactExports.useState([]), _useState6 = _slicedToArray(_useState5, 2), options = _useState6[0], setOptions = _useState6[1];
-        var _useState7 = reactExports.useState(""), _useState8 = _slicedToArray(_useState7, 2), questionToken = _useState8[0], setQuestionToken = _useState8[1];
-        var selectOption = function selectOption(idx, _) {
+        var _useState = reactExports.useState({
+            loading: false,
+            error: null,
+            success: null,
+            questionTitle: "",
+            question: "",
+            options: [],
+            questionToken: ""
+        }), _useState2 = _slicedToArray(_useState, 2), state = _useState2[0], setState = _useState2[1];
+        var updateState = reactExports.useCallback((function(updates) {
+            setState((function(prev) {
+                return Object.assign(Object.assign({}, prev), updates);
+            }));
+        }), []);
+        var selectOption = reactExports.useCallback((function(idx, _) {
             return __awaiter(_this, void 0, void 0, _regeneratorRuntime().mark((function _callee() {
                 var result;
                 return _regeneratorRuntime().wrap((function _callee$(_context) {
                     while (1) switch (_context.prev = _context.next) {
                       case 0:
-                        _context.next = 2;
-                        return gamerAPI.sendAnswer(questionToken, idx + 1);
+                        if (!(state.loading || !state.questionToken)) {
+                            _context.next = 2;
+                            break;
+                        }
+                        return _context.abrupt("return");
 
                       case 2:
+                        updateState({
+                            loading: true,
+                            error: null,
+                            success: null
+                        });
+                        _context.prev = 3;
+                        _context.next = 6;
+                        return gamerAPI.sendAnswer(state.questionToken, idx + 1);
+
+                      case 6:
                         result = _context.sent;
                         if ("error" in result) {
-                            setQuestionTitle("");
-                            setQuestion(result.msg);
-                            setOptions([]);
-                            setQuestionToken("");
+                            updateState({
+                                loading: false,
+                                error: result.msg,
+                                questionTitle: "",
+                                question: "",
+                                options: [],
+                                questionToken: ""
+                            });
                         } else {
-                            setQuestionTitle("");
-                            setQuestion(result.gift);
-                            setOptions([]);
-                            setQuestionToken("");
+                            updateState({
+                                loading: false,
+                                success: result.gift,
+                                questionTitle: "",
+                                question: "",
+                                options: [],
+                                questionToken: ""
+                            });
+                            setTimeout((function() {
+                                updateState({
+                                    success: null
+                                });
+                            }), 5e3);
                         }
+                        _context.next = 13;
+                        break;
 
-                      case 4:
+                      case 10:
+                        _context.prev = 10;
+                        _context.t0 = _context["catch"](3);
+                        updateState({
+                            loading: false,
+                            error: "網路錯誤，請稍後再試",
+                            questionTitle: "",
+                            question: "",
+                            options: [],
+                            questionToken: ""
+                        });
+
+                      case 13:
                       case "end":
                         return _context.stop();
                     }
-                }), _callee);
+                }), _callee, null, [ [ 3, 10 ] ]);
             })));
-        };
-        var renderDialog = function renderDialog() {
-            return React.createElement("li", {
-                className: "sidenav-section__item"
-            }, React.createElement(SelectOptionComponent, {
+        }), [ state.loading, state.questionToken, gamerAPI, updateState ]);
+        var renderDialog = reactExports.useCallback((function() {
+            return React.createElement(SelectOptionComponent, {
                 onSelectOption: selectOption,
                 renderTitle: function renderTitle() {
-                    return React.createElement(React.Fragment, null, React.createElement("b", null, React.createElement("div", null, questionTitle)), React.createElement("br", null), React.createElement("div", null, question), React.createElement("br", null));
+                    return React.createElement(React.Fragment, null, React.createElement("b", null, React.createElement("div", null, state.questionTitle)), React.createElement("br", null), React.createElement("div", null, state.question), React.createElement("br", null));
                 },
-                options: options
-            }));
-        };
+                options: state.options,
+                loading: state.loading,
+                error: state.error,
+                success: state.success,
+                questionTitle: state.questionTitle,
+                question: state.question
+            });
+        }), [ selectOption, state ]);
         var buttonLabel = "動畫瘋答題";
-        var updateQuestion = function updateQuestion() {
+        var updateQuestion = reactExports.useCallback((function() {
             return __awaiter(_this, void 0, void 0, _regeneratorRuntime().mark((function _callee2() {
                 var result;
                 return _regeneratorRuntime().wrap((function _callee2$(_context2) {
                     while (1) switch (_context2.prev = _context2.next) {
                       case 0:
-                        _context2.next = 2;
+                        updateState({
+                            loading: true,
+                            error: null,
+                            success: null,
+                            questionTitle: "",
+                            question: "",
+                            options: [],
+                            questionToken: ""
+                        });
+                        _context2.prev = 1;
+                        _context2.next = 4;
                         return gamerAPI.getQuestion();
 
-                      case 2:
+                      case 4:
                         result = _context2.sent;
                         if ("error" in result) {
-                            setQuestionTitle("");
-                            setQuestion(result.msg);
-                            setOptions([]);
-                            setQuestionToken("");
+                            updateState({
+                                loading: false,
+                                error: result.msg,
+                                questionTitle: "",
+                                question: "",
+                                options: [],
+                                questionToken: ""
+                            });
                         } else {
-                            setQuestionTitle(result.game);
-                            setQuestion(result.question);
-                            setOptions([ result.a1, result.a2, result.a3, result.a4 ]);
-                            setQuestionToken(result.token);
+                            updateState({
+                                loading: false,
+                                questionTitle: result.game,
+                                question: result.question,
+                                options: [ result.a1, result.a2, result.a3, result.a4 ],
+                                questionToken: result.token
+                            });
                         }
+                        _context2.next = 11;
+                        break;
 
-                      case 4:
+                      case 8:
+                        _context2.prev = 8;
+                        _context2.t0 = _context2["catch"](1);
+                        updateState({
+                            loading: false,
+                            error: "載入問題失敗，請檢查網路連線",
+                            questionTitle: "",
+                            question: "",
+                            options: [],
+                            questionToken: ""
+                        });
+
+                      case 11:
                       case "end":
                         return _context2.stop();
                     }
-                }), _callee2);
+                }), _callee2, null, [ [ 1, 8 ] ]);
             })));
-        };
-        var cleanQuestion = function cleanQuestion() {
-            setQuestionTitle("載入中............");
-            setQuestion("");
-            setOptions([]);
-            setQuestionToken("");
-        };
+        }), [ gamerAPI, updateState ]);
+        var cleanQuestion = reactExports.useCallback((function() {
+            setState({
+                loading: false,
+                error: null,
+                success: null,
+                questionTitle: "",
+                question: "",
+                options: [],
+                questionToken: ""
+            });
+        }), []);
         return React.createElement(ButtonDialog, {
             onCloseDialog: cleanQuestion,
             onOpenDialog: updateQuestion,
             renderDialog: renderDialog,
             buttonLabel: buttonLabel,
+            title: "動畫瘋答題",
+            maxWidth: "md",
+            fullWidth: true,
             useScopedCssBaseline: false,
             customButtonRender: function customButtonRender() {
                 return React.createElement("a", {
                     href: "#",
-                    className: "sidenav-section__link",
+                    className: "sidenav-section__link hover:bg-gray-50 transition-colors duration-200 rounded-lg",
                     onClick: function onClick(e) {
                         return e.preventDefault();
                     },
@@ -15540,6 +17830,7 @@
             if (success) {
                 clearInterval(insertBtnInterval);
                 console.log("動畫瘋答題按鈕已成功掛載到動畫瘋項目後");
+                notify.success("動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。", "功能載入成功");
                 return;
             }
         }
@@ -15549,6 +17840,7 @@
             if (_success) {
                 clearInterval(insertBtnInterval);
                 console.log("動畫瘋答題按鈕已成功掛載到服務列表末尾");
+                notify.success("動畫瘋答題功能已成功載入！點擊左側選單中的「動畫瘋答題」開始答題。", "功能載入成功");
                 return;
             }
         }
