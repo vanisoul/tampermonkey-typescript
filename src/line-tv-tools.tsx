@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Line TV 增強功能
 // @version      1.0.0
-// @description  Line TV 廣告跳過 & 1080P 解鎖功能 & 影片跳過快捷鍵
+// @description  Line TV 廣告跳過 & 影片跳過快捷鍵
 // @author       Vanisoul
 // @match        https://www.linetv.tw/*
 // @license      MIT
@@ -41,7 +41,6 @@ const App = () => {
 
   // 狀態管理
   const { data: adSkipEnabled, updateData: setAdSkipEnabled } = useGmValue("lineTvAdSkipEnabled", true);
-  const { data: qualityUnlockEnabled, updateData: setQualityUnlockEnabled } = useGmValue("lineTvQualityUnlockEnabled", true);
   const { data: videoSkipEnabled, updateData: setVideoSkipEnabled } = useGmValue("lineTvVideoSkipEnabled", true);
   const { data: skipHotkey, updateData: setSkipHotkey } = useGmValue("lineTvSkipHotkey", "j");
   const { data: skipSeconds, updateData: setSkipSeconds } = useGmValue("lineTvSkipSeconds", 90);
@@ -68,30 +67,6 @@ const App = () => {
     }
   };
 
-  // 1080P 解鎖功能
-  const removeQualityOverlay = () => {
-    // 查找包含所有指定 class 的元素
-    const qualityOverlays = document.querySelectorAll(
-      '.vjs-overlay.vjs-overlay-top-left.vjs-overlay-quality-cover.absolute.w-full.h-full.pin.bg-linetv-background.bg-opacity-70.text-linetv-high-emphasis.vjs-overlay-no-background'
-    ) as NodeListOf<HTMLElement>;
-
-    qualityOverlays.forEach(overlay => {
-      overlay.parentNode?.removeChild(overlay);
-    });
-
-    // 備用方案：查找包含部分關鍵 class 的元素
-    const fallbackOverlays = document.querySelectorAll(
-      '.vjs-overlay-quality-cover'
-    ) as NodeListOf<HTMLElement>;
-
-    fallbackOverlays.forEach(overlay => {
-      // 檢查是否包含其他相關 class
-      if (overlay.classList.contains('vjs-overlay-top-left') &&
-        overlay.classList.contains('bg-linetv-background')) {
-        overlay.parentNode?.removeChild(overlay);
-      }
-    });
-  };
 
   // 廣告跳過監控 - 持續監控
   useEffect(() => {
@@ -101,13 +76,6 @@ const App = () => {
     return () => clearInterval(interval);
   }, [adSkipEnabled]);
 
-  // 1080P 解鎖監控 - 條件監控
-  useEffect(() => {
-    if (!qualityUnlockEnabled) return;
-
-    const interval = setInterval(removeQualityOverlay, 1000);
-    return () => clearInterval(interval);
-  }, [qualityUnlockEnabled]);
 
   // 影片跳過功能
   const skipVideo = () => {
@@ -240,31 +208,6 @@ const App = () => {
 
             <Divider className="my-4" />
 
-            {/* 1080P 解鎖功能 */}
-            <Box>
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={qualityUnlockEnabled}
-                    onChange={(e) => setQualityUnlockEnabled(e.target.checked)}
-                    color="primary"
-                  />
-                }
-                label={
-                  <Box>
-                    <Typography variant="subtitle1" className="font-medium text-gray-800">
-                      1080P 解鎖
-                    </Typography>
-                    <Typography variant="body2" className="text-gray-600 mt-1">
-                      移除品質限制覆蓋層，解鎖高畫質播放
-                    </Typography>
-                  </Box>
-                }
-                className="items-start"
-              />
-            </Box>
-
-            <Divider className="my-4" />
 
             {/* 影片跳過功能 */}
             <Box>
