@@ -8,6 +8,52 @@
 
 (function() {
     "use strict";
+    const createAbortError = () => {
+        const error = new Error("Delay aborted");
+        error.name = "AbortError";
+        return error;
+    };
+    const clearMethods = new WeakMap;
+    function createDelay({clearTimeout: defaultClear, setTimeout: defaultSet} = {}) {
+        return (milliseconds, {value: value, signal: signal} = {}) => {
+            if (signal?.aborted) {
+                return Promise.reject(createAbortError());
+            }
+            let timeoutId;
+            let settle;
+            let rejectFunction;
+            const clear = defaultClear ?? clearTimeout;
+            const signalListener = () => {
+                clear(timeoutId);
+                rejectFunction(createAbortError());
+            };
+            const cleanup = () => {
+                if (signal) {
+                    signal.removeEventListener("abort", signalListener);
+                }
+            };
+            const delayPromise = new Promise(((resolve, reject) => {
+                settle = () => {
+                    cleanup();
+                    resolve(value);
+                };
+                rejectFunction = reject;
+                timeoutId = (defaultSet ?? setTimeout)(settle, milliseconds);
+            }));
+            if (signal) {
+                signal.addEventListener("abort", signalListener, {
+                    once: true
+                });
+            }
+            clearMethods.set(delayPromise, (() => {
+                clear(timeoutId);
+                timeoutId = null;
+                settle();
+            }));
+            return delayPromise;
+        };
+    }
+    const delay = createDelay();
     function log(msg, obj) {
         if (!obj) {
             console.log(`[WW-Aidoo] ${msg}`);
@@ -145,13 +191,14 @@
                     return false;
                 }
                 log(`檢測到需要替換的結構，影片 ID: ${videoId}`);
-                const iframe = replaceVideoStructure("40957");
+                const iframe = replaceVideoStructure("42437");
                 if (!iframe) {
                     log("DOM 結構替換失敗");
                     return false;
                 }
                 const iframeWindow = await waitForIframeLoad(iframe);
                 log("iframe 載入完成");
+                await delay(10);
                 if (!checkIframeBootAPI(iframeWindow)) {
                     log("iframe 中的 Boot API 不可用");
                     return false;

@@ -6,6 +6,8 @@
 // @license MIT
 // ==/UserScript==
 
+import delay from "delay";
+
 // 型別定義
 interface VodData {
   vodPic: string;
@@ -227,7 +229,7 @@ function log(msg: string, obj?: unknown) {
       log(`檢測到需要替換的結構，影片 ID: ${videoId}`);
 
       // 3. 替換 DOM 結構, 需要免費 video Id
-      const iframe = replaceVideoStructure("40957");
+      const iframe = replaceVideoStructure("42437");
       if (!iframe) {
         log("DOM 結構替換失敗");
         return false;
@@ -236,6 +238,8 @@ function log(msg: string, obj?: unknown) {
       // 4. 等待 iframe 載入
       const iframeWindow = await waitForIframeLoad(iframe);
       log("iframe 載入完成");
+
+      await delay(10);
 
       // 5. 檢查 iframe 中的 API
       if (!checkIframeBootAPI(iframeWindow)) {
