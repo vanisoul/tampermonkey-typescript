@@ -135,10 +135,10 @@ src/netflix-enhancer.tsx
 ### 當頁面有 下一集 時的結構
 
 ```
-<div class="nfa-pos-abs nfa-bot-6-em nfa-right-5-em nfa-d-flex"><button class="color-secondary hasLabel default-ltr-iqcdef-cache-1ez4rzs" data-uia="watch-credits-seamless-button" type="button"><span class="default-ltr-iqcdef-cache-1vh9doa">观看演职员表</span></button><div class="default-ltr-iqcdef-cache-1npqywr" style="width: 1.25rem;"></div><button class="color-primary hasLabel hasIcon default-ltr-iqcdef-cache-1ez4rzs" data-uia="next-episode-seamless-button" type="button"><div class="default-ltr-iqcdef-cache-1st24vv"><div class="medium default-ltr-iqcdef-cache-iyulz3" role="presentation"><svg viewBox="0 0 24 24" width="24" height="24" data-icon="PlayMedium" data-icon-id=":rcf:" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" role="img">
+<button class="hasLabel hasIcon default-ltr-iqcdef-cache-v5z301" data-uia="next-episode-seamless-button-draining" type="button"><div class="default-ltr-iqcdef-cache-13u5nr8"><div class="inner" style="transition: transform 5s linear; transform: translate(0px);"></div></div><div class="default-ltr-iqcdef-cache-5hykvn"><div class="medium default-ltr-iqcdef-cache-iyulz3" role="presentation"><svg viewBox="0 0 24 24" width="24" height="24" data-icon="PlayMedium" data-icon-id=":r68:" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" role="img">
 <path d="M5 2.69127C5 1.93067 5.81547 1.44851 6.48192 1.81506L23.4069 11.1238C24.0977 11.5037 24.0977 12.4963 23.4069 12.8762L6.48192 22.1849C5.81546 22.5515 5 22.0693 5 21.3087V2.69127Z" fill="currentColor"></path>
 
-</svg></div></div><div class="default-ltr-iqcdef-cache-1npqywr" style="width: 1rem;"></div><span class="default-ltr-iqcdef-cache-1vh9doa">下一集</span></button></div>
+</svg></div></div><div class="default-ltr-iqcdef-cache-1npqywr" style="width: 0.8rem;"></div><span class="default-ltr-iqcdef-cache-ick94x">下一集</span></button>
 ```
 
 ### 影片播放器當滑鼠移動到下列節點時會出現播放速度選單

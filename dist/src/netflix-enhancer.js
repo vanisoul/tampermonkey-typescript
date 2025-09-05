@@ -7977,7 +7977,7 @@
         var observerRef = reactExports.useRef(null);
         var lastSpeedApplied = reactExports.useRef(null);
         var skipIntroSelector = 'button[data-uia="player-skip-intro"]';
-        var nextEpisodeSelector = 'button[data-uia="next-episode-seamless-button"]';
+        var nextEpisodeSelectors = [ 'button[data-uia="next-episode-seamless-button-draining"]', 'button[data-uia="next-episode-seamless-button"]' ];
         var videoSelector = "video";
         var clickButton = reactExports.useCallback((function(selector) {
             var button = document.querySelector(selector);
@@ -8002,7 +8002,9 @@
                 clickButton(skipIntroSelector);
             }
             if (settings.nextEpisodeEnabled) {
-                clickButton(nextEpisodeSelector);
+                nextEpisodeSelectors.forEach((function(selector) {
+                    return clickButton(selector);
+                }));
             }
             applyPlaybackSpeed();
         }), [ settings.skipIntroEnabled, settings.nextEpisodeEnabled, clickButton, applyPlaybackSpeed ]);

@@ -41,7 +41,10 @@ function NetflixEnhancer() {
   const lastSpeedApplied = useRef<number | null>(null);
 
   const skipIntroSelector = 'button[data-uia="player-skip-intro"]';
-  const nextEpisodeSelector = 'button[data-uia="next-episode-seamless-button"]';
+  const nextEpisodeSelectors = [
+    'button[data-uia="next-episode-seamless-button-draining"]',
+    'button[data-uia="next-episode-seamless-button"]',
+  ];
   const videoSelector = "video";
 
   const clickButton = useCallback((selector: string) => {
@@ -71,7 +74,8 @@ function NetflixEnhancer() {
     }
 
     if (settings.nextEpisodeEnabled) {
-      clickButton(nextEpisodeSelector);
+      // biome-ignore lint/complexity/noForEach: <explanation>
+      nextEpisodeSelectors.forEach((selector) => clickButton(selector));
     }
 
     applyPlaybackSpeed();
