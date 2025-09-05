@@ -7976,14 +7976,12 @@
         var _useGmValue = useGmValue("netflix-enhancer-settings", DEFAULT_SETTINGS), settings = _useGmValue.data, updateSettings = _useGmValue.updateData;
         var observerRef = reactExports.useRef(null);
         var lastSpeedApplied = reactExports.useRef(null);
-        var nextEpisodeCheckInterval = reactExports.useRef(null);
         var skipIntroSelector = 'button[data-uia="player-skip-intro"]';
         var nextEpisodeSelector = 'button[data-uia="next-episode-seamless-button"]';
         var videoSelector = "video";
-        var clickButton = reactExports.useCallback((function(selector, debugName) {
+        var clickButton = reactExports.useCallback((function(selector) {
             var button = document.querySelector(selector);
             if (button) {
-                console.log("Netflix Enhancer: 點擊".concat(debugName, "按鈕"), button);
                 button.click();
                 return true;
             }
@@ -8001,19 +7999,16 @@
         }), [ settings.speedControlEnabled, settings.defaultPlaybackSpeed ]);
         var handleDOMChanges = reactExports.useCallback((function() {
             if (settings.skipIntroEnabled) {
-                clickButton(skipIntroSelector, "跳過簡介");
+                clickButton(skipIntroSelector);
             }
             if (settings.nextEpisodeEnabled) {
-                clickButton(nextEpisodeSelector, "下一集");
+                clickButton(nextEpisodeSelector);
             }
             applyPlaybackSpeed();
         }), [ settings.skipIntroEnabled, settings.nextEpisodeEnabled, clickButton, applyPlaybackSpeed ]);
         reactExports.useEffect((function() {
             if (observerRef.current) {
                 observerRef.current.disconnect();
-            }
-            if (nextEpisodeCheckInterval.current) {
-                clearInterval(nextEpisodeCheckInterval.current);
             }
             observerRef.current = new MutationObserver((function() {
                 handleDOMChanges();
@@ -8022,21 +8017,13 @@
                 childList: true,
                 subtree: true
             });
-            nextEpisodeCheckInterval.current = setInterval((function() {
-                if (settings.nextEpisodeEnabled) {
-                    clickButton(nextEpisodeSelector, "下一集 (定時檢查)");
-                }
-            }), 2e3);
             handleDOMChanges();
             return function() {
                 if (observerRef.current) {
                     observerRef.current.disconnect();
                 }
-                if (nextEpisodeCheckInterval.current) {
-                    clearInterval(nextEpisodeCheckInterval.current);
-                }
             };
-        }), [ handleDOMChanges, settings.nextEpisodeEnabled, clickButton ]);
+        }), [ handleDOMChanges ]);
         var toggleSkipIntro = reactExports.useCallback((function() {
             updateSettings(_objectSpread2(_objectSpread2({}, settings), {}, {
                 skipIntroEnabled: !settings.skipIntroEnabled

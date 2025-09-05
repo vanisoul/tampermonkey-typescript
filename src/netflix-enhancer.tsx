@@ -39,16 +39,14 @@ function NetflixEnhancer() {
 
   const observerRef = useRef<MutationObserver | null>(null);
   const lastSpeedApplied = useRef<number | null>(null);
-  const nextEpisodeCheckInterval = useRef<NodeJS.Timeout | null>(null);
 
   const skipIntroSelector = 'button[data-uia="player-skip-intro"]';
   const nextEpisodeSelector = 'button[data-uia="next-episode-seamless-button"]';
   const videoSelector = "video";
 
-  const clickButton = useCallback((selector: string, debugName: string) => {
+  const clickButton = useCallback((selector: string) => {
     const button = document.querySelector(selector) as HTMLButtonElement;
     if (button) {
-      console.log(`Netflix Enhancer: 點擊${debugName}按鈕`, button);
       button.click();
       return true;
     }
@@ -69,11 +67,11 @@ function NetflixEnhancer() {
 
   const handleDOMChanges = useCallback(() => {
     if (settings.skipIntroEnabled) {
-      clickButton(skipIntroSelector, "跳過簡介");
+      clickButton(skipIntroSelector);
     }
 
     if (settings.nextEpisodeEnabled) {
-      clickButton(nextEpisodeSelector, "下一集");
+      clickButton(nextEpisodeSelector);
     }
 
     applyPlaybackSpeed();
@@ -82,10 +80,6 @@ function NetflixEnhancer() {
   useEffect(() => {
     if (observerRef.current) {
       observerRef.current.disconnect();
-    }
-
-    if (nextEpisodeCheckInterval.current) {
-      clearInterval(nextEpisodeCheckInterval.current);
     }
 
     observerRef.current = new MutationObserver(() => {
@@ -97,24 +91,14 @@ function NetflixEnhancer() {
       subtree: true,
     });
 
-    // 專門為下一集按鈕設置的檢查間隔，因為它出現時機較晚
-    nextEpisodeCheckInterval.current = setInterval(() => {
-      if (settings.nextEpisodeEnabled) {
-        clickButton(nextEpisodeSelector, "下一集 (定時檢查)");
-      }
-    }, 2000);
-
     handleDOMChanges();
 
     return () => {
       if (observerRef.current) {
         observerRef.current.disconnect();
       }
-      if (nextEpisodeCheckInterval.current) {
-        clearInterval(nextEpisodeCheckInterval.current);
-      }
     };
-  }, [handleDOMChanges, settings.nextEpisodeEnabled, clickButton]);
+  }, [handleDOMChanges]);
 
   const toggleSkipIntro = useCallback(() => {
     updateSettings({
