@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           ani gamer video
-// @version        1.1.1
+// @version        1.1.2
 // @description    動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author         Vanisoul
 // @match          https://ani.gamer.com.tw/*
@@ -11,6 +11,7 @@
 // @updateHistory  1.0.2 (2024-01-06) 增加隱藏歷史觀看紀錄功能, 但是畫面會先出現在隱藏, 只是方便隱藏試看影片
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory  1.1.1 (2025-09-07) 修正自動同意問題 & 減少初始化時間 & 修正 lint 錯誤
+// @updateHistory  1.1.2 (2025-09-07) 自動同意功能只要出現就點擊取消只執行一次 & 切換下一集功能採用點擊影片結束時的下一集按鈕
 // @grant          GM_registerMenuCommand
 // @grant          GM_unregisterMenuCommand
 // @grant          GM_setValue
@@ -8067,33 +8068,19 @@
             };
         }), []);
         reactExports.useEffect((function() {
-            function getSnList() {
-                var snArray = [];
-                unsafeWindow.$(".season ul li a").each((function() {
-                    var href = unsafeWindow.$(this).attr("href");
-                    var sn = href === null || href === void 0 ? void 0 : href.split("=")[1];
-                    if (sn) {
-                        snArray.push(Number.parseInt(sn, 10));
-                    }
-                }));
-                return snArray;
-            }
-            function getCurrentPage(videoSnArray) {
-                var currentSN = window.location.search.split("=")[1];
-                return videoSnArray.indexOf(Number.parseInt(currentSN, 10));
-            }
-            function goToNextPage(videoSnArray) {
-                var currentPageIndex = getCurrentPage(videoSnArray);
-                if (currentPageIndex >= 0 && currentPageIndex < videoSnArray.length - 1) {
-                    var nextSN = videoSnArray[currentPageIndex + 1];
-                    window.location.href = "?sn=".concat(nextSN);
-                } else {
-                    alert("已經是最後一集");
+            function clickNextEpisodeButton() {
+                var nextEpisodeButton = document.getElementById("nextEpisode");
+                if (nextEpisodeButton && nextEpisodeButton.offsetParent !== null) {
+                    nextEpisodeButton.click();
+                    return true;
                 }
+                return false;
             }
             function nextVideo() {
-                var snArray = getSnList();
-                goToNextPage(snArray);
+                if (clickNextEpisodeButton()) {
+                    return;
+                }
+                console.log("未找到下一集按鈕");
             }
             if (autoNext) {
                 if (!aniVideo) {
@@ -8125,14 +8112,10 @@
             if (!autoPlay) {
                 return;
             }
+            autoPlayMethod();
             var interval = setInterval((function() {
-                if (autoPlayMethod()) {
-                    clearInterval(interval);
-                }
+                autoPlayMethod();
             }), 1e3);
-            setTimeout((function() {
-                clearInterval(interval);
-            }), 1e4);
             return function() {
                 clearInterval(interval);
             };

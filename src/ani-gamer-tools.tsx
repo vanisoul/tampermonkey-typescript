@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ani gamer video
-// @version      1.1.1
+// @version      1.1.2
 // @description  動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author       Vanisoul
 // @match        https://ani.gamer.com.tw/*
@@ -11,6 +11,7 @@
 // @updateHistory    1.0.2 (2024-01-06) 增加隱藏歷史觀看紀錄功能, 但是畫面會先出現在隱藏, 只是方便隱藏試看影片
 // @updateHistory    1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory    1.1.1 (2025-09-07) 修正自動同意問題 & 減少初始化時間 & 修正 lint 錯誤
+// @updateHistory    1.1.2 (2025-09-07) 自動同意功能只要出現就點擊取消只執行一次 & 切換下一集功能採用點擊影片結束時的下一集按鈕
 // ==/UserScript==
 
 import React, { useEffect, useState } from "react";
@@ -141,36 +142,23 @@ const App = () => {
 
   // 處理影片結束跳轉下一集
   useEffect(() => {
-    function getSnList() {
-      const snArray: number[] = [];
-      unsafeWindow.$(".season ul li a").each(function () {
-        const href = unsafeWindow.$(this).attr("href");
-        const sn = href?.split("=")[1];
-        if (sn) {
-          snArray.push(Number.parseInt(sn, 10));
-        }
-      });
-      return snArray;
-    }
-
-    function getCurrentPage(videoSnArray: number[]) {
-      const currentSN = window.location.search.split("=")[1];
-      return videoSnArray.indexOf(Number.parseInt(currentSN, 10));
-    }
-
-    function goToNextPage(videoSnArray: number[]) {
-      const currentPageIndex = getCurrentPage(videoSnArray);
-      if (currentPageIndex >= 0 && currentPageIndex < videoSnArray.length - 1) {
-        const nextSN = videoSnArray[currentPageIndex + 1];
-        window.location.href = `?sn=${nextSN}`;
-      } else {
-        alert("已經是最後一集");
+    function clickNextEpisodeButton() {
+      const nextEpisodeButton = document.getElementById("nextEpisode") as HTMLButtonElement;
+      if (nextEpisodeButton && nextEpisodeButton.offsetParent !== null) {
+        nextEpisodeButton.click();
+        return true;
       }
+      return false;
     }
 
     function nextVideo() {
-      const snArray = getSnList();
-      goToNextPage(snArray);
+      // 先嘗試點擊下一集按鈕
+      if (clickNextEpisodeButton()) {
+        return;
+      }
+
+      // 如果沒有找到下一集按鈕，顯示提醒
+      console.log("未找到下一集按鈕");
     }
 
     if (autoNext) {
@@ -211,18 +199,11 @@ const App = () => {
       return;
     }
 
-    // 1 秒設定一次, 避免外部 DOM 還不存在
+    // 持續監控，每 1 秒檢查一次是否出現同意按鈕
+    autoPlayMethod();
     const interval = setInterval(() => {
-      if (autoPlayMethod()) {
-        // 成功點擊後停止間隔
-        clearInterval(interval);
-      }
+      autoPlayMethod();
     }, 1000);
-
-    // 10 秒後停止
-    setTimeout(() => {
-      clearInterval(interval);
-    }, 10000);
 
     return () => {
       clearInterval(interval);
