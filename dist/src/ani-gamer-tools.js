@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name           ani gamer video
-// @version        1.1.0
+// @version        1.1.1
 // @description    動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author         Vanisoul
 // @match          https://ani.gamer.com.tw/*
@@ -10,10 +10,11 @@
 // @updateHistory  1.0.1 (2024-01-04) 增加各種快捷鍵功能 & 新增時間設定選項 & 自動撥放啟用提示
 // @updateHistory  1.0.2 (2024-01-06) 增加隱藏歷史觀看紀錄功能, 但是畫面會先出現在隱藏, 只是方便隱藏試看影片
 // @updateHistory  1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
-// @grant          GM_setValue
-// @grant          GM_getValue
+// @updateHistory  1.1.1 (2025-09-07) 修正自動同意問題 & 減少初始化時間 & 修正 lint 錯誤
 // @grant          GM_registerMenuCommand
 // @grant          GM_unregisterMenuCommand
+// @grant          GM_setValue
+// @grant          GM_getValue
 // ==/UserScript==
 
 (function() {
@@ -7946,6 +7947,14 @@
         createRoot(fragmentElement).render(fragmentApp());
         return true;
     }
+    const useGmMenu = (menuText, onTriggerMenu) => {
+        reactExports.useEffect((() => {
+            const id = GM_registerMenuCommand(menuText, onTriggerMenu);
+            return () => {
+                GM_unregisterMenuCommand(id);
+            };
+        }), [ menuText, onTriggerMenu ]);
+    };
     function useGmValue(key, defaultValue) {
         const [data, setValue] = reactExports.useState(GM_getValue(key, defaultValue));
         function updateData(input) {
@@ -7957,14 +7966,6 @@
             updateData: updateData
         };
     }
-    const useGmMenu = (menuText, onTriggerMenu) => {
-        reactExports.useEffect((() => {
-            const id = GM_registerMenuCommand(menuText, onTriggerMenu);
-            return () => {
-                GM_unregisterMenuCommand(id);
-            };
-        }), [ menuText, onTriggerMenu ]);
-    };
     var App = function App() {
         var defaultGamerSkipKey = "j";
         var _useGmValue = useGmValue("gamerSkipKey", defaultGamerSkipKey), gamerSkipKey = _useGmValue.data, updateGamerSkipKey = _useGmValue.updateData;
@@ -7984,11 +7985,11 @@
         useGmMenu("設定跳過長度", (function() {
             var time = prompt("請輸入跳過長度", gamerOPTime.toString());
             if (time) {
-                if (isNaN(parseInt(time, 10))) {
+                if (Number.isNaN(Number.parseInt(time, 10))) {
                     alert("請輸入數字");
                     return;
                 }
-                updateGamerOPTime(parseInt(time, 10));
+                updateGamerOPTime(Number.parseInt(time, 10));
                 alert("已設定跳過長度為 ".concat(time));
             }
         }));
@@ -7998,7 +7999,7 @@
         useGmMenu("設定影片速度", (function() {
             var rate = prompt("請輸入影片速度 [".concat(gamerVideoRatePool.toString(), "]"), gamerVideoRate.toString());
             if (rate) {
-                var rateNumber = parseFloat(rate);
+                var rateNumber = Number.parseFloat(rate);
                 if (gamerVideoRatePool.includes(rateNumber)) {
                     updateGamerVideoRate(rateNumber);
                     alert("已設定影片速度為 ".concat(rate));
@@ -8036,7 +8037,7 @@
             }
             if (ids) {
                 var idsArray = ids.split(",").map((function(id) {
-                    return parseInt(id.trim(), 10);
+                    return Number.parseInt(id.trim(), 10);
                 }));
                 updateHideHistoryIds(idsArray);
                 alert("已設定隱藏觀看紀錄 ".concat(idsArray.toString()));
@@ -8049,14 +8050,10 @@
         var _useGmValue7 = useGmValue("autoPlay", defaultAutoPlay), autoPlay = _useGmValue7.data, updateAutoPlay = _useGmValue7.updateData;
         useGmMenu("設定自動同意撥放", (function() {
             var isAutoPlay = confirm("是否啟用自動同意撥放");
-            if (isAutoPlay) {
-                alert("要自動撥放，請先設定網站設置");
-                alert("網址欄左側，點擊鎖頭圖標或信息圖標（取決於網站是否使用 HTTPS），在彈出的菜單中選擇「網站設置」，在「網站設置」頁面，找到「聲音」選項，並將其設置為「允許」。");
-            }
             updateAutoPlay(isAutoPlay);
             alert("已設定自動同意撥放功能 ".concat(isAutoPlay));
         }));
-        var _useState = reactExports.useState(undefined), _useState2 = _slicedToArray(_useState, 2), aniVidoe = _useState2[0], setAniVidoe = _useState2[1];
+        var _useState = reactExports.useState(undefined), _useState2 = _slicedToArray(_useState, 2), aniVideo = _useState2[0], setAniVidoe = _useState2[1];
         reactExports.useEffect((function() {
             var interval = setInterval((function() {
                 var video = document.getElementById("ani_video_html5_api");
@@ -8076,20 +8073,20 @@
                     var href = unsafeWindow.$(this).attr("href");
                     var sn = href === null || href === void 0 ? void 0 : href.split("=")[1];
                     if (sn) {
-                        snArray.push(parseInt(sn, 10));
+                        snArray.push(Number.parseInt(sn, 10));
                     }
                 }));
                 return snArray;
             }
             function getCurrentPage(videoSnArray) {
                 var currentSN = window.location.search.split("=")[1];
-                return videoSnArray.indexOf(parseInt(currentSN, 10));
+                return videoSnArray.indexOf(Number.parseInt(currentSN, 10));
             }
             function goToNextPage(videoSnArray) {
                 var currentPageIndex = getCurrentPage(videoSnArray);
                 if (currentPageIndex >= 0 && currentPageIndex < videoSnArray.length - 1) {
                     var nextSN = videoSnArray[currentPageIndex + 1];
-                    window.location.href = "?sn=" + nextSN;
+                    window.location.href = "?sn=".concat(nextSN);
                 } else {
                     alert("已經是最後一集");
                 }
@@ -8099,38 +8096,43 @@
                 goToNextPage(snArray);
             }
             if (autoNext) {
-                if (!aniVidoe) {
+                if (!aniVideo) {
                     return;
                 }
-                aniVidoe.addEventListener("ended", nextVideo);
+                aniVideo.addEventListener("ended", nextVideo);
             }
             return function() {
-                if (!aniVidoe) {
+                if (!aniVideo) {
                     return;
                 }
-                aniVidoe.removeEventListener("ended", nextVideo);
+                aniVideo.removeEventListener("ended", nextVideo);
             };
-        }), [ autoNext, aniVidoe ]);
+        }), [ autoNext, aniVideo ]);
         reactExports.useEffect((function() {
-            if (aniVidoe) {
-                aniVidoe.playbackRate = gamerVideoRate;
+            if (aniVideo) {
+                aniVideo.playbackRate = gamerVideoRate;
             }
-        }), [ gamerVideoRate, aniVidoe ]);
+        }), [ gamerVideoRate, aniVideo ]);
         reactExports.useEffect((function() {
-            function autoPlayMethed() {
-                var adultClick = unsafeWindow.$._data(unsafeWindow.$("#adult")[0], "events").click;
-                if (adultClick && adultClick.length !== 0) {
-                    adultClick[0].handler();
+            function autoPlayMethod() {
+                var adultButton = document.getElementById("adult");
+                if (adultButton && adultButton.style.display !== "none") {
+                    adultButton.click();
+                    return true;
                 }
+                return false;
+            }
+            if (!autoPlay) {
+                return;
             }
             var interval = setInterval((function() {
-                if (autoPlay) {
-                    autoPlayMethed();
+                if (autoPlayMethod()) {
+                    clearInterval(interval);
                 }
             }), 1e3);
             setTimeout((function() {
                 clearInterval(interval);
-            }), 5e3);
+            }), 1e4);
             return function() {
                 clearInterval(interval);
             };
@@ -8148,9 +8150,9 @@
                     return false;
                 }
                 historyList.each((function() {
-                    var _a;
+                    var _href$split$1$trim;
                     var href = unsafeWindow.$(this).attr("href");
-                    var sn = parseInt((_a = href === null || href === void 0 ? void 0 : href.split("=")[1].trim()) !== null && _a !== void 0 ? _a : "", 10);
+                    var sn = Number.parseInt((_href$split$1$trim = href === null || href === void 0 ? void 0 : href.split("=")[1].trim()) !== null && _href$split$1$trim !== void 0 ? _href$split$1$trim : "", 10);
                     if (sn && hideHistoryIds.includes(sn)) {
                         unsafeWindow.$(this).closest(".user-watch-list").hide();
                     }
@@ -8169,10 +8171,10 @@
         }), [ hideHistoryIds ]);
         reactExports.useEffect((function() {
             function skipVideo() {
-                if (!aniVidoe) {
+                if (!aniVideo) {
                     return;
                 }
-                aniVidoe.currentTime += gamerOPTime;
+                aniVideo.currentTime += gamerOPTime;
             }
             function keyDownHandler(e) {
                 if (e.key === gamerSkipKey) {
@@ -8183,7 +8185,7 @@
             return function() {
                 document.removeEventListener("keydown", keyDownHandler);
             };
-        }), [ gamerSkipKey, gamerOPTime, aniVidoe ]);
+        }), [ gamerSkipKey, gamerOPTime, aniVideo ]);
         return React.createElement("div", null);
     };
     var mountInterval = setInterval((function() {
@@ -8191,5 +8193,5 @@
         if (success) {
             clearInterval(mountInterval);
         }
-    }), 3e3);
+    }), 500);
 })();
