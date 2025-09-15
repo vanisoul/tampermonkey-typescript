@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name         ani gamer video
-// @version      1.1.2
+// @version      1.1.3
 // @description  動畫瘋, 自動撥放, J 鍵跳過 90S, 自動設定影片速度, 隱藏觀看歷史
 // @author       Vanisoul
 // @match        https://ani.gamer.com.tw/*
@@ -12,6 +12,7 @@
 // @updateHistory    1.1.0 (2024-01-13) 改為 react 版本 & 第三方元件使用 MUI
 // @updateHistory    1.1.1 (2025-09-07) 修正自動同意問題 & 減少初始化時間 & 修正 lint 錯誤
 // @updateHistory    1.1.2 (2025-09-07) 自動同意功能只要出現就點擊取消只執行一次 & 切換下一集功能採用點擊影片結束時的下一集按鈕
+// @updateHistory    1.1.3 (2025-09-15) 下一集 改用每秒觸發
 // ==/UserScript==
 
 import React, { useEffect, useState } from "react";
@@ -151,7 +152,17 @@ const App = () => {
       return false;
     }
 
-    function nextVideo() {
+    function checkAndClickNext() {
+      if (!aniVideo) {
+        return;
+      }
+
+      // 檢查影片是否已結束或接近結束
+      const duration = aniVideo.duration;
+      const currentTime = aniVideo.currentTime;
+
+      // 當影片剩餘時間少於 1 秒時觸發
+      // if (duration && currentTime && duration - currentTime <= 1) {
       // 先嘗試點擊下一集按鈕
       if (clickNextEpisodeButton()) {
         return;
@@ -159,21 +170,19 @@ const App = () => {
 
       // 如果沒有找到下一集按鈕，顯示提醒
       console.log("未找到下一集按鈕");
+      // }
     }
 
-    if (autoNext) {
-      if (!aniVideo) {
-        return;
-      }
-      aniVideo.addEventListener("ended", nextVideo);
+    if (autoNext && aniVideo) {
+      // 每秒檢查一次
+      const interval = setInterval(checkAndClickNext, 1000);
+
+      return () => {
+        clearInterval(interval);
+      };
     }
 
-    return () => {
-      if (!aniVideo) {
-        return;
-      }
-      aniVideo.removeEventListener("ended", nextVideo);
-    };
+    return () => {};
   }, [autoNext, aniVideo]);
 
   // 處理影片速度
